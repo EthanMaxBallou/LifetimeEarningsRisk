@@ -17,6 +17,8 @@ df = CSV.read("/Users/ethanballou/Documents/Data/Risk/old_gam_data.csv", DataFra
 dropmissing!(df, [:J])
 dropmissing!(df, [:gam_fearn0_A_])
 dropmissing!(df, [:aep])
+dropmissing!(df, [:edmaxyrs])
+
 
 df.occ = categorical(df.occ)
 df.year = categorical(df.year)
@@ -29,7 +31,7 @@ df.twoind = categorical(df.twoind)
 
 df.race = categorical(df.race)
 
-
+df.age_five = df.currentage.^5
 
 
 # First Run: state, occ, year
@@ -44,8 +46,11 @@ df.race = categorical(df.race)
 # interactions with jplusQ? interact j or q with things like age, tenure, etc.?
 
 
+reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + currentagefourth + edmaxyrs), df)
+#print(reg1)
 
-reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + occ + state + year + relation + group + twoind + aep + tenure + currentagefourth + race + edmaxyrs), df)
+
+reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + occ + state + year + relation + aep + tenure + currentagefourth + age_five + race + edmaxyrs), df)
 #print(reg1)
 
 print("R-Squared: ", r2(reg1))
@@ -68,9 +73,13 @@ selected_predictors = [:JplusQ, :personid, :J, :Q, :gam_fearn0_A_, :gam_fwwage0_
 
 inc_predictors = [:fearn0_P0, :fwwage0_P0, :fhwage0_P0, :fearn1_P0, :fearn1_P1, :fwwage1_P0, :fwwage1_P1, :fhwage1_P0, :fhwage1_P1]  # Replace with your chosen variables
 
+occ_pred = [:oneind, :soc2010]
 
 newDF1 = DataFrames.select(df, Not(selected_predictors))
 newDF1 = DataFrames.select(newDF1, Not(inc_predictors))
+
+newDF1 = DataFrames.select(newDF1, Not(occ_pred))
+
 
 target = :residuals
 VARS = names(newDF1)
@@ -81,7 +90,7 @@ rename!(newDF1, Symbol.(names(newDF1)))
 # List of columns to convert to categorical
 categore = [:student, :self, :both, :postgrad, :union, :hourly, :veteran, :limited, :unemp, 
             :OLF, :nojobinfo, :tenmiss, :tenmiss26, :lowtenure, :white, :educwrths, 
-            :censdiv, :oneind, :soc2010, :oneind]
+            :censdiv]
 
 
 
@@ -157,7 +166,7 @@ end
 
 
 # Export the DataFrame to a CSV file
-CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/coefficients5.csv", coefficients_df)
+CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/coefficients6.csv", coefficients_df)
 
 
 
