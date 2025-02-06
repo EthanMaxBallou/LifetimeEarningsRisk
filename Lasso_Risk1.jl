@@ -36,43 +36,69 @@ df.annualHRSwife = zeros(size(df, 1))
 
 
 
+# Extract unique years and personids
+unique_years = unique(df.year)
+unique_personids = unique(df.personid)
+
+# Create a new DataFrame with personid as the first column
+result_df = DataFrame(personid = unique_personids)
+
+# Add a column for each unique year in result_df and name them the year
+for year in unique(df.year)
+    result_df[!, Symbol(string(year))] = Vector{Union{Missing, Bool}}(missing, nrow(result_df))
+end
+
+
 for year in unique(df.year)
 
-    for ID in unique(df.personid)
+    marriageLABEL = labels.marital[1]
+    childLABEL = labels.numCHILD[1]
+    annHRLABEL = labels.annualHRS[1]
+    annHRwifeLABEL = labels.annualHRSwife[1]
 
-        marriageLABEL = labels.marital[labels.year .== year][1]
-        childLABEL = labels.numCHILD[labels.year .== year][1]
-        annHRLABEL = labels.annualHRS[labels.year .== year][1]
-        annHRwifeLABEL = labels.annualHRSwife[labels.year .== year][1]
+    
 
-        println(marriageLABEL)
-
-        marital_values = otherPSID[!, marriageLABEL][(otherPSID.personid .== ID)]
-        if length(marital_values) > 0
-            df.marital[(df.personid .== ID) .& (df.year .== year)] .= marital_values
-        end
-
-        child_values = otherPSID[!, childLABEL][(otherPSID.personid .== ID)]
-        if length(child_values) > 0
-            df.numCHILD[(df.personid .== ID) .& (df.year .== year)] .= child_values
-        end
-
-        annHR_values = otherPSID[!, annHRLABEL][(otherPSID.personid .== ID)]
-        if length(annHR_values) > 0
-            df.annualHRS[(df.personid .== ID) .& (df.year .== year)] .= annHR_values
-        end
-
-        annHRwife_values = otherPSID[!, annHRwifeLABEL][(otherPSID.personid .== ID)]
-        if length(annHRwife_values) > 0
-            df.annualHRSwife[(df.personid .== ID) .& (df.year .== year)] .= annHRwife_values
-        end
-
-    end
-
-    println(year)
 
 end
 
+
+
+
+for year in unique(df.year)
+    year_mask = df.year .== year
+    year_labels = labels[labels.year .== year, :]
+    
+    marriageLABEL = year_labels.marital[1]
+    childLABEL = year_labels.numCHILD[1]
+    annHRLABEL = year_labels.annualHRS[1]
+    annHRwifeLABEL = year_labels.annualHRSwife[1]
+
+    for ID in unique(df.personid)
+        id_mask = df.personid .== ID
+
+        marital_values = otherPSID[!, marriageLABEL][(otherPSID.personid .== ID)]
+        if !isempty(marital_values)
+            df.marital[id_mask .& year_mask] .= coalesce.(marital_values, 0.0)
+        end
+
+        child_values = otherPSID[!, childLABEL][(otherPSID.personid .== ID)]
+        if !isempty(child_values)
+            df.numCHILD[id_mask .& year_mask] .= coalesce.(child_values, 0.0)
+        end
+
+        annHR_values = otherPSID[!, annHRLABEL][(otherPSID.personid .== ID)]
+        if !isempty(annHR_values)
+            df.annualHRS[id_mask .& year_mask] .= coalesce.(annHR_values, 0.0)
+        end
+
+        annHRwife_values = otherPSID[!, annHRwifeLABEL][(otherPSID.personid .== ID)]
+        if !isempty(annHRwife_values)
+            df.annualHRSwife[id_mask .& year_mask] .= coalesce.(annHRwife_values, 0.0)
+        end
+    end
+
+    println(year)
+end
 
 
 
