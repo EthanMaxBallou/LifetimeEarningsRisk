@@ -13,7 +13,7 @@ df = CSV.read("/Users/ethanballou/Documents/Data/PSID4/df/data1.csv", DataFrame)
 target = CSV.read("/Users/ethanballou/Documents/Data/PSID4/df/target1.csv", DataFrame)
 
 
-Rankings = CSV.read("/Users/ethanballou/Documents/Papers/EarningsRisk/Average_Ranks.csv", DataFrame)
+Rankings = CSV.read("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/Average_Ranks.csv", DataFrame)
 
 
 # Perform the join
