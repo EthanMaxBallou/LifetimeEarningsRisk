@@ -56,6 +56,23 @@ for year in unique(df.year)
 
 end
 
+# Add fearn0_P0 variable from df to res by matching on year and personid
+res = leftjoin(res, select(df, [:year, :personid, :aep]), on = [:year, :personid], makeunique = true)
+
+# Add lagged variables for children and fearn0_P0 in the res DataFrame
+sort!(res, [:personid, :year])
+res.children_GR = Vector{Union{Missing, Float64}}(missing, nrow(res))
+res.AEP_GR = Vector{Union{Missing, Float64}}(missing, nrow(res))
+
+for i in 2:nrow(res)
+    if res.personid[i] == res.personid[i-1] && res.year[i] == res.year[i-1] + 1
+        res.children_GR[i] = res.children[i] - res.children[i-1]
+        res.AEP_GR[i] = res.aep[i] - res.aep[i-1]
+    end
+end
+
+# Drop rows with missing values in the new lagged variable
+dropmissing!(res, [:children_GR, :AEP_GR])
 
 df = leftjoin(df, res, on = [:year, :personid], makeunique = true)
 
@@ -66,6 +83,10 @@ dropmissing!(df, [:children])
 dropmissing!(df, [:annualHRS])
 dropmissing!(df, [:annualHRSwife])
 dropmissing!(df, [:sex])
+
+dropmissing!(df, [:children_GR])
+dropmissing!(df, [:AEP_GR])
+
 
 
 # Combine some of the values in the oneind variable into a single misc value
@@ -104,7 +125,7 @@ df.marital = categorical(df.marital)
 # JandQ interactions
 
 # DO NOT FORGET THIS
-df = filter(row -> row.unemp == 0, df)
+#df = filter(row -> row.unemp == 0, df)
 
 
 median_age = median(df.currentage)
@@ -140,11 +161,10 @@ df.Q_2 = df.Q.^2
 
 
 # abs val risk
-df.gamABS = abs.(df.gam_fearn0_A_)
+df.gamABS = log.(abs.(df.gam_fearn0_A_))
 
 # positive or negative gam dummy
 df.GAM_POS = df.gam_fearn0_A_ .> 0
-
 
 
 # Create a DataFrame listing variable names and the number of unique values for each
@@ -153,13 +173,12 @@ unique_values_df = DataFrame(
     unique_values = [length(unique(df[!, col])) for col in names(df)]
 )
 
-
+# Drop rows in df with -Inf as a value for df.gamABS
+df = filter(row -> row.gamABS != -Inf, df)
 
 # Drop rows where sex is 9 or motherYR or fatherYR is greater than 9000
 subsample = filter(row -> row.motherYR <= 9000 , df)
 subsample = filter(row -> row.fatherYR <= 9000, subsample)
-
-
 
 
 reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE), df)
@@ -167,43 +186,43 @@ print(reg1)
 print("R-Squared: ", r2(reg1))
 
 
-reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + children), df)
-print(reg1)
+#reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + children), df)
+#print(reg1)
 print("R-Squared: ", r2(reg1))
 
 
-reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + oneind), df)
-print(reg1)
+#reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + oneind), df)
+#print(reg1)
 print("R-Squared: ", r2(reg1))
 
 
-reg1 = lm(@formula(gamABS ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + oneind), df)
-print(reg1)
+#reg1 = lm(@formula(gamABS ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + oneind), df)
+#print(reg1)
 print("R-Squared: ", r2(reg1))
 
 
-reg1 = lm(@formula(gamABS ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + fearn0_P0 + oneind), df)
-print(reg1)
+#reg1 = lm(@formula(gamABS ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + fearn0_P0 + oneind), df)
+#print(reg1)
 print("R-Squared: ", r2(reg1))
 
 
-reg1 = lm(@formula(gamABS ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + fearn0_P0 + oneind + tenure + year), df)
-print(reg1)
+#reg1 = lm(@formula(gamABS ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + fearn0_P0 + oneind + tenure + year), df)
+#print(reg1)
 print("R-Squared: ", r2(reg1))
 
 
-reg1 = lm(@formula(gamABS ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + fearn0_P0 + oneind + motherYR + fatherYR + tenure + year), subsample)
-print(reg1)
+#reg1 = lm(@formula(gamABS ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + fearn0_P0 + oneind + motherYR + fatherYR + tenure + year), subsample)
+#print(reg1)
 print("R-Squared: ", r2(reg1))
 
 
-reg1 = lm(@formula(gamABS ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + fearn0_P0 + twoind + motherYR + fatherYR + tenure + year), subsample)
-print(reg1)
+#reg1 = lm(@formula(gamABS ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE + annualHRSwife + childAGE + fearn0_P0 + twoind + motherYR + fatherYR + tenure + year), subsample)
+#print(reg1)
 print("R-Squared: ", r2(reg1))
 
 
-reg1 = lm(@formula(GAM_POS ~ J + Q + currentagefourth + edmaxyrs + annualHRSwife + childAGE + fearn0_P0), df)
-print(reg1)
+#reg1 = lm(@formula(GAM_POS ~ J + Q + currentagefourth + edmaxyrs + annualHRSwife + childAGE + fearn0_P0), df)
+#print(reg1)
 print("R-Squared: ", r2(reg1))
 
 
@@ -230,9 +249,9 @@ df.residuals = residuals(reg3)
 
 
 
-variables_SUB = [:J, :Q, :currentage, :edmaxyrs, :annualHRS, :annualHRSwife, :children, :fearn0_P0, :motherYR, :fatherYR, :tenure]
+variables_SUB = [:J, :Q, :currentage, :edmaxyrs, :annualHRS, :annualHRSwife, :children, :fearn0_P0, :motherYR, :fatherYR, :tenure, :children_GR, :rGDPgrow]
 
-variables_FULL = [:J, :Q, :currentage, :edmaxyrs, :annualHRS, :annualHRSwife, :children, :fearn0_P0, :tenure]
+variables_FULL = [:J, :Q, :currentage, :edmaxyrs, :annualHRS, :annualHRSwife, :children, :fearn0_P0, :tenure, :children_GR, :rGDPgrow]
 
 
 
@@ -246,9 +265,6 @@ function higherORDER!(jdf, independent_vars)
     # Add higher-order terms for non-categorical variables
     for col in independent_vars
         jdf[:, Symbol("$(col)_squared")] = jdf[:, col] .^ 2
-        jdf[:, Symbol("$(col)_cubed")] = jdf[:, col] .^ 3
-        jdf[:, Symbol("$(col)_four")] = jdf[:, col] .^ 4
-        jdf[:, Symbol("$(col)_five")] = jdf[:, col] .^ 5
     end
 
     REALindependent_vars = setdiff(Symbol.(names(jdf)), [:residuals])
@@ -270,20 +286,160 @@ higherORDER!(df, variables_FULL)
 
 
 
+dropmissing!(subsample)
+dropmissing!(df)
 
+
+
+function convert_to_float32!(df::DataFrame)
+    # Convert relevant columns to Float32
+    for col in names(df)
+        if eltype(df[!, col]) == Float64
+            df[!, col] = Float32.(df[!, col])
+        end
+    end
+end
+
+# Apply the function to subsample
+convert_to_float32!(subsample)
+convert_to_float32!(df)
+
+println("Column types in subsample:")
+for col in names(subsample)
+    println("$col: ", eltype(subsample[!, col]))
+end
+
+
+GC.gc()
 
 
 target = :residuals
 
 # Prepare the data for GLMNet
-X = Matrix(subsample[:, Not(target)])  # Predictor matrix
-y = Vector(subsample[:, target])       # Target vector
+X = Matrix(df[:, Not(target)])  # Predictor matrix
+y = Vector(df[:, target])       # Target vector
+
+
+GC.gc()
 
 
 
+println("Fitting LASSO model...")
 
-# Fit the LASSO model
 lasso_model = glmnet(X, y, alpha=1.0)
+
+coefficients = lasso_model.betas
+
+
+# Convert coefficients to a DataFrame
+coefficients_df = DataFrame(coefficients, :auto)
+
+# Add a column with the variable names
+variable_names_lasso = names(df[:, Not(target)])
+coefficients_df.variable = variable_names_lasso
+
+
+# Reorder columns to make 'variable' the first column
+coefficients_df = select(coefficients_df, :variable, Not(:variable))
+
+# Export the DataFrame to a CSV file
+CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficients3_REGULAR_FULL.csv", coefficients_df)
+
+
+
+
+
+
+# Create a DataFrame with the absolute values of the coefficients, excluding the 'variable' column
+coefficients_df_abs = copy(coefficients_df)
+for col in names(coefficients_df_abs)[2:end]
+    coefficients_df_abs[!, col] = abs.(coefficients_df_abs[!, col])
+end
+
+
+# Sort the coefficients_df by ascending order for each column starting from the last column and excluding the variable name column
+for col in reverse(names(coefficients_df_abs)[2:end])
+    coefficients_df = sort(coefficients_df, col)
+end
+
+CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficients3_ABS_FULL.csv", coefficients_df_abs)
+
+
+
+# Sort the coefficients_df_abs by the column x100
+coefficients_df_abs = sort(coefficients_df_abs, :x50, rev = true)
+
+# Extract the top 30 values of the variable column in coefficients_df_abs
+top_30_variables = coefficients_df_abs[1:30, :variable]
+
+# Convert the string values to symbols
+top_30_symbols = Symbol.(top_30_variables)
+
+
+# Ensure all columns are present and have the correct data types
+required_columns = [:tenure, 
+    :fearn0_P0, 
+    :edmaxyrs, 
+    :children_squared, 
+    :children, 
+    :children_x_fearn0_P0, 
+    :Q, 
+    :fatherYR, 
+    :residuals,
+    :currentage_x_edmaxyrs,
+    :fearn0_P0_x_tenure,
+    :edmaxyrs_squared,
+    :children_x_tenure,
+    :Q_x_tenure,
+    :motherYR
+    ]
+
+
+# Create a new DataFrame with only the required columns
+required_df = select(df, vcat(top_30_symbols, :residuals))
+
+
+
+# Convert relevant columns to Float32
+for col in names(required_df)
+    if eltype(required_df[!, col]) == Float32
+        required_df[!, col] = Float64.(required_df[!, col])
+    end
+end
+
+
+
+# Regress all the variables in required_df on residuals
+formula = Term(:residuals) ~ sum(Term.(Symbol.(names(required_df, Not(:residuals)))))
+reg_all = lm(formula, required_df)
+print(reg_all)
+println("R-Squared: ", r2(reg_all))
+
+
+
+
+
+
+reg4 = lm(@formula(residuals ~ tenure + fearn0_P0 + edmaxyrs + children_squared + children + children_x_fearn0_P0 + Q + fatherYR), required_df)
+print(reg4)
+print("R-Squared: ", r2(reg4))
+
+
+
+reg4 = lm(@formula(residuals ~ tenure + fearn0_P0 + edmaxyrs + children_squared + children + children_x_fearn0_P0 + Q + fatherYR + currentage_x_edmaxyrs + fearn0_P0_x_tenure + edmaxyrs_squared + children_x_tenure), required_df)
+print(reg4)
+print("R-Squared: ", r2(reg4))
+
+
+
+
+
+
+
+
+ridge_model = glmnet(X, y, alpha=0)
+
+
 
 
 
