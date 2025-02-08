@@ -181,6 +181,17 @@ subsample = filter(row -> row.motherYR <= 9000 , df)
 subsample = filter(row -> row.fatherYR <= 9000, subsample)
 
 
+
+regFERT = lm(@formula(children ~ gam_fearn0_A_), df)
+print(regFERT)
+print("R-Squared: ", r2(regFERT))
+
+regFERT = lm(@formula(children ~ gamABS + marital + currentage), df)
+print(regFERT)
+print("R-Squared: ", r2(regFERT))
+
+
+
 reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + currentagefourth + edmaxyrs + JAGE + QAGE), df)
 print(reg1)
 print("R-Squared: ", r2(reg1))
@@ -231,14 +242,15 @@ print("R-Squared: ", r2(reg1))
 
 
 
-reg2 = lm(@formula(gamABS ~ occ + year), subsample)
+reg2 = lm(@formula(gamABS ~ occ + year + state), subsample)
 print(reg2)
 print("R-Squared: ", r2(reg2))
 
 subsample.residuals = residuals(reg2)
 
 
-reg3 = lm(@formula(gamABS ~ occ + year), df)
+
+reg3 = lm(@formula(gamABS ~ occ + year + state), df)
 print(reg3)
 print("R-Squared: ", r2(reg3))
 
@@ -249,9 +261,9 @@ df.residuals = residuals(reg3)
 
 
 
-variables_SUB = [:J, :Q, :currentage, :edmaxyrs, :annualHRS, :annualHRSwife, :children, :fearn0_P0, :motherYR, :fatherYR, :tenure, :children_GR, :rGDPgrow]
+variables_SUB = [:J, :Q, :currentage, :edmaxyrs, :annualHRS, :annualHRSwife, :children, :fearn0_P0, :motherYR, :fatherYR, :tenure, :rGDPgrow, :OLF, :race, :marital]
 
-variables_FULL = [:J, :Q, :currentage, :edmaxyrs, :annualHRS, :annualHRSwife, :children, :fearn0_P0, :tenure, :children_GR, :rGDPgrow]
+variables_FULL = [:J, :Q, :currentage, :edmaxyrs, :annualHRS, :annualHRSwife, :children, :fearn0_P0, :tenure, :rGDPgrow, :OLF, :race, :marital]
 
 
 
@@ -262,10 +274,25 @@ df = select(df, vcat(variables_FULL, :residuals))
 
 
 function higherORDER!(jdf, independent_vars)
+    dummy = [:marital, :race]
+
     # Add higher-order terms for non-categorical variables
-    for col in independent_vars
+    for col in setdiff(independent_vars, dummy)
         jdf[:, Symbol("$(col)_squared")] = jdf[:, col] .^ 2
     end
+
+
+    for col in dummy
+        unique_values = unique(jdf[:, col])
+        for val in unique_values[1:end-1]  # Exclude the last dummy to avoid redundancy
+            dummy_name = Symbol("$(col)_$(val)")
+            jdf[:, dummy_name] = jdf[:, col] .== val
+        end
+        select!(jdf, Not(col))  # Remove the original categorical variable
+        
+        println("Converted column $(col) to categorical.")
+    end
+
 
     REALindependent_vars = setdiff(Symbol.(names(jdf)), [:residuals])
 
@@ -330,7 +357,6 @@ lasso_model = glmnet(X, y, alpha=1.0)
 
 coefficients = lasso_model.betas
 
-
 # Convert coefficients to a DataFrame
 coefficients_df = DataFrame(coefficients, :auto)
 
@@ -338,17 +364,59 @@ coefficients_df = DataFrame(coefficients, :auto)
 variable_names_lasso = names(df[:, Not(target)])
 coefficients_df.variable = variable_names_lasso
 
+# Reorder columns to make 'variable' the first column
+coefficients_df = select(coefficients_df, :variable, Not(:variable))
+
+# Export the DataFrame to a CSV file
+CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficientsFIN_REGULAR_FULL.csv", coefficients_df)
+
+# Create a DataFrame with the absolute values of the coefficients, excluding the 'variable' column
+coefficients_df_abs1 = copy(coefficients_df)
+for col in names(coefficients_df_abs1)[2:end]
+    coefficients_df_abs1[!, col] = abs.(coefficients_df_abs1[!, col])
+end
+
+# Sort the coefficients_df by ascending order for each column starting from the last column and excluding the variable name column
+for col in reverse(names(coefficients_df_abs1)[2:end])
+    coefficients_df_abs1 = sort(coefficients_df_abs1, col)
+end
+
+CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficientsFIN_ABS_FULL.csv", coefficients_df_abs)
+
+
+
+
+
+
+
+# Prepare the data for GLMNet
+X = Matrix(subsample[:, Not(target)])  # Predictor matrix
+y = Vector(subsample[:, target])       # Target vector
+
+
+GC.gc()
+
+
+
+
+println("Fitting LASSO model...")
+
+lasso_model = glmnet(X, y, alpha=1.0)
+
+coefficients = lasso_model.betas
+
+# Convert coefficients to a DataFrame
+coefficients_df = DataFrame(coefficients, :auto)
+
+# Add a column with the variable names
+variable_names_lasso = names(subsample[:, Not(target)])
+coefficients_df.variable = variable_names_lasso
 
 # Reorder columns to make 'variable' the first column
 coefficients_df = select(coefficients_df, :variable, Not(:variable))
 
 # Export the DataFrame to a CSV file
-CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficients3_REGULAR_FULL.csv", coefficients_df)
-
-
-
-
-
+CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficientsFIN_REGULAR_SUB.csv", coefficients_df)
 
 # Create a DataFrame with the absolute values of the coefficients, excluding the 'variable' column
 coefficients_df_abs = copy(coefficients_df)
@@ -356,21 +424,25 @@ for col in names(coefficients_df_abs)[2:end]
     coefficients_df_abs[!, col] = abs.(coefficients_df_abs[!, col])
 end
 
-
 # Sort the coefficients_df by ascending order for each column starting from the last column and excluding the variable name column
 for col in reverse(names(coefficients_df_abs)[2:end])
     coefficients_df = sort(coefficients_df, col)
 end
 
-CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficients3_ABS_FULL.csv", coefficients_df_abs)
+CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficientsFIN_ABS_SUB.csv", coefficients_df_abs)
+
+
+
+
+
 
 
 
 # Sort the coefficients_df_abs by the column x100
-coefficients_df_abs = sort(coefficients_df_abs, :x50, rev = true)
+coefficients_df_abs1 = sort(coefficients_df_abs1, :x50, rev = true)
 
 # Extract the top 30 values of the variable column in coefficients_df_abs
-top_30_variables = coefficients_df_abs[1:30, :variable]
+top_30_variables = coefficients_df_abs1[1:30, :variable]
 
 # Convert the string values to symbols
 top_30_symbols = Symbol.(top_30_variables)
@@ -434,10 +506,7 @@ print("R-Squared: ", r2(reg4))
 
 
 
-
-
-
-ridge_model = glmnet(X, y, alpha=0)
+#ridge_model = glmnet(X, y, alpha=0)
 
 
 
