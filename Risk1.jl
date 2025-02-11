@@ -1,173 +1,48 @@
-# Risk1
+# Risk Pilot
 
 using DataFrames
 using GLM
+using StatFiles
 using CSV
-using CategoricalArrays
-using Combinatorics
-using Statistics
-using StatsModels
-using GLMNet
 
 
 
-df = CSV.read("/Users/ethanballou/Documents/Data/Risk/old_gam_data.csv", DataFrame)
 
+newDF = CSV.read("/Users/ethanballou/Documents/Data/PSID4/1995.csv", DataFrame)
 
-dropmissing!(df, [:J])
-dropmissing!(df, [:gam_fearn0_A_])
-dropmissing!(df, [:aep])
-dropmissing!(df, [:edmaxyrs])
+gammas = CSV.read("/Users/ethanballou/Documents/Papers/EarningsRisk/Scott/replication package/208972-V1/Data/REtrends-NoGr/interstagecalculations-reshaped-gam-collapsed.csv", DataFrame)
 
+uyear = 1995
+tyear = uyear + 0
 
-df.occ = categorical(df.occ)
-df.year = categorical(df.year)
-df.state = categorical(df.state)
+cols_to_check = names(gammas)[3:end]
+filtered_gammas = filter(row -> any(!ismissing(row[col]) for col in cols_to_check), gammas)
 
-df.group = categorical(df.group)
-df.relation = categorical(df.relation)
 
-df.twoind = categorical(df.twoind)
+newDF.personid = (newDF.ER30001 .* 1000) + newDF.ER30002
+newDF.personidUNI = (newDF.personid .* 10000) .+ uyear
 
-df.race = categorical(df.race)
 
-df.age_five = df.currentage.^5
+FIN_filtered = dropmissing(filtered_gammas)
+FIN_filtered = filter(row -> row.year == tyear, FIN_filtered)
 
+FIN_filtered.personidUNI = (FIN_filtered.personid .* 10000) .+ uyear
 
-# First Run: state, occ, year
-# Second Run: relation, group
-# Third Run: twoind, aep
-# Fourth Run: tenure, age^4, race, edmaxyrs
+ppl_list = unique(FIN_filtered.personid)
+ppl_list_check = copy(ppl_list)
 
 
-# occ variable interactions?
-# inc varaible interactions?
-# take the variation of a variable out by residuals then regress tha variable again to check if a squared version is viable?
-# interactions with jplusQ? interact j or q with things like age, tenure, etc.?
+newDF = filter(row -> row.personid in ppl_list, newDF)
 
 
-reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + currentagefourth + edmaxyrs), df)
-#print(reg1)
 
+CSV.write("/Users/ethanballou/Documents/Data/PSID4/df/data1.csv", newDF)
+CSV.write("/Users/ethanballou/Documents/Data/PSID4/df/target1.csv", FIN_filtered)
 
-reg1 = lm(@formula(gam_fearn0_A_ ~ JplusQ + occ + state + year + relation + aep + tenure + currentagefourth + age_five + race + edmaxyrs), df)
-#print(reg1)
 
-print("R-Squared: ", r2(reg1))
 
-
-println("\n")
-println(var(df.gam_fearn0_A_))
-println("\n")
-
-
-df.residuals = residuals(reg1)
-
-
-
-
-
-
-
-selected_predictors = [:JplusQ, :personid, :J, :Q, :gam_fearn0_A_, :gam_fwwage0_A_, :gam_fhwage0_A_, :over, :risktol, :cohort, :agegrp, :birthgrp, :state, :year, :occ, :relation, :group, :aep, :twoind, :noearn5, :race, :tenure, :currentagefourth]  # Replace with your chosen variables
-
-inc_predictors = [:fearn0_P0, :fwwage0_P0, :fhwage0_P0, :fearn1_P0, :fearn1_P1, :fwwage1_P0, :fwwage1_P1, :fhwage1_P0, :fhwage1_P1]  # Replace with your chosen variables
-
-occ_pred = [:oneind, :soc2010]
-
-newDF1 = DataFrames.select(df, Not(selected_predictors))
-newDF1 = DataFrames.select(newDF1, Not(inc_predictors))
-
-newDF1 = DataFrames.select(newDF1, Not(occ_pred))
-
-
-target = :residuals
-VARS = names(newDF1)
-
-# Convert column names to symbols
-rename!(newDF1, Symbol.(names(newDF1)))
-
-# List of columns to convert to categorical
-categore = [:student, :self, :both, :postgrad, :union, :hourly, :veteran, :limited, :unemp, 
-            :OLF, :nojobinfo, :tenmiss, :tenmiss26, :lowtenure, :white, :educwrths, 
-            :censdiv]
-
-
-
-
-df_cols = Symbol.(names(newDF1))  # Convert column names to Symbols
-
-# Find missing columns
-missing_cols = setdiff(categore, df_cols)
-
-if !isempty(missing_cols)
-    println("Warning: These columns are not found in df: ", missing_cols)
-end
-
-# Convert specified columns to categorical and create dummy variables
-for col in intersect(categore, df_cols)
-    println("Processing column: $col")
-    newDF1[!, col] = categorical(newDF1[!, col])
-    dummies = DataFrame(StatsModels.modelmatrix(Term(col), newDF1), :auto)
-    # Rename dummy columns to include the original variable name
-    rename!(dummies, Dict(old_name => Symbol("$(col)_", old_name) for old_name in names(dummies)))
-    newDF1 = hcat(newDF1, dummies)
-    #println("Dummy variables for $col:")
-end
-
-
-
-# Drop the original categorical columns
-newDF1 = DataFrames.select(newDF1, Not(categore))
-
-
-#dropmissing!(newDF1, [:aep])
-
-# Check for missing values and print columns with missing values
-missing_cols = [names(newDF1)[i] for i in 1:ncol(newDF1) if any(ismissing, newDF1[:, i])]
-if !isempty(missing_cols)
-    println("Warning: Missing values detected in columns: ", missing_cols)
-end
-
-# Prepare the data for GLMNet
-X = Matrix(newDF1[:, Not(target)])  # Predictor matrix
-y = Vector(newDF1[:, target])       # Target vector
-
-
-
-
-# Fit the LASSO model
-lasso_model = glmnet(X, y, alpha=1.0)
-
-println(lasso_model)
-
-
-coefficients = lasso_model.betas
-
-# Take the absolute value of all the coefficient values
-coefficients = abs.(coefficients)
-
-
-# Convert coefficients to a DataFrame
-coefficients_df = DataFrame(coefficients, :auto)
-
-# Add a column with the variable names
-variable_names = names(newDF1[:, Not(target)])
-coefficients_df.variable = variable_names
-
-# Reorder columns to make 'variable' the first column
-coefficients_df = select(coefficients_df, :variable, Not(:variable))
-
-
-# Sort the coefficients_df by ascending order for each column starting from the last column and excluding the variable name column
-for col in reverse(names(coefficients_df)[2:end])
-    coefficients_df = sort(coefficients_df, col)
-end
-
-
-# Export the DataFrame to a CSV file
-CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/coefficients6.csv", coefficients_df)
-
+# make categorical variables categorical and remove uneeded
+# make 94raw, 94cat, realInteractions datasets
 
 
 

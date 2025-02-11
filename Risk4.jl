@@ -101,7 +101,7 @@ dropmissing!(df, [:AEP_GR])
 
 
 df.occ = categorical(df.occ)
-df.year = categorical(df.year)
+
 df.state = categorical(df.state)
 
 df.group = categorical(df.group)
@@ -161,7 +161,7 @@ df.Q_2 = df.Q.^2
 
 
 # abs val risk
-df.gamABS = log.(abs.(df.gam_fearn0_A_))
+df.gamABS = df.gam_fearn0_A_ .+ 0
 
 # positive or negative gam dummy
 df.GAM_POS = df.gam_fearn0_A_ .> 0
@@ -179,6 +179,16 @@ df = filter(row -> row.gamABS != -Inf, df)
 # Drop rows where sex is 9 or motherYR or fatherYR is greater than 9000
 subsample = filter(row -> row.motherYR <= 9000 , df)
 subsample = filter(row -> row.fatherYR <= 9000, subsample)
+
+
+
+subsample.motherYR = subsample.motherYR .- subsample.currentage .- subsample.year
+subsample.fatherYR = subsample.fatherYR .- subsample.currentage .- subsample.year
+
+
+df.year = categorical(df.year)
+subsample.year = categorical(subsample.year)
+
 
 
 
@@ -257,30 +267,25 @@ print("R-Squared: ", r2(reg3))
 df.residuals = residuals(reg3)
 
 
-
-
+# Create a smaller DataFrame with df.gamABS and df.personid
+small_df = copy(select(df, [:personid, :year, :occ, :state]))
 
 
 variables_SUB = [:J, :Q, :currentage, :edmaxyrs, :annualHRS, :annualHRSwife, :children, :fearn0_P0, :motherYR, :fatherYR, :tenure, :rGDPgrow, :OLF, :race, :marital]
 
 variables_FULL = [:J, :Q, :currentage, :edmaxyrs, :annualHRS, :annualHRSwife, :children, :fearn0_P0, :tenure, :rGDPgrow, :OLF, :race, :marital]
 
-
-
-# Filter df and subsample to only have the variables in the vector and the residuals variable
-subsample = select(subsample, vcat(variables_SUB, :residuals))
-df = select(df, vcat(variables_FULL, :residuals))
-
-
+# Filter df and subsample to only have the variables in the vector, personid, year, and the residuals variable
+subsample = select(subsample, vcat(variables_SUB, :personid, :year, :residuals, :gamABS, :occ, :state))
+df = select(df, vcat(variables_FULL, :personid, :year, :residuals, :gamABS, :occ, :state))
 
 function higherORDER!(jdf, independent_vars)
     dummy = [:marital, :race]
 
-    # Add higher-order terms for non-categorical variables
-    for col in setdiff(independent_vars, dummy)
+    # Add higher-order terms for non-categorical variables, excluding OLF
+    for col in setdiff(independent_vars, vcat(dummy, [:OLF]))
         jdf[:, Symbol("$(col)_squared")] = jdf[:, col] .^ 2
     end
-
 
     for col in dummy
         unique_values = unique(jdf[:, col])
@@ -293,16 +298,19 @@ function higherORDER!(jdf, independent_vars)
         println("Converted column $(col) to categorical.")
     end
 
+    REALindependent_vars = setdiff(Symbol.(names(jdf)), [:residuals, :personid, :year, :gamABS, :occ, :state])
 
-    REALindependent_vars = setdiff(Symbol.(names(jdf)), [:residuals])
-
-    # Add interaction terms for all combinations of two variables
+    # Add interaction terms for all combinations of two variables, excluding specified interactions
     for combo in combinations(REALindependent_vars, 2)
-        interaction_name = Symbol("$(combo[1])_x_$(combo[2])")
-        jdf[:, interaction_name] = jdf[:, combo[1]] .* jdf[:, combo[2]]
-        println("Added interaction term for $(combo[1]) and $(combo[2]).")
+        if !(startswith(string(combo[1]), "marital_") && startswith(string(combo[2]), "marital_") ||
+             startswith(string(combo[1]), "race_") && startswith(string(combo[2]), "race_") ||
+             (startswith(string(combo[1]), "marital_") && startswith(string(combo[2]), "race_")) ||
+             (startswith(string(combo[1]), "race_") && startswith(string(combo[2]), "marital_")))
+            interaction_name = Symbol("$(combo[1])_x_$(combo[2])")
+            jdf[:, interaction_name] = jdf[:, combo[1]] .* jdf[:, combo[2]]
+            println("Added interaction term for $(combo[1]) and $(combo[2]).")
+        end
     end
-
 end
 
 # Convert categorical variables to dummy variables for subsample
@@ -311,12 +319,8 @@ higherORDER!(subsample, variables_SUB)
 # Convert categorical variables to dummy variables for full sample (df)
 higherORDER!(df, variables_FULL)
 
-
-
 dropmissing!(subsample)
 dropmissing!(df)
-
-
 
 function convert_to_float32!(df::DataFrame)
     # Convert relevant columns to Float32
@@ -336,14 +340,17 @@ for col in names(subsample)
     println("$col: ", eltype(subsample[!, col]))
 end
 
+println("Column types in df:")
+for col in names(df)
+    println("$col: ", eltype(df[!, col]))
+end
 
 GC.gc()
-
 
 target = :residuals
 
 # Prepare the data for GLMNet
-X = Matrix(df[:, Not(target)])  # Predictor matrix
+X = Matrix(df[:, Not([target, :personid, :year, :gamABS, :occ, :state])])  # Predictor matrix
 y = Vector(df[:, target])       # Target vector
 
 
@@ -361,7 +368,7 @@ coefficients = lasso_model.betas
 coefficients_df = DataFrame(coefficients, :auto)
 
 # Add a column with the variable names
-variable_names_lasso = names(df[:, Not(target)])
+variable_names_lasso = names(df[:, Not([target, :personid, :year, :gamABS, :occ, :state])])
 coefficients_df.variable = variable_names_lasso
 
 # Reorder columns to make 'variable' the first column
@@ -381,7 +388,7 @@ for col in reverse(names(coefficients_df_abs1)[2:end])
     coefficients_df_abs1 = sort(coefficients_df_abs1, col)
 end
 
-CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficientsFIN_ABS_FULL.csv", coefficients_df_abs)
+CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficientsFIN_ABS_FULL.csv", coefficients_df_abs1)
 
 
 
@@ -390,7 +397,7 @@ CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoeff
 
 
 # Prepare the data for GLMNet
-X = Matrix(subsample[:, Not(target)])  # Predictor matrix
+X = Matrix(subsample[:, Not([target, :personid, :year, :gamABS, :occ, :state])])  # Predictor matrix
 y = Vector(subsample[:, target])       # Target vector
 
 
@@ -409,7 +416,7 @@ coefficients = lasso_model.betas
 coefficients_df = DataFrame(coefficients, :auto)
 
 # Add a column with the variable names
-variable_names_lasso = names(subsample[:, Not(target)])
+variable_names_lasso = names(subsample[:, Not([target, :personid, :year, :gamABS, :occ, :state])])
 coefficients_df.variable = variable_names_lasso
 
 # Reorder columns to make 'variable' the first column
@@ -438,8 +445,15 @@ CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoeff
 
 
 
+
+# IF POPS
+coefficients_df_abs1 = CSV.read("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficientsFIN_ABS_FULL.csv", DataFrame)
+
+
+
+
 # Sort the coefficients_df_abs by the column x100
-coefficients_df_abs1 = sort(coefficients_df_abs1, :x50, rev = true)
+coefficients_df_abs1 = sort(coefficients_df_abs1, :x24, rev = true)
 
 # Extract the top 30 values of the variable column in coefficients_df_abs
 top_30_variables = coefficients_df_abs1[1:30, :variable]
@@ -448,28 +462,87 @@ top_30_variables = coefficients_df_abs1[1:30, :variable]
 top_30_symbols = Symbol.(top_30_variables)
 
 
-# Ensure all columns are present and have the correct data types
-required_columns = [:tenure, 
-    :fearn0_P0, 
-    :edmaxyrs, 
-    :children_squared, 
-    :children, 
-    :children_x_fearn0_P0, 
-    :Q, 
-    :fatherYR, 
-    :residuals,
-    :currentage_x_edmaxyrs,
-    :fearn0_P0_x_tenure,
-    :edmaxyrs_squared,
-    :children_x_tenure,
-    :Q_x_tenure,
-    :motherYR
-    ]
+# Export the top 30 variable names to a CSV file
+top_30_df = DataFrame(variable = top_30_variables)
+CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/top_30_variables_FULL.csv", top_30_df)
 
 
 # Create a new DataFrame with only the required columns
-required_df = select(df, vcat(top_30_symbols, :residuals))
+required_df = select(df, vcat(top_30_symbols, :year, :occ, :state, :gamABS))
 
+
+GC.gc()
+
+
+# Convert relevant columns to Float32
+for col in names(required_df)
+    if eltype(required_df[!, col]) == Float32
+        required_df[!, col] = Float64.(required_df[!, col])
+    end
+end
+
+
+# Regress all the variables in required_df on gamABS
+formula = Term(:gamABS) ~ sum(Term.(Symbol.(names(required_df, Not(:gamABS)))))
+reg_all = lm(formula, required_df)
+print(reg_all)
+println("R-Squared: ", r2(reg_all))
+
+# Export the model summary to a text file
+open("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/model_summary.txt", "w") do f
+    write(f, string(reg_all))
+    write(f, "\nR-Squared: ", r2(reg_all))
+end
+
+
+
+
+formula = Term(:gamABS) ~ sum(Term.(Symbol.(names(required_df, Not(:gamABS, :year, :state, :occ)))))
+reg_all = lm(formula, required_df)
+print(reg_all)
+println("R-Squared: ", r2(reg_all))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# IF POPS
+coefficients_df_abs = CSV.read("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/REALcoefficientsFIN_ABS_SUB.csv", DataFrame)
+
+
+
+
+# Sort the coefficients_df_abs by the column x100
+coefficients_df_abs = sort(coefficients_df_abs, :x24, rev = true)
+
+# Extract the top 30 values of the variable column in coefficients_df_abs
+top_30_variables = coefficients_df_abs[1:30, :variable]
+
+# Convert the string values to symbols
+top_30_symbols = Symbol.(top_30_variables)
+
+
+# Export the top 30 variable names to a CSV file
+top_30_df = DataFrame(variable = top_30_variables)
+CSV.write("/Users/ethanballou/Documents/Papers/EarningsRisk/CodeOutput/top_30_variables_FULL.csv", top_30_df)
+
+
+
+# Create a new DataFrame with only the required columns
+required_df = select(subsample, vcat(top_30_symbols, :year, :occ, :state, :gamABS))
+
+
+GC.gc()
 
 
 # Convert relevant columns to Float32
@@ -482,7 +555,13 @@ end
 
 
 # Regress all the variables in required_df on residuals
-formula = Term(:residuals) ~ sum(Term.(Symbol.(names(required_df, Not(:residuals)))))
+formula = Term(:gamABS) ~ sum(Term.(Symbol.(names(required_df, Not(:gamABS)))))
+reg_all = lm(formula, required_df)
+print(reg_all)
+println("R-Squared: ", r2(reg_all))
+
+
+formula = Term(:gamABS) ~ sum(Term.(Symbol.(names(required_df, Not(:gamABS, :year, :state, :occ)))))
 reg_all = lm(formula, required_df)
 print(reg_all)
 println("R-Squared: ", r2(reg_all))
@@ -492,15 +571,6 @@ println("R-Squared: ", r2(reg_all))
 
 
 
-reg4 = lm(@formula(residuals ~ tenure + fearn0_P0 + edmaxyrs + children_squared + children + children_x_fearn0_P0 + Q + fatherYR), required_df)
-print(reg4)
-print("R-Squared: ", r2(reg4))
-
-
-
-reg4 = lm(@formula(residuals ~ tenure + fearn0_P0 + edmaxyrs + children_squared + children + children_x_fearn0_P0 + Q + fatherYR + currentage_x_edmaxyrs + fearn0_P0_x_tenure + edmaxyrs_squared + children_x_tenure), required_df)
-print(reg4)
-print("R-Squared: ", r2(reg4))
 
 
 
