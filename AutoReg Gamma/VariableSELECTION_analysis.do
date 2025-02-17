@@ -2,23 +2,96 @@
 
 * run both and compare across in both coefficents, selection of variables, and significance  
 
+
 use "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta", clear
 
-* Load the example dataset
-sysuse auto, clear
-
-* Convert the headroom variable to a categorical variable
-egen headroom_cat = cut(headroom), at(1 2 3 4 5)
 
 
-reg price mpg weight length foreign
+tabulate race, generate(race_dum)
+tabulate censdiv, generate(censdiv_dum)
+tabulate occ, generate(occ_dum)
+tabulate year, generate(year_dum)
+tabulate state, generate(state_dum)
+
+* Generate squared terms for age, tenure, and edmaxyrs
+gen tenure_squared = tenure^2
+gen edmaxyrs_squared = edmaxyrs^2
+gen edmaxyrs_cubed = edmaxyrs^3
+
+gen PRsquare = PrRecess^2
+gen rGDPsquare = rGDPgrow^2
+gen fhwageSQ = fhwage0_P0^2
+
+
+
+* Run the stepwise regression
+*stepwise, pr(.05): regress gammaP_WEIGHTED OLF tenure edmaxyrs currentage fhwage0_P0 (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
+* Run the stepwise regression
+*stepwise, pr(.05): regress gammaP_WEIGHTED OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
+* Run the stepwise regression
+*stepwise, pr(.05): regress gammaP_WEIGHTED edmaxyrs_cubed rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
+* Run the stepwise regression
+*stepwise, pr(.05): regress gammaP_WEIGHTED edmaxyrs_cubed PRsquare rGDPsquare fhwageSQ rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
+* Run the stepwise regression
+stepwise, pr(.05): regress gammaP_WEIGHTED PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
+* Run the stepwise regression
+stepwise, pr(.05) pe(.02) forward: regress gammaP_WEIGHTED PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
 
 *------------------------------------------------------------
-* 1. Stepwise Regression
-*    Here we use a stepwise selection with a p-value criterion of 0.05.
-*    This will start with an empty model and add variables that meet the criterion.
+* This is a new section regressing on the non-weighted version of gamma
 *------------------------------------------------------------
-stepwise, pr(.2): regress price mpg weight length foreign i.headroom_cat
+
+
+
+
+
+* Run the stepwise regression
+*stepwise, pr(.05): regress gamma_sorta OLF tenure edmaxyrs currentage fhwage0_P0 (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
+* Run the stepwise regression
+*stepwise, pr(.05): regress gamma_sorta OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
+* Run the stepwise regression
+*stepwise, pr(.05): regress gamma_sorta edmaxyrs_cubed rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
+* Run the stepwise regression
+*stepwise, pr(.05): regress gamma_sorta edmaxyrs_cubed PRsquare rGDPsquare fhwageSQ rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
+* Run the stepwise regression
+stepwise, pr(.05): regress gamma_sorta PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
+
+
+
+
+
+
+
 
 *------------------------------------------------------------
 * 2. LASSO Regression

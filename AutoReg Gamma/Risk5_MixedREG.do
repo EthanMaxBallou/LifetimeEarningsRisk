@@ -60,6 +60,13 @@ egen gammaP_WEIGHTED = sum(temp3), by(idyear)
 
 drop temp3 sumsqrtinvmsr SquaredRES msr res
 
+drop J Q sumjkq JJQQp JplusQ GAMMA gam_fearn0_A_ gam_fwwage0_A_ gamma_real
+
+drop JQ sqrtinvmsr wt
+
+
+duplicates drop
+
 save "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta", replace
 
 
