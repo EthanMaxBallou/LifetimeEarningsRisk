@@ -23,16 +23,17 @@ mixed GAMMA sumjkq J ||  idyear: sumjkq, cov(unstructured) cluster(personid) var
 
 estat recovar, corr
 predict b*, reffects
-predict gamma_real, fitted
+*predict gamma_real, fitted
 
 
-gen gamma_sorta = b2 + _b[_cons] + ((b1 + _b[sumjkq]) * 2)
+*gen gamma_sorta = b2 + _b[_cons] + ((b1 + _b[sumjkq]) * 2)
 
+gen new_gamma = GAMMA - sumjkq * (_b[sumjkq] + b1) - J * (_b[J])
 
 
 * Creating composite gamma for each (i,t)
 
-areg gamma_real i.JJQQp, a(idyear)
+areg new_gamma i.JJQQp, a(idyear)
 
 predict res, r
 gen SquaredRES = res^2
@@ -48,7 +49,7 @@ egen sumsqrtinvmsr = sum(sqrtinvmsr), by(idyear)
 gen wt = sqrtinvmsr/sumsqrtinvmsr
 
 
-gen temp3 = wt * gamma_real
+gen temp3 = wt * new_gamma
 egen gammaP_WEIGHTED = sum(temp3), by(idyear)
 
 
@@ -60,7 +61,7 @@ egen gammaP_WEIGHTED = sum(temp3), by(idyear)
 
 drop temp3 sumsqrtinvmsr SquaredRES msr res
 
-drop J Q sumjkq JJQQp JplusQ GAMMA gam_fearn0_A_ gam_fwwage0_A_ gamma_real
+drop J Q sumjkq JJQQp JplusQ GAMMA gam_fearn0_A_ gam_fwwage0_A_ new_gamma
 
 drop JQ sqrtinvmsr wt
 
