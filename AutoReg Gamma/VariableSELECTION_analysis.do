@@ -27,6 +27,23 @@ gen fhwageSQ = fhwage0_P0^2
 
 
 
+* Scatter plot of age and gammaP_WEIGHTED
+twoway (scatter gammaP_WEIGHTED currentage), title("Scatter plot of Age and gammaP_WEIGHTED") xlabel(, grid) ylabel(, grid)
+
+* Scatter plot of ma5aep2 and gammaP_WEIGHTED
+twoway (scatter gammaP_WEIGHTED ma5aep2), title("Scatter plot of ma5aep2 and gammaP_WEIGHTED") xlabel(, grid) ylabel(, grid)
+
+* Scatter plot of currentagefourth and gammaP_WEIGHTED
+twoway (scatter gammaP_WEIGHTED currentagefourth), title("Scatter plot of currentagefourth and gammaP_WEIGHTED") xlabel(, grid) ylabel(, grid)
+
+* Scatter plot of tenure and gammaP_WEIGHTED
+twoway (scatter gammaP_WEIGHTED tenure), title("Scatter plot of Tenure and gammaP_WEIGHTED") xlabel(, grid) ylabel(, grid)
+
+* Scatter plot of edmaxyrs_squared and gammaP_WEIGHTED
+twoway (scatter gammaP_WEIGHTED edmaxyrs_squared), title("Scatter plot of edmaxyrs_squared and gammaP_WEIGHTED") xlabel(, grid) ylabel(, grid)
+
+
+
 
 * Run the stepwise regression
 stepwise, pr(.05): regress gammaP_WEIGHTED PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
@@ -34,13 +51,45 @@ stepwise, pr(.05): regress gammaP_WEIGHTED PRsquare rGDPsquare fhwageSQ edmaxyrs
 
 * LASSO
 
-lasso linear gammaP_WEIGHTED PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared i.(state year occ censdiv race), selection(adaptive) rseed(12345)
+quietly lasso linear gammaP_WEIGHTED PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared i.(state year occ censdiv race), selection(adaptive) rseed(12345)
 
 lassoknots
 
-lasso linear gammaP_WEIGHTED (i.(state year occ censdiv race)) PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared, selection(adaptive) rseed(12345) 
+quietly lasso linear gammaP_WEIGHTED (i.(state year occ censdiv race)) PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared, selection(adaptive) rseed(12345) 
 
 lassoknots
+
+
+* Create interactions of all the variables with edmaxyrs
+foreach var in PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared {
+    gen `var'_edyrs_sq = `var' * edmaxyrs
+}
+
+* Create interactions of all the variables with tenure
+foreach var in PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared {
+    gen `var'_ten = `var' * tenure
+}
+
+* LASSO with interactions
+quietly lasso linear gammaP_WEIGHTED PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared ///
+    PRsquare_edyrs_sq rGDPsquare_edyrs_sq fhwageSQ_edyrs_sq edmaxyrs_cubed_edyrs_sq ma5aep_edyrs_sq ma5aep2_edyrs_sq rGDPgrow_edyrs_sq PrRecess_edyrs_sq veteran_edyrs_sq OLF_edyrs_sq tenure_edyrs_sq edmaxyrs_edyrs_sq currentage_edyrs_sq fhwage0_P0_edyrs_sq currentagesq_edyrs_sq currentagecube_edyrs_sq currentagefourth_edyrs_sq tenure_squared_edyrs_sq ///
+    PRsquare_ten rGDPsquare_ten fhwageSQ_ten edmaxyrs_cubed_ten ma5aep_ten ma5aep2_ten rGDPgrow_ten PrRecess_ten veteran_ten OLF_ten edmaxyrs_ten currentage_ten fhwage0_P0_ten currentagesq_ten currentagecube_ten currentagefourth_ten tenure_squared_ten ///
+    i.(state year occ censdiv race), selection(adaptive) rseed(12345)
+
+lassoknots
+
+quietly lasso linear gammaP_WEIGHTED (i.(state year occ censdiv race)) PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared ///
+    PRsquare_edyrs_sq rGDPsquare_edyrs_sq fhwageSQ_edyrs_sq edmaxyrs_cubed_edyrs_sq ma5aep_edyrs_sq ma5aep2_edyrs_sq rGDPgrow_edyrs_sq PrRecess_edyrs_sq veteran_edyrs_sq OLF_edyrs_sq tenure_edyrs_sq edmaxyrs_edyrs_sq currentage_edyrs_sq fhwage0_P0_edyrs_sq currentagesq_edyrs_sq currentagecube_edyrs_sq currentagefourth_edyrs_sq tenure_squared_edyrs_sq ///
+    PRsquare_ten rGDPsquare_ten fhwageSQ_ten edmaxyrs_cubed_ten ma5aep_ten ma5aep2_ten rGDPgrow_ten PrRecess_ten veteran_ten OLF_ten edmaxyrs_ten currentage_ten fhwage0_P0_ten currentagesq_ten currentagecube_ten currentagefourth_ten tenure_squared_ten, selection(adaptive) rseed(12345)
+
+lassoknots
+
+
+
+regress gammaP_WEIGHTED ma5aep2_edyrs_sq currentagefourth_edyrs_sq i.(state year occ censdiv race)
+
+regress gammaP_WEIGHTED currentagefourth edmaxyrs_squared currentagesq ma5aep i.(state year occ censdiv race)
+
 
 
 
@@ -99,32 +148,5 @@ lassoknots
 
 
 
-
-
-
-
-
-*------------------------------------------------------------
-* 2. LASSO Regression
-*    Stata’s built-in lasso routines can be used for variable selection.
-*    Here we run a linear lasso regression with the adaptive selection method.
-*------------------------------------------------------------
-lasso linear price mpg weight length foreign i.headroom_cat, selection(adaptive) rseed(12345)
-
-* To view the selected model variables after lasso, type:
-lasso list
-
-
-*------------------------------------------------------------
-* 3. Ridge Regression
-*    Ridge regression is not built into Stata’s base installation but is available 
-*    via an SSC package. The following code installs and uses the 'ridgereg' package.
-*------------------------------------------------------------
-
-* If not already installed, install the ridgereg package:
-ssc install ridgereg
-
-* Run ridge regression with a specified lambda value (here, 0.1):
-ridgereg price mpg weight length foreign , model(grr1)
 
 
