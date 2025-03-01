@@ -125,14 +125,6 @@ regress gammaP_WEIGHTED L_gammaP_old L_gammaP_young
 
 mean gammaP_WEIGHTED
 
-mean L_gammaP_old
-mean L_gammaP_young
-
-
-bysort personid (year): gen first_year_gamma = gammaP_WEIGHTED if _n == 1
-
-mean first_year_gamma
-
 
 
 
