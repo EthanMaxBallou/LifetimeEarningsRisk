@@ -49,6 +49,13 @@ twoway (scatter gammaP_WEIGHTED edmaxyrs_squared), title("Scatter plot of edmaxy
 stepwise, pr(.05): regress gammaP_WEIGHTED PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (censdiv_dum1-censdiv_dum9) (race_dum1-race_dum5)
 
 
+regress gammaP_WEIGHTED currentagecube currentagefourth ma5aep ma5aep2 i.(state occ censdiv)
+
+
+
+
+
+
 * LASSO
 
 quietly lasso linear gammaP_WEIGHTED PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared i.(state year occ censdiv race), selection(adaptive) rseed(12345)
@@ -58,6 +65,11 @@ lassoknots
 quietly lasso linear gammaP_WEIGHTED (i.(state year occ censdiv race)) PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared, selection(adaptive) rseed(12345) 
 
 lassoknots
+
+
+regress gammaP_WEIGHTED currentagefourth ma5aep2 edmaxyrs_cubed fhwageSQ currentagesq i.(state year occ censdiv race)
+
+
 
 
 * Create interactions of all the variables with edmaxyrs
@@ -85,10 +97,50 @@ quietly lasso linear gammaP_WEIGHTED (i.(state year occ censdiv race)) PRsquare 
 lassoknots
 
 
+regress gammaP_WEIGHTED ma5aep2_edyrs_sq currentagefourth_edyrs_sq fhwageSQ_edyrs_sq edmaxyrs_cubed tenure fhwageSQ i.(state year occ censdiv race)
 
-regress gammaP_WEIGHTED ma5aep2_edyrs_sq currentagefourth_edyrs_sq i.(state year occ censdiv race)
 
-regress gammaP_WEIGHTED currentagefourth edmaxyrs_squared currentagesq ma5aep i.(state year occ censdiv race)
+
+
+
+* Generate lagged value of gammaP_WEIGHTED for each person
+bysort personid (year): gen L_gammaP_WEIGHTED = gammaP_WEIGHTED[_n-1]
+
+* Run the regression with the lagged value
+regress gammaP_WEIGHTED L_gammaP_WEIGHTED currentagefourth edmaxyrs_squared currentagesq ma5aep ma5aep2 fhwageSQ i.(state year occ censdiv race)
+
+
+
+
+gen age_less_than_35 = (currentage < 35)
+gen age_greater_than_35 = (currentage >= 35)
+
+
+gen L_gammaP_young = L_gammaP_WEIGHTED * age_less_than_35
+gen L_gammaP_old = L_gammaP_WEIGHTED * age_greater_than_35
+
+
+* Run the regression with the lagged value and its interactions
+regress gammaP_WEIGHTED L_gammaP_old L_gammaP_young
+
+mean gammaP_WEIGHTED
+
+mean L_gammaP_old
+mean L_gammaP_young
+
+
+bysort personid (year): gen first_year_gamma = gammaP_WEIGHTED if _n == 1
+
+mean first_year_gamma
+
+
+
+
+* Generate change in gammaP_WEIGHTED across years for each person
+bysort personid (year): gen delta_gammaP_WEIGHTED = gammaP_WEIGHTED - gammaP_WEIGHTED[_n-1]
+
+* Regress the change in gammaP_WEIGHTED on the selected variables for each person
+regress delta_gammaP_WEIGHTED currentagefourth edmaxyrs edmaxyrs_squared currentagesq currentage ma5aep ma5aep2 i.(state year occ censdiv race)
 
 
 
@@ -96,6 +148,9 @@ regress gammaP_WEIGHTED currentagefourth edmaxyrs_squared currentagesq ma5aep i.
 * Ridge
 
 *ridgereg gammaP_WEIGHTED PRsquare rGDPsquare fhwageSQ edmaxyrs_cubed ma5aep ma5aep2 rGDPgrow PrRecess veteran OLF tenure edmaxyrs currentage fhwage0_P0 currentagesq currentagecube currentagefourth tenure_squared edmaxyrs_squared state_dum* year_dum* occ_dum* censdiv_dum* race_dum*, model(grr1)
+
+
+
 
 
 
