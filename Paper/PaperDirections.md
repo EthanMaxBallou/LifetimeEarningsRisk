@@ -1,4 +1,12 @@
-List of possible directions of research
+To - Do
+
+1. Do categorical variables for education - binned (no HS diploma, HS, College, postgrad)
+2. Do categorical for cohort and industry
+3. Maybe a age interaction with cohort or something
+4. Or an age^2 interaction with under 25, 25-35, 35-40, etc
+4. Draft paper
+
+List of possible of research extensions
 
 1. Gamma effect on fertility
 2. Shocks to sex ratio and its effects on gamma (or vice versa)
