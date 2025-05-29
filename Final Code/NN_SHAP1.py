@@ -42,7 +42,7 @@ print(meta.column_names)
 # Columns to drop from the dataset
 columns_to_keep = [
     'year', 'personid', 'state', 'occ', 'twoind', 'race', 
-    'edmaxyrs', 'currentage', 'veteran', 'rGDPgrow', 
+    'currentage', 'veteran', 'rGDPgrow', 
     'PrRecess', 'OLF', 'tenure', 'currentagesq', 
     'currentagecube', 'cohort', 'ma5aep', 
     'fhwage0_P0', 'gammaP_WEIGHTED'
@@ -111,7 +111,7 @@ y_test = scaler_y.transform(y_test)
 
 num_variables = X_train.shape[1]
 
-    
+
 # 1000 or 2000, 2-3 layers?, sigmoid
 
 nn1 = Sequential()
@@ -138,17 +138,15 @@ nn1.compile(optimizer="adam", loss="mse", metrics=["mse"])
 
 Network1 = nn1.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), verbose=1)
 
-Network2 = nn1.fit(X_train, y_train, epochs=40, validation_data=(X_val, y_val), verbose=1)
+#Network2 = nn1.fit(X_train, y_train, epochs=40, validation_data=(X_val, y_val), verbose=1)
 
+#Network3 = nn1.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), verbose=1)
 
-
-Network3 = nn1.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), verbose=1)
-
-Network4 = nn1.fit(X_train, y_train, epochs=10, validation_data=(X_val, y_val), verbose=1)
+#Network4 = nn1.fit(X_train, y_train, epochs=10, validation_data=(X_val, y_val), verbose=1)
 
 
 test_loss, test_mse = nn1.evaluate(X_test, y_test, verbose=0)
-print(f"Test MSE after retraining: {test_mse}")
+print(f"Test MSE after training: {test_mse}")
 
 
 
@@ -157,27 +155,35 @@ nn1.save("/Users/ethanballou/Documents/Papers/EarningsRisk/Risk_NN.keras")
 
 
 
+X_background = X_train[:50]
+explainer = shap.DeepExplainer(nn1, X_background)
+
+shap_values = explainer.shap_values(X_test)
+
+
+# Reshape to remove the singleton dimension (100, 8086, 1) -> (100, 8086)
+shap_values_reshaped = shap_values.squeeze(axis=-1)
+
+
 
 
 sample_indices = np.random.choice(X_test.shape[0], 5, replace=False)
 X_test_sample = X_test[sample_indices]
 
 
-# Select a small subset of the training data for the background dataset
-X_background = X_train[:50]
+# Visualize the SHAP force plot for the sample
+shap.force_plot(explainer.expected_value, shap_values, X_test_sample, feature_names=data.columns)
 
 
-explainer = shap.DeepExplainer(nn1, X_background)
-
-
-shap_values = explainer.shap_values(X_test)
+# Visualize the SHAP summary plot for the test set
+shap.summary_plot(shap_values[:,:,0], X_test, feature_names=data.columns, max_display=20)
 
 
 
 # DO WITH ABSOLUTE VALUE AND NOT ASOLUTE VALUE BEFORE AVERAGE TO SEE WHICH CHANGE SIGN
 
-# Reshape to remove the singleton dimension (100, 8086, 1) -> (100, 8086)
-shap_values_reshaped = shap_values.squeeze(axis=-1)
+# THE VARIANCE OF THE SHAP VALUES IS MORE IMPORTANT??? AVERAGING A DUMMY VAR ISNT THAT IMPORTANT
+
 
 # Average SHAP values across the 100 samples for each feature
 ABSaverage_shap_values = np.mean(np.abs(shap_values_reshaped), axis=0)
