@@ -61,7 +61,7 @@ regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veter
 
 
 
-* Stepwise regression (Do with different controls (with ind and with occupation))
+* Stepwise regression
 
 * No controls
 stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube 
@@ -109,23 +109,19 @@ lassoknots
 
 
 
+
+
 * LASSO across occ and ind
 
 * occ
-quietly lasso linear gammaP_WEIGHTED fhwage0_P0 tenure currentage currentagesq currentagecube i.(occ race cohort), selection(bic) rseed(12345)
+quietly lasso linear gammaP_WEIGHTED i.(occ), selection(bic) rseed(12345)
 lassoknots
 
 
 * ind
-quietly lasso linear gammaP_WEIGHTED fhwage0_P0 tenure currentage currentagesq currentagecube i.(twoind race cohort), selection(bic) rseed(12345)
+quietly lasso linear gammaP_WEIGHTED i.(twoind), selection(bic) rseed(12345)
 lassoknots
 
 
-* occ
-stepwise, pr(.05): regress gammaP_WEIGHTED i.(occ)
-
-
-* ind
-stepwise, pr(.05): regress gammaP_WEIGHTED fhwage0_P0 tenure currentage currentagesq currentagecube i.(twoind race cohort)
 
 

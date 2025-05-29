@@ -11,6 +11,7 @@ import shap
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import pyreadstat
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
@@ -27,60 +28,64 @@ from sklearn.linear_model import LassoCV
 
 
 
+# Load the .dta file
+dta_file_path = "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta"
+data, meta = pyreadstat.read_dta(dta_file_path)
+
+# Display the first few rows of the dataframe
+print(data.head())
+
+# Optionally, inspect metadata
+print(meta.column_names)
+
+
+# Columns to drop from the dataset
+columns_to_keep = [
+    'year', 'personid', 'state', 'occ', 'twoind', 'race', 
+    'edmaxyrs', 'currentage', 'veteran', 'rGDPgrow', 
+    'PrRecess', 'OLF', 'tenure', 'currentagesq', 
+    'currentagecube', 'cohort', 'ma5aep', 
+    'fhwage0_P0', 'gammaP_WEIGHTED'
+]
+
+
+# Drop columns not in columns_to_keep
+data = data[columns_to_keep]
 
 
 
 
-data = pd.read_csv('/Users/ethanballou/Documents/Data/PSID4/df/data1.csv')
+# Create a vector with the names of the columns to convert
+columns_to_convert = ['race', 'occ', 'year', 'state', 'cohort', 'twoind']
 
-dropMAIN = ['ER32007', 'ER33281', 'ER32008', 'ER33275', 'ER32021']  # Replace with actual column names
+# Create dummy variables for all specified columns in one line
+data = pd.get_dummies(data, columns=columns_to_convert, drop_first=False)
 
-data = data.drop(columns=dropMAIN)
-
-
-
-
-
-psidCODE = pd.read_csv('/Users/ethanballou/Documents/Data/PSID4/J341928/codebook.csv')
-
-
-# Create a dictionary to store the number of unique values for each column
-unique_values = {column: data[column].nunique() for column in data.columns}
-
-# Convert to a Pandas DataFrame for better readability
-unique_values_df = pd.DataFrame(list(unique_values.items()), columns=['Column', 'Unique Values'])
-
-columns_to_dummy = unique_values_df[unique_values_df['Unique Values'] <= 20]['Column'].tolist()
-
-data = pd.get_dummies(data, columns=columns_to_dummy, drop_first=False)
+# Generate education level indicators
+data['EDU1'] = (data['edmaxyrs'] < 12).astype(int)
+data['EDU2'] = ((data['edmaxyrs'] >= 12) & (data['edmaxyrs'] < 14)).astype(int)
+data['EDU3'] = ((data['edmaxyrs'] >= 14) & (data['edmaxyrs'] < 16)).astype(int)
 
 
-target = pd.read_csv('/Users/ethanballou/Documents/Data/PSID4/df/target1.csv')
 
 
-target = target[target['personid'].isin(data['personid'])]
+# Separate the target variable from the data
+target = data[['gammaP_WEIGHTED']]  # Extract the target column
+data = data.drop(columns=['gammaP_WEIGHTED'])  # Remove the target column from the data
 
-target = target.sort_values(by='personid')
-data = data.sort_values(by='personid')
 
-
-code = pd.read_csv('/Users/ethanballou/Documents/Data/PSID4/variable_names_REMOVE.csv')
-
-columns_to_remove = code['Variable'].tolist()
-
-data = data.drop(columns=columns_to_remove, errors='ignore')
+# Drop 'personid' column from the dataset
+data = data.drop(columns=['personid'], errors='ignore')
 
 
 
 X = data.values  # Features
-y = target.drop(columns=['personid', 'year']).values[:,0]  # Target variables, dropping personid and year
-
+y = target.values  # Target variables, dropping personid and year
 
 
 # Split data into train, validation, and test sets
 X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
 X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
-
 
 
 scaler = MinMaxScaler()
@@ -279,25 +284,6 @@ nn1.add(Dense(1, activation="linear"))
 
 # Print model summary
 nn1.summary()
-
-
-
-lasso = LassoCV(cv=5, alphas=[1e-5, 1e-4, 1e-3, 1e-2, 1e-1], max_iter=10000, random_state=42).fit(X_train, y_train)
-
-# Extract coefficients
-coef_df = pd.DataFrame({
-    'Feature': data.drop(columns=['personid', 'year'], errors='ignore').columns,
-    'Coefficient': lasso.coef_
-}).sort_values(by='Coefficient', ascending=False)
-
-# Display results
-print(coef_df)
-
-
-
-
-
-
 
 
 
