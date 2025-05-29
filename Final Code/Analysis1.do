@@ -83,8 +83,6 @@ stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwa
 
 * LASSO
 
-* quietly lasso linear gammaP_WEIGHTED EDU1 EDU2 EDU3 EDU4 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind), selection(adaptive) rseed(12345)
-
 * No controls
 quietly lasso linear gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube, selection(bic) rseed(12345) 
 lassoknots
@@ -111,6 +109,23 @@ lassoknots
 
 
 
+* LASSO across occ and ind
 
+* occ
+quietly lasso linear gammaP_WEIGHTED fhwage0_P0 tenure currentage currentagesq currentagecube i.(occ race cohort), selection(bic) rseed(12345)
+lassoknots
+
+
+* ind
+quietly lasso linear gammaP_WEIGHTED fhwage0_P0 tenure currentage currentagesq currentagecube i.(twoind race cohort), selection(bic) rseed(12345)
+lassoknots
+
+
+* occ
+stepwise, pr(.05): regress gammaP_WEIGHTED i.(occ)
+
+
+* ind
+stepwise, pr(.05): regress gammaP_WEIGHTED fhwage0_P0 tenure currentage currentagesq currentagecube i.(twoind race cohort)
 
 
