@@ -10,11 +10,31 @@ use "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta", clear
 ssc install ridgereg
 
 
+
+
+
+* Generate a table with summary statistics for the sample
+summarize
+
+* Export summary statistics to a table
+outreg2 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/AutoReg Gamma/SummaryStatistics.doc", replace ctitle("Summary Statistics")
+
+
+
+
 tabulate race, generate(race_dum)
 tabulate censdiv, generate(censdiv_dum)
 tabulate occ, generate(occ_dum)
 tabulate year, generate(year_dum)
 tabulate state, generate(state_dum)
+tabulate cohort, generate(cohort_dum)
+tabulate twoind, generate(twoind_dum)
+
+gen EDU1 = (edmaxyrs < 12)
+gen EDU2 = (12 <= edmaxyrs < 14)
+gen EDU3 = (14 <= edmaxyrs < 16)
+gen EDU4 = (edmaxyrs >= 16)
+
 
 * Generate squared terms for age, tenure, and edmaxyrs
 gen tenure_squared = tenure^2
@@ -28,7 +48,8 @@ gen fhwageSQ = fhwage0_P0^2
 
 
 * Scatter plot of age and gammaP_WEIGHTED
-twoway (scatter gammaP_WEIGHTED currentage), title("Scatter plot of Age and gammaP_WEIGHTED") xlabel(, grid) ylabel(, grid)
+twoway (scatter gammaP_WEIGHTED currentage), title("Distribution of Age and Gamma") xlabel(, grid) ylabel(, grid)
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png", replace
 
 * Scatter plot of ma5aep2 and gammaP_WEIGHTED
 twoway (scatter gammaP_WEIGHTED ma5aep2), title("Scatter plot of ma5aep2 and gammaP_WEIGHTED") xlabel(, grid) ylabel(, grid)
