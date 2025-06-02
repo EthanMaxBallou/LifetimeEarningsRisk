@@ -4,6 +4,8 @@ use "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta", clear
 
 ssc install ridgereg
 
+cd "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk"
+
 
 tabulate race, generate(race_dum)
 tabulate censdiv, generate(censdiv_dum)
@@ -34,6 +36,12 @@ twoway (scatter gammaP_WEIGHTED currentage), title("Distribution of Age and Gamm
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png", replace
 
 
+
+
+
+log using "MainAnalysis.smcl", name(log1) replace
+
+log using "MainAnalysis.txt", text name(log2) replace
 
 
 
@@ -83,31 +91,49 @@ stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwa
 
 * LASSO
 
-* No controls
-quietly lasso linear gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube, selection(bic) rseed(12345) 
+
+* (1) No controls
+quietly lasso linear gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ///
+        fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube, ///
+        selection(bic) rseed(12345)
+estimates store Lasso_NoControls
 lassoknots
 
-
-* controls - no occ or ind
-quietly lasso linear gammaP_WEIGHTED (i.(state year race cohort)) EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube, selection(bic) rseed(12345) 
+* (2) “controls – no occ or ind”
+quietly lasso linear gammaP_WEIGHTED ///
+        (i.(state year race cohort)) ///
+        EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure ///
+        currentage currentagesq currentagecube, ///
+        selection(bic) rseed(12345)
+estimates store Lasso_NoOccNoInd
 lassoknots
 
-
-* controls - no occ
-quietly lasso linear gammaP_WEIGHTED (i.(state year race cohort twoind)) EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube, selection(bic) rseed(12345) 
+* (3) “controls – no occ”
+quietly lasso linear gammaP_WEIGHTED ///
+        (i.(state year race cohort twoind)) ///
+        EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure ///
+        currentage currentagesq currentagecube, ///
+        selection(bic) rseed(12345)
+estimates store Lasso_NoOcc
 lassoknots
 
-
-* controls - no ind
-quietly lasso linear gammaP_WEIGHTED (i.(state year occ race cohort)) EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube, selection(bic) rseed(12345) 
+* (4) “controls – no ind”
+quietly lasso linear gammaP_WEIGHTED ///
+        (i.(state year occ race cohort)) ///
+        EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure ///
+        currentage currentagesq currentagecube, ///
+        selection(bic) rseed(12345)
+estimates store Lasso_NoInd
 lassoknots
 
-
-* All controls
-quietly lasso linear gammaP_WEIGHTED (i.(state year occ race cohort twoind)) EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube, selection(bic) rseed(12345) 
+* (5) “All controls”
+quietly lasso linear gammaP_WEIGHTED ///
+        (i.(state year occ race cohort twoind)) ///
+        EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure ///
+        currentage currentagesq currentagecube, ///
+        selection(bic) rseed(12345)
+estimates store Lasso_AllControls
 lassoknots
-
-
 
 
 
@@ -123,5 +149,8 @@ quietly lasso linear gammaP_WEIGHTED i.(twoind), selection(bic) rseed(12345)
 lassoknots
 
 
+
+log close log1
+log close log2
 
 
