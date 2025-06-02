@@ -117,10 +117,10 @@ num_variables = X_train.shape[1]
 nn1 = Sequential()
 nn1.add(Input((num_variables,)))
 
-nn1.add(Dense(1000, activation="relu"))
+nn1.add(Dense(1000, activation="sigmoid"))
 nn1.add(Dropout(0.3))
-nn1.add(Dense(1000, activation="relu"))
-nn1.add(Dense(1000, activation="relu"))
+nn1.add(Dense(1000, activation="sigmoid"))
+nn1.add(Dense(1000, activation="sigmoid"))
 
 nn1.add(Dense(1, activation="linear"))
 
@@ -188,7 +188,7 @@ print(shap_summary_df.head(10))
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/shap_summary.csv', index=False)
 
 
-
+top_cont = ['fhwage0_P0', 'ma5aep', 'rGDPgrow', 'tenure', 'currentage', 'currentagesq', 'currentagecube', 'PrRecess']
 
 
 
@@ -197,34 +197,23 @@ print(f"SHAP values shape: {shap_values[:,:,0].shape}")
 print(f"X_test shape: {X_test.shape}")
 
 
-# Visualize the SHAP force plot for the sample
-shap.force_plot(explainer.expected_value, shap_values, X_test_sample, feature_names=data.columns)
+# Filter SHAP values and feature names to only include top_cont variables
+top_cont_indices = [data.columns.get_loc(feature) for feature in top_cont]
+shap_values_top_cont = shap_values_reshaped[:, top_cont_indices]
+X_test_top_cont = X_test[:, top_cont_indices]
 
-
-# Visualize the SHAP summary plot for the test set
-shap.summary_plot(shap_values[:,:,0], X_test, feature_names=data.columns, max_display=50)
-
-
-# Ensure you are using the entire test set for both SHAP values and features
-
-shap.dependence_plot(0, shap_values, X_test)
-
-
-shap.dependence_plot((0, 1), shap_values[:,:,0], X_test)
-
-
-# Visualize the SHAP force plot for the sample
-shap.force_plot(explainer.expected_value, shap_values, X_test_sample, feature_names=data.columns)
-
-
-# Visualize the SHAP summary plot for the test set
-shap.summary_plot(shap_values[:,:,0], X_test, feature_names=data.columns, max_display=20)
+# Visualize the SHAP summary plot for the test set with top_cont variables
+shap.summary_plot(shap_values_top_cont, X_test_top_cont, feature_names=top_cont, max_display=len(top_cont))
+plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/shap_summary_plot_cont.png', bbox_inches='tight')
 
 
 
-shap.initjs()
 
-shap.save_html("/Users/ethanballou/Documents/Data/PSID4/df/force_plot.html", shap.force_plot(explainer.expected_value, shap_values, X_test_sample, feature_names=data.columns))
+
+
+#shap.initjs()
+
+#shap.save_html("/Users/ethanballou/Documents/Data/PSID4/df/force_plot.html", shap.force_plot(explainer.expected_value, shap_values, X_test_sample, feature_names=data.columns))
 
 
 
