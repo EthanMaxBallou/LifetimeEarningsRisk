@@ -204,7 +204,7 @@ X_test_top_cont = X_test[:, top_cont_indices]
 
 # Visualize the SHAP summary plot for the test set with top_cont variables
 shap.summary_plot(shap_values_top_cont, X_test_top_cont, feature_names=top_cont, max_display=len(top_cont))
-plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/shap_summary_plot_cont.png', bbox_inches='tight')
+#plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/shap_summary_plot_cont.png', bbox_inches='tight')
 
 
 
