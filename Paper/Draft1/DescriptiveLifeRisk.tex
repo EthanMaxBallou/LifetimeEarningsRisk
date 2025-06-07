@@ -1,12 +1,14 @@
 \documentclass[12pt]{article}
 \usepackage{setspace}
 \usepackage{geometry}
-\geometry{margin=1in}
 \usepackage{hyperref}
 \usepackage{multicol}
 \usepackage{booktabs}
 \usepackage{amssymb}
 \usepackage{graphicx}
+
+\geometry{margin=1in}
+\bibliographystyle{plain}
 
 \title{Hetergoneity in Lifetime Earnings Risk}
 
@@ -48,7 +50,9 @@ Abstract.  This is our abstract.  It is abstract.
 \begin{center}
 %PRELIMINARY: DO NOT CIRCULATE OR QUOTE
 \end{center}
+\section{Introduction}
 
+This is an example citation \cite{exampleCitation}.
 \section{Introduction}
 
 
@@ -56,8 +60,7 @@ Abstract.  This is our abstract.  It is abstract.
 
 Multiply all Coefficients by 100?
 
-\\
-\\ 
+\vspace{4cm}
 
 \begin{table}[ht]
 \centering
@@ -118,64 +121,49 @@ Industry Controls    &               &                 & \checkmark    &        
 \centering
 \caption{Stepwise Results for $\gamma$}
 
-
-
 \begin{tabular}{lccccc}
-
 
 \toprule
                     & (1)     & (2)   & (3)    & (4)      & (5)         \\
-\midrule
-Occupation Controls      & (order of selection) 1  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (Coefficient)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-Industry Controls      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-Cohort Controls      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-Race Controls      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-Year Controls      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-State Controls      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-EDU1                & $-0.004$  & $-0.004$    & $-0.005$  & $-0.006$   & $-0.006$    \\
-                    & (0.003)   & (0.003)     & (0.003)   & (0.003)    & (0.003)     \\
-EDU2                & $-0.003$  & $-0.003$    & $-0.004$  & $-0.004$   & $-0.005$    \\
-                    & (0.002)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-EDU3                & $-0.001$  & $-0.001$    & $-0.001$  & $-0.001$   & $-0.001$    \\
-                    & (0.002)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-PrRecess            & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-rGDPgrow            & $0.000$   & $0.001$     & $0.001$   & $0.001$    & $0.001$     \\
-                    & (0.000)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-fhwage0\_P0         & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-ma5aep              & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-veteran             & $0.000$   & $0.000$     & $0.001$   & $0.000$    & $0.000$     \\
-                    & (0.001)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-OLF                 & $0.006$   & $0.006$     & $0.005$   & $0.006$    & $0.006$     \\
-                    & (0.006)   & (0.006)     & (0.006)   & (0.006)    & (0.006)     \\
-tenure              & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-currentage          & $0.009$   & $0.009$     & $0.009$   & $0.009$    & $0.009$     \\
-                    & (0.004)   & (0.004)     & (0.004)   & (0.004)    & (0.004)     \\
-currentagesq        & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-currentagecube      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
 
 \midrule
-Other Controls      &               & \checkmark      & \checkmark    & \checkmark    & \checkmark     \\
+
+
+EDU1                & Selected  & 12    & 13  & Selected   & Selected    \\
+EDU2                & Selected  & 1    & 1  & Selected   & Selected    \\
+EDU3                & 6  & 4    & 4  & 6   & 7    \\
+PrRecess            & 1   & 11     & 12   & 1    & 2     \\
+rGDPgrow            & 5   & 10     & 11   & 4    & 3     \\
+fhwage0\_P0         & 7   & 3     & 3   & 9    & 10     \\
+ma5aep              & 2   & 8     & 6   & 3    & 5     \\
+veteran             & 8   & 2     & 2   & 10    & 11     \\
+OLF                 & 3   & 9     & 5   & 2    & 4     \\
+tenure              & 4   & 7     & 8   & 5    & 6     \\
+currentage          & Selected   & Selected     & Selected   & Selected    & Selected     \\
+currentagesq        & Selected  & Selected    & Selected  & Selected   & Selected    \\
+currentagecube      & Selected  & Selected    & Selected  & Selected   & Selected    \\
+
+\midrule
+Occupation Controls      & -   & -    & -  & Selected   & Selected    \\
+Industry Controls      & -  & -    & -  & -   & 1    \\
+Cohort Controls      & -  & 6    & 9  & 7   & 8    \\
+Race Controls      & -  & 13    & 14  & 11   & 12    \\
+Year Controls      & -  & 5    & 10  & 8   & 9    \\
+State Controls      & -  & Selected    & Selected  & Selected   & Selected    \\
+
+\midrule
 Occupation Controls  &               &                 &               & \checkmark    & \checkmark     \\
 Industry Controls    &               &                 & \checkmark    &               & \checkmark     \\
+Other Controls      &               & \checkmark      & \checkmark    & \checkmark    & \checkmark     \\
+
 \bottomrule
 \end{tabular}%
 \newline
-\textit{Notes:}vjhhvhj
+
+\footnotesize
+\textit{Notes:} This table reports results from stepwise regression models using a p-value threshold of 0.05. "Selected" indicates variables retained in the final model. Numbers indicate the order of variable removal (with 1 being the last variable removed before model finalization). "-" indicates the variable was not included in the initial model specification.
 
 \end{table}
-
 
 
 
@@ -185,64 +173,48 @@ Industry Controls    &               &                 & \checkmark    &        
 \centering
 \caption{Lasso Results for $\gamma$}
 
-
-
 \begin{tabular}{lccccc}
-
 
 \toprule
                     & (1)     & (2)   & (3)    & (4)      & (5)         \\
-\midrule
-Occupation Controls      & (order of selection) 1  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (Coefficient)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-Industry Controls      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-Cohort Controls      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-Race Controls      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-Year Controls      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-State Controls      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-EDU1                & $-0.004$  & $-0.004$    & $-0.005$  & $-0.006$   & $-0.006$    \\
-                    & (0.003)   & (0.003)     & (0.003)   & (0.003)    & (0.003)     \\
-EDU2                & $-0.003$  & $-0.003$    & $-0.004$  & $-0.004$   & $-0.005$    \\
-                    & (0.002)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-EDU3                & $-0.001$  & $-0.001$    & $-0.001$  & $-0.001$   & $-0.001$    \\
-                    & (0.002)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-PrRecess            & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-rGDPgrow            & $0.000$   & $0.001$     & $0.001$   & $0.001$    & $0.001$     \\
-                    & (0.000)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-fhwage0\_P0         & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-ma5aep              & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-veteran             & $0.000$   & $0.000$     & $0.001$   & $0.000$    & $0.000$     \\
-                    & (0.001)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-OLF                 & $0.006$   & $0.006$     & $0.005$   & $0.006$    & $0.006$     \\
-                    & (0.006)   & (0.006)     & (0.006)   & (0.006)    & (0.006)     \\
-tenure              & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-currentage          & $0.009$   & $0.009$     & $0.009$   & $0.009$    & $0.009$     \\
-                    & (0.004)   & (0.004)     & (0.004)   & (0.004)    & (0.004)     \\
-currentagesq        & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-currentagecube      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
 
 \midrule
-Other Controls      &               & \checkmark      & \checkmark    & \checkmark    & \checkmark     \\
+EDU1                &  (5)  &  (5)    &  (4)  &  (2)   &  (2)    \\
+EDU2                &  (3)  &  (2)    &  (2)  &  (2)   &  (2)    \\
+EDU3                &  (10)  &  (7)    &  (7)  &  (7)   &  (5)    \\
+PrRecess            &  (6)   & Not Selected    & Not Selected   & Not Selected    & Not Selected     \\
+rGDPgrow            &  (8)   & Not Selected     & Not Selected   & Not Selected    & Not Selected     \\
+fhwage0\_P0         &  (9)   &  (10)     &  (10)   &  (10)    &  (9)     \\
+ma5aep              &  (1)   &  (3)     &  (2)   &  (3)    &  (2)     \\
+veteran             &  (12)   &  (8)     &  (9)   &  (8)    &  (7)     \\
+OLF                 &  (4)   &  (3)     &  (4)   &  (2)    &  (2)     \\
+tenure              &  (7)   &  (5)     &  (5)   &  (4)    &  (3)     \\
+currentage          &  (11)   &  (6)     &  (8)   &  (6)    &  (6)     \\
+currentagesq        &  (13)  &  (11)    &  (11)  &  (11)   &  (10)    \\
+currentagecube      &  (3)  &  (6)    &  (6)  &  (5)   &  (4)    \\
+
+\midrule
+Occupation Controls      & -   & -    & -  & Selected   & Selected    \\
+Industry Controls      & -  & -    & Selected  & -   & Selected    \\
+Cohort Controls      & -  & Selected    & Selected  & Selected   & Selected    \\
+Race Controls      & -  & Selected    & Selected  & Selected   & Selected    \\
+Year Controls      & -  & Selected    & Selected  & Selected   & Selected    \\
+State Controls      & -  & Selected    & Selected  & Selected   & Selected    \\
+
+
+\midrule
 Occupation Controls  &               &                 &               & \checkmark    & \checkmark     \\
 Industry Controls    &               &                 & \checkmark    &               & \checkmark     \\
+Other Controls      &               & \checkmark      & \checkmark    & \checkmark    & \checkmark     \\
+
 \bottomrule
 \end{tabular}%
 \newline
-\textit{Notes:}vjhhvhj
+
+\footnotesize
+\textit{Notes:} This table reports variables selected by Lasso regression with Bayesian Information Criterion (BIC) variable selection. "Selected" indicates variables retained in the final model. Numbers in parentheses indicate the order in which variables were added to the model. "-" indicates the variable was not included or not selected in the model.
 
 \end{table}
-
 
 
 
@@ -250,63 +222,109 @@ Industry Controls    &               &                 & \checkmark    &        
 
 \begin{table}[ht]
 \centering
-\caption{Lasso Results for $\gamma$}
+\caption{Lasso and SHAP Results for Occupations}
 
+\scriptsize  % Controls the font size of the table content
 
-
-\begin{tabular}{lccc}
-
-
+\begin{tabular}{lcc|lcc}
 \toprule
-                    & (1)     & (2)   & (3)         \\
+Occupation & LASSO Order & SHAP Rank & Occupation & LASSO Order & SHAP Rank \\
 \midrule
-Occupation Controls      & (order of selection) 1  & $-0.000$    & $-0.000$    \\
-                    & (Coefficient)   & (0.000)     & (0.000)     \\
-Industry Controls      & $-0.000$  & $-0.000$    & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-Cohort Controls      & $-0.000$  & $-0.000$    & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-Race Controls      & $-0.000$  & $-0.000$    & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-Year Controls      & $-0.000$  & $-0.000$    & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-State Controls      & $-0.000$  & $-0.000$    & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-EDU1                & $-0.004$  & $-0.004$    & $-0.005$    \\
-                    & (0.003)   & (0.003)     & (0.003)     \\
-EDU2                & $-0.003$  & $-0.003$    & $-0.004$    \\
-                    & (0.002)   & (0.002)     & (0.002)     \\
-EDU3                & $-0.001$  & $-0.001$    & $-0.001$    \\
-                    & (0.002)   & (0.002)     & (0.002)     \\
-PrRecess            & $0.000$   & $0.000$     & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-rGDPgrow            & $0.000$   & $0.001$     & $0.001$     \\
-                    & (0.000)   & (0.002)     & (0.002)     \\
-fhwage0\_P0         & $0.000$   & $0.000$     & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-ma5aep              & $0.000$   & $0.000$     & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-veteran             & $0.000$   & $0.000$     & $0.001$     \\
-                    & (0.001)   & (0.002)     & (0.002)     \\
-OLF                 & $0.006$   & $0.006$     & $0.005$     \\
-                    & (0.006)   & (0.006)     & (0.006)     \\
-tenure              & $0.000$   & $0.000$     & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-currentage          & $0.009$   & $0.009$     & $0.009$     \\
-                    & (0.004)   & (0.004)     & (0.004)     \\
-currentagesq        & $-0.000$  & $-0.000$    & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-currentagecube      & $-0.000$  & $-0.000$    & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)     \\
-
-\midrule
-Other Controls      &               & \checkmark      & \checkmark     \\
-Occupation Controls  &               &                 & \checkmark     \\
-Industry Controls    &               & \checkmark      &               \\
+Fisher/Hunter (64) & (1) & (67) & Salesperson (49) & (24) & (54) \\
+Aerospace/Marine Engineer (4) & (2) & (17) & Spinner/Weaver (75) & (25) & (64) \\
+Music/Perform (17) & (3) & (29) & Bricklay/Carpt (95) & (25) & (19) \\
+Dr./Dentist/Vet (6) & (4) & (22) & Bookkeepr/Cash (33) & (26) & (52) \\
+Transp. Attend (35) & (5) & (72) & ComputerOperat (34) & (26) & (34) \\
+Lumbrman/Axman (73) & (5) & (48) & Rest./StoreMgr (50) & (26) & (39) \\
+Prof. Athlete (18) & (7) & (47) & SecurityServic (58) & (26) & (38) \\
+Buyer (42) & (7) & (49) & Machine Fitter (84) & (26) & (3) \\
+Eng. Tech. Expert (3) & (9) & (44) & Convey. Oper. (97) & (27) & (12) \\
+Service Worker (59) & (10) & (35) & Domestic Help (54) & (28) & (41) \\
+Farm Manager (61) & (10) & (4) & Forestry Work (63) & (28) & (59) \\
+Jewelry Maker (88) & (10) & (60) & RelatMedicalJob (7) & Not selected & (36) \\
+Chemist (1) & (13) & (5) & Mathematician (8) & Not selected & (24) \\
+Lawyer (12) & (13) & (66) & Cleric (14) & Not selected & (40) \\
+Educator (13) & (13) & (13) & Sculptr/Paintr (16) & Not selected & (71) \\
+Author (15) & (13) & (45) & Scientist (19) & Not selected & (30) \\
+Stenographer (32) & (13) & (46) & Agriculturist (21) & Not selected & (1) \\
+Transport. Oper (98) & (13) & (8) & Office Manager (30) & Not selected & (69) \\
+Insurance Rep. (44) & (17) & (53) & Administrator (31) & Not selected & (50) \\
+Broadcaster (86) & (17) & (56) & Conductor (36) & Not selected & (65) \\
+Painter (93) & (17) & (25) & Mailman (37) & Not selected & (9) \\
+Tailor (79) & (19) & (20) & Tel. Operator (38) & Not selected & (42) \\
+Stat. Mach. Oper (96) & (19) & (41) & Ofc.Worker Etc (39) & Not selected & (55) \\
+Architect/Engineer (2) & (20) & (11) & HH Supervisor (52) & Not selected & (77) \\
+Vendor (45) & (20) & (10) & Dry-Cleaner (56) & Not selected & (63) \\
+Legislator (20) & (21) & (27) & Hair Stylist (57) & Not selected & (75) \\
+Tech.Salespers (43) & (21) & (58) & Farm Hand (62) & Not selected & (51) \\
+Janitor (55) & (21) & (26) & Inspector (70) & Not selected & (7) \\
+Agriculturladm (60) & (21) & (2) & Miner (71) & Not selected & (70) \\
+Food Producer (77) & (21) & (37) & Foundry Worker (72) & Not selected & (68) \\
+Tool/Die Maker (83) & (21) & (16) & ChemicalWorker (74) & Not selected & (61) \\
+Pipe Fitter (87) & (21) & (43) & Shoemaker (80) & Not selected & (62) \\
+Labor/Craftsmn (99) & (22) & (18) & Cabinet Maker (81) & Not selected & (73) \\
+Accountant (11) & (23) & (15) & Stone Cutter (82) & Not selected & (76) \\
+BusinessManagr (40) & (23) & (33) & Electr. Enginr (85) & Not selected & (21) \\
+Cook/Waiter (53) & (23) & (28) & Glazier (89) & Not selected & (74) \\
+Life/Physical Scientist (5) & (24) & (31) & Printer Etc. (92) & Not selected & (57) \\
+Economist (9) & (24) & (14) & Manufacturer (94) & Not selected & (78) \\
+& & & Soldier (101) & Not selected & (23) \\
+& & & Other (999) & Not selected & (32) \\
 \bottomrule
 \end{tabular}%
 \newline
-\textit{Notes:}vjhhvhj
+
+\footnotesize
+\textit{Notes:} This table reports occupations selected by Lasso regression with Bayesian Information Criterion (BIC) for predicting earnings risk. "LASSO Order" indicates the order in which variables would enter the model if the penalty were relaxed. "SHAP Rank" shows the variable importance ranking based on SHAP values (lower numbers indicate greater importance). Note that the BIC-optimal model contained no occupation variables.
+
+\end{table}
+
+
+
+\begin{table}[ht]
+\centering
+\caption{Lasso and SHAP Results for Industries}
+
+\begin{tabular}{lcc}
+
+\toprule
+Industry & LASSO Selection Order & SHAP Ranking \\
+\midrule
+Construction (14) & (1) & (7) \\
+Other Services (30) & (1) & (4) \\
+Clothing/Text. (12) & (3) & (18) \\
+Educ./Sport (27) & (3) & (22) \\
+Public Admin. (33) & (3) & (10) \\
+Chemicals (5) & (6) & (9) \\
+Health Service (28) & (6) & (29) \\
+Agric.,Forestry (1) & (8) & (20) \\
+Other Trans. (21) & (9) & (6) \\
+Service Indust (25) & (9) & (21) \\
+Postal System (20) & (11) & (24) \\
+Mechanical Eng. (9) & (12) & (2) \\
+Wood/Paper/Print (11) & (12) & (17) \\
+Earth/Clay/Stone (7) & (14) & (16) \\
+Volunt./Church (31) & (14) & (28) \\
+Wholesale (16) & (16) & (5) \\
+Train System (19) & (17) & (3) \\
+Insurance (23) & (17) & (25) \\
+Electrical Eng. (10) & (19) & (11) \\
+Legal Services (29) & (19) & (13) \\
+Synthetics (6) & (21) & (23) \\
+Volunt./Church (31) & (21) & (28) \\
+Food Industry (13) & (23) & (30) \\
+Financial Inst. (22) & (24) & (19) \\
+Iron/Steel (8) & (25) & (26) \\
+Energy/Water (3) & (26) & (1) \\
+Mining (4) & (27) & (12) \\
+Restaurants (24) & (28) & (27) \\
+Other industries & Not selected & Various \\
+\bottomrule
+\end{tabular}%
+\newline
+
+\footnotesize
+\textit{Notes:} This table reports industries selected by Lasso regression with Bayesian Information Criterion (BIC) for predicting earnings risk. "LASSO Selection Order" indicates the order in which variables would enter the model if the penalty were relaxed. "SHAP Ranking" shows the variable importance ranking based on SHAP values (lower numbers indicate greater importance). Note that the BIC-optimal model contained no industry variables.
 
 \end{table}
 
@@ -318,9 +336,6 @@ Industry Controls    &               & \checkmark      &               \\
 
 
 
-
-
-
-
+\bibliography{references}
 
 \end{document}

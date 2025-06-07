@@ -36,7 +36,8 @@ twoway (scatter gammaP_WEIGHTED currentage), title("Distribution of Age and Gamm
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png", replace
 
 
-
+histogram gammaP_WEIGHTED, normal title("Distribution of gammaP_WEIGHTED") xlabel(, grid) ylabel(, grid)
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png", replace
 
 
 log using "MainAnalysis.smcl", name(log1) replace
