@@ -1,0 +1,20 @@
+Var,1,2,3,4,5
+EDU1,s,2,2,s,s
+EDU2,s,1,1,s,s
+EDU3,6,10,8,6,6
+PrRecess,1,3,3,1,1
+rGDPgrow,4,4,4,4,4
+fhwage0P0,7,11,13,9,9
+ma5aep,2,6,6,3,3
+veteran,8,12,12,10,11
+OLF,3,5,5,2,2
+tenure,5,7,9,5,5
+currentage,s,s,s,s,s
+currentagesq,s,s,s,s,s
+currentagecube,s,s,s,s,s
+Occupation Controls,-,-,-,s,s
+Industry Controls,-,-,7,-,10
+Cohort Controls,-,8,10,7,7
+Race Controls,-,13,14,11,12
+Year Controls,-,9,11,8,8
+State Controls,-,s,s,s,s

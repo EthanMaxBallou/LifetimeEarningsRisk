@@ -1,19 +1,19 @@
 # Fdb version 4
-["bibtex DescriptiveLifeRisk"] 1749446244.4705 "DescriptiveLifeRisk.aux" "DescriptiveLifeRisk.bbl" "DescriptiveLifeRisk" 1749446246.75514 0
+["bibtex DescriptiveLifeRisk"] 1749458621.67555 "DescriptiveLifeRisk.aux" "DescriptiveLifeRisk.bbl" "DescriptiveLifeRisk" 1749459821.89007 0
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/bibtex/bib/tikz-feynman/references.bib" 1748843178.34416 3843 4744c087bc34b85451b33d95346f9586 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/bibtex/bst/bibtex/plain.bst" 1740345458.36725 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "DescriptiveLifeRisk.aux" 1749446245.81146 1815 f0962f301241960bb73d4e77239a2e9b "pdflatex"
+  "DescriptiveLifeRisk.aux" 1749459820.95446 1815 f0962f301241960bb73d4e77239a2e9b "pdflatex"
   (generated)
   "DescriptiveLifeRisk.bbl"
   "DescriptiveLifeRisk.blg"
   (rewritten before read)
-["pdflatex"] 1749446244.8554 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft1/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1749446246.75535 0
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft1/DescriptiveLifeRisk.tex" 1749446241.68269 15691 29d3657e862ccadc298620b63ec85126 ""
+["pdflatex"] 1749459819.90041 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft1/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1749459821.89028 0
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft1/DescriptiveLifeRisk.tex" 1749459819.00618 15763 fc91a70fc385bf6405c0a63460f997c4 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png" 1749438883.04722 47100 2cf1c5c7f0fb3df7e42ccf7c17b11b42 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png" 1749438946.6031 46600 0b201f0b491bacd7ec1b2831f166967b ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png" 1749435848.27477 65165 cfe6470e12b55b8568c423d25e4993b7 ""
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png" 1749270568.82995 59782 7235a61c2c10ac6136e1481118e58b9a ""
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png" 1749270326.10226 152605 93fd87411547521f30c9549dfbe618b0 ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png" 1749453510.83729 59782 7235a61c2c10ac6136e1481118e58b9a ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png" 1749453510.26707 152605 93fd87411547521f30c9549dfbe618b0 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map" 1749439353.79308 81088 29d6fa367ac022d1b69251d68c0742e6 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0700.pk" 1740782457.2477 8268 ba405594e7d9975df0afaa5cd4f38a6e ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk" 1740352020.30047 11548 00b1f0567d483e9610dd30d5a4bb7d75 ""
@@ -109,10 +109,10 @@
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/setspace/setspace.sty" 1740369222.49227 22490 8cac309b79a4c53a4ffce4b1b07aead0 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/multicol.sty" 1740345468.67927 32879 f4cfa2226c995da5b04a89ee47abf182 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url/url.sty" 1740345494.98424 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "DescriptiveLifeRisk.aux" 1749446245.81146 1815 f0962f301241960bb73d4e77239a2e9b "pdflatex"
-  "DescriptiveLifeRisk.bbl" 1749446244.7973 49 0eba253fc001332e731e8aba3f23127b "bibtex DescriptiveLifeRisk"
-  "DescriptiveLifeRisk.out" 1749446245.81226 103 9814c2d956916adb9290eca4e25c967a "pdflatex"
-  "DescriptiveLifeRisk.tex" 1749446241.68269 15691 29d3657e862ccadc298620b63ec85126 ""
+  "DescriptiveLifeRisk.aux" 1749459820.95446 1815 f0962f301241960bb73d4e77239a2e9b "pdflatex"
+  "DescriptiveLifeRisk.bbl" 1749458622.02405 49 0eba253fc001332e731e8aba3f23127b "bibtex DescriptiveLifeRisk"
+  "DescriptiveLifeRisk.out" 1749459820.95523 103 9814c2d956916adb9290eca4e25c967a "pdflatex"
+  "DescriptiveLifeRisk.tex" 1749459819.00618 15763 fc91a70fc385bf6405c0a63460f997c4 ""
   (generated)
   "DescriptiveLifeRisk.aux"
   "DescriptiveLifeRisk.log"

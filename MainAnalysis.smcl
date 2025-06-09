@@ -3,20 +3,15 @@
       name:  {res}log1
        {txt}log:  {res}/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/MainAnalysis.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res} 1 Jun 2025, 22:46:44
+ {txt}opened on:  {res} 9 Jun 2025, 02:18:30
 {txt}
 {com}. 
 . log using "MainAnalysis.txt", text name(log2) replace
-{txt}{p 0 4 2}
-(file {bf}
-/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/MainAnalysis.txt{rm}
-not found)
-{p_end}
-{.-}
+{txt}{.-}
       name:  {res}log2
        {txt}log:  {res}/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/MainAnalysis.txt
   {txt}log type:  {res}text
- {txt}opened on:  {res} 1 Jun 2025, 22:46:44
+ {txt}opened on:  {res} 9 Jun 2025, 02:18:30
 {txt}
 {com}. 
 . 
@@ -918,21 +913,22 @@ currentagecube {c |}{col 16}{res}{space 2} 2.05e-06{col 28}{space 2} 7.29e-07{co
 
 {com}. 
 . * controls - no occ
-. stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum2)
+. stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 {res}{txt}note: {bf:year_dum26} omitted because of estimability.
 note: {bf:year_dum27} omitted because of estimability.
 note: {bf:o.cohort_dum4} omitted because of estimability.
+note: {bf:o.twoind_dum30} omitted because of estimability.
 
 {p2colset 0 23 32 2}{...}
 Wald test, begin with full model:
-{p2col:p = {res:0.9937} >= 0.0500,}removing {res:race_dum1 race_dum2 race_dum3 race_dum4 race_dum5}{p_end}
-{p2col:p = {res:0.9832} >= 0.0500,}removing {res:veteran}{p_end}
-{p2col:p = {res:0.8872} >= 0.0500,}removing {res:fhwage0_P0}{p_end}
-{p2col:p = {res:0.7915} >= 0.0500,}removing {res:EDU3}{p_end}
-{p2col:p = {res:0.6887} >= 0.0500,}removing {res:year_dum1 year_dum2 year_dum3 year_dum4 year_dum5 year_dum6 year_dum7 year_dum8 year_dum9 year_dum10 year_dum11 year_dum12 year_dum13 year_dum14 year_dum15 year_dum16 year_dum17 year_dum18 year_dum19 year_dum20 year_dum21 year_dum22 year_dum23 year_dum24 year_dum25}{p_end}
-{p2col:p = {res:0.6579} >= 0.0500,}removing {res:cohort_dum1 cohort_dum2 cohort_dum3}{p_end}
-{p2col:p = {res:0.4623} >= 0.0500,}removing {res:twoind_dum1 twoind_dum2}{p_end}
-{p2col:p = {res:0.4885} >= 0.0500,}removing {res:tenure}{p_end}
+{p2col:p = {res:0.9943} >= 0.0500,}removing {res:race_dum1 race_dum2 race_dum3 race_dum4 race_dum5}{p_end}
+{p2col:p = {res:0.7951} >= 0.0500,}removing {res:fhwage0_P0}{p_end}
+{p2col:p = {res:0.7473} >= 0.0500,}removing {res:veteran}{p_end}
+{p2col:p = {res:0.7169} >= 0.0500,}removing {res:year_dum1 year_dum2 year_dum3 year_dum4 year_dum5 year_dum6 year_dum7 year_dum8 year_dum9 year_dum10 year_dum11 year_dum12 year_dum13 year_dum14 year_dum15 year_dum16 year_dum17 year_dum18 year_dum19 year_dum20 year_dum21 year_dum22 year_dum23 year_dum24 year_dum25}{p_end}
+{p2col:p = {res:0.6052} >= 0.0500,}removing {res:cohort_dum1 cohort_dum2 cohort_dum3}{p_end}
+{p2col:p = {res:0.5697} >= 0.0500,}removing {res:tenure}{p_end}
+{p2col:p = {res:0.4942} >= 0.0500,}removing {res:EDU3}{p_end}
+{p2col:p = {res:0.4762} >= 0.0500,}removing {res:twoind_dum1 twoind_dum2 twoind_dum3 twoind_dum4 twoind_dum5 twoind_dum6 twoind_dum7 twoind_dum8 twoind_dum9 twoind_dum10 twoind_dum11 twoind_dum12 twoind_dum13 twoind_dum14 twoind_dum15 twoind_dum16 twoind_dum17 twoind_dum18 twoind_dum19 twoind_dum20 twoind_dum21 twoind_dum22 twoind_dum23 twoind_dum24 twoind_dum25 twoind_dum26 twoind_dum27 twoind_dum28 twoind_dum29}{p_end}
 {p2col:p = {res:0.4001} >= 0.0500,}removing {res:ma5aep}{p_end}
 {p2col:p = {res:0.3711} >= 0.0500,}removing {res:OLF}{p_end}
 {p2col:p = {res:0.3213} >= 0.0500,}removing {res:rGDPgrow}{p_end}
@@ -952,9 +948,7 @@ Wald test, begin with full model:
 {txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 1}gammaP_WEIGH~D{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
 {hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 2}currentagesq {c |}{col 16}{res}{space 2}-.0002446{col 28}{space 2} .0000924{col 39}{space 1}   -2.65{col 48}{space 3}0.008{col 56}{space 4}-.0004256{col 69}{space 3}-.0000635
-{txt}currentagecube {c |}{col 16}{res}{space 2} 2.05e-06{col 28}{space 2} 7.29e-07{col 39}{space 1}    2.82{col 48}{space 3}0.005{col 56}{space 4} 6.26e-07{col 69}{space 3} 3.48e-06
-{txt}{space 4}state_dum1 {c |}{col 16}{res}{space 2} .0218937{col 28}{space 2} .0216623{col 39}{space 1}    1.01{col 48}{space 3}0.312{col 56}{space 4}-.0205645{col 69}{space 3} .0643518
+{space 4}state_dum1 {c |}{col 16}{res}{space 2} .0218937{col 28}{space 2} .0216623{col 39}{space 1}    1.01{col 48}{space 3}0.312{col 56}{space 4}-.0205645{col 69}{space 3} .0643518
 {txt}{space 4}state_dum2 {c |}{col 16}{res}{space 2}  .010152{col 28}{space 2}   .02129{col 39}{space 1}    0.48{col 48}{space 3}0.633{col 56}{space 4}-.0315765{col 69}{space 3} .0518805
 {txt}{space 4}state_dum3 {c |}{col 16}{res}{space 2} .0054201{col 28}{space 2}  .021286{col 39}{space 1}    0.25{col 48}{space 3}0.799{col 56}{space 4}-.0363004{col 69}{space 3} .0471407
 {txt}{space 4}state_dum4 {c |}{col 16}{res}{space 2} .0111659{col 28}{space 2} .0209242{col 39}{space 1}    0.53{col 48}{space 3}0.594{col 56}{space 4}-.0298454{col 69}{space 3} .0521773
@@ -1006,6 +1000,8 @@ Wald test, begin with full model:
 {txt}{space 3}state_dum50 {c |}{col 16}{res}{space 2}  .017339{col 28}{space 2} .0280528{col 39}{space 1}    0.62{col 48}{space 3}0.537{col 56}{space 4}-.0376446{col 69}{space 3} .0723226
 {txt}{space 3}state_dum51 {c |}{col 16}{res}{space 2} .0571477{col 28}{space 2} .0260582{col 39}{space 1}    2.19{col 48}{space 3}0.028{col 56}{space 4} .0060736{col 69}{space 3} .1082218
 {txt}{space 4}currentage {c |}{col 16}{res}{space 2} .0093781{col 28}{space 2}  .003789{col 39}{space 1}    2.48{col 48}{space 3}0.013{col 56}{space 4} .0019517{col 69}{space 3} .0168045
+{txt}{space 2}currentagesq {c |}{col 16}{res}{space 2}-.0002446{col 28}{space 2} .0000924{col 39}{space 1}   -2.65{col 48}{space 3}0.008{col 56}{space 4}-.0004256{col 69}{space 3}-.0000635
+{txt}currentagecube {c |}{col 16}{res}{space 2} 2.05e-06{col 28}{space 2} 7.29e-07{col 39}{space 1}    2.82{col 48}{space 3}0.005{col 56}{space 4} 6.26e-07{col 69}{space 3} 3.48e-06
 {txt}{space 9}_cons {c |}{col 16}{res}{space 2}-.1155991{col 28}{space 2} .0543588{col 39}{space 1}   -2.13{col 48}{space 3}0.033{col 56}{space 4}-.2221424{col 69}{space 3}-.0090558
 {txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 
@@ -1180,25 +1176,26 @@ Wald test, begin with full model:
 
 {com}. 
 . * All controls
-. stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum2)
+. stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 {res}{txt}note: {bf:year_dum26} omitted because of estimability.
 note: {bf:year_dum27} omitted because of estimability.
 note: {bf:o.cohort_dum4} omitted because of estimability.
+note: {bf:o.twoind_dum30} omitted because of estimability.
 
 {p2colset 0 23 32 2}{...}
 Wald test, begin with full model:
-{p2col:p = {res:0.9638} >= 0.0500,}removing {res:race_dum1 race_dum2 race_dum3 race_dum4 race_dum5}{p_end}
-{p2col:p = {res:0.9496} >= 0.0500,}removing {res:veteran}{p_end}
-{p2col:p = {res:0.8489} >= 0.0500,}removing {res:fhwage0_P0}{p_end}
-{p2col:p = {res:0.7044} >= 0.0500,}removing {res:year_dum1 year_dum2 year_dum3 year_dum4 year_dum5 year_dum6 year_dum7 year_dum8 year_dum9 year_dum10 year_dum11 year_dum12 year_dum13 year_dum14 year_dum15 year_dum16 year_dum17 year_dum18 year_dum19 year_dum20 year_dum21 year_dum22 year_dum23 year_dum24 year_dum25}{p_end}
-{p2col:p = {res:0.5811} >= 0.0500,}removing {res:cohort_dum1 cohort_dum2 cohort_dum3}{p_end}
-{p2col:p = {res:0.5564} >= 0.0500,}removing {res:EDU3}{p_end}
-{p2col:p = {res:0.3839} >= 0.0500,}removing {res:tenure}{p_end}
-{p2col:p = {res:0.3311} >= 0.0500,}removing {res:ma5aep}{p_end}
-{p2col:p = {res:0.3292} >= 0.0500,}removing {res:OLF}{p_end}
-{p2col:p = {res:0.3071} >= 0.0500,}removing {res:rGDPgrow}{p_end}
-{p2col:p = {res:0.2912} >= 0.0500,}removing {res:PrRecess}{p_end}
-{p2col:p = {res:0.2509} >= 0.0500,}removing {res:twoind_dum1 twoind_dum2}{p_end}
+{p2col:p = {res:0.9597} >= 0.0500,}removing {res:race_dum1 race_dum2 race_dum3 race_dum4 race_dum5}{p_end}
+{p2col:p = {res:0.8270} >= 0.0500,}removing {res:veteran}{p_end}
+{p2col:p = {res:0.7824} >= 0.0500,}removing {res:twoind_dum1 twoind_dum2 twoind_dum3 twoind_dum4 twoind_dum5 twoind_dum6 twoind_dum7 twoind_dum8 twoind_dum9 twoind_dum10 twoind_dum11 twoind_dum12 twoind_dum13 twoind_dum14 twoind_dum15 twoind_dum16 twoind_dum17 twoind_dum18 twoind_dum19 twoind_dum20 twoind_dum21 twoind_dum22 twoind_dum23 twoind_dum24 twoind_dum25 twoind_dum26 twoind_dum27 twoind_dum28 twoind_dum29}{p_end}
+{p2col:p = {res:0.8716} >= 0.0500,}removing {res:fhwage0_P0}{p_end}
+{p2col:p = {res:0.7022} >= 0.0500,}removing {res:year_dum1 year_dum2 year_dum3 year_dum4 year_dum5 year_dum6 year_dum7 year_dum8 year_dum9 year_dum10 year_dum11 year_dum12 year_dum13 year_dum14 year_dum15 year_dum16 year_dum17 year_dum18 year_dum19 year_dum20 year_dum21 year_dum22 year_dum23 year_dum24 year_dum25}{p_end}
+{p2col:p = {res:0.5671} >= 0.0500,}removing {res:cohort_dum1 cohort_dum2 cohort_dum3}{p_end}
+{p2col:p = {res:0.5686} >= 0.0500,}removing {res:EDU3}{p_end}
+{p2col:p = {res:0.3841} >= 0.0500,}removing {res:tenure}{p_end}
+{p2col:p = {res:0.3052} >= 0.0500,}removing {res:rGDPgrow}{p_end}
+{p2col:p = {res:0.3060} >= 0.0500,}removing {res:ma5aep}{p_end}
+{p2col:p = {res:0.3447} >= 0.0500,}removing {res:OLF}{p_end}
+{p2col:p = {res:0.2974} >= 0.0500,}removing {res:PrRecess}{p_end}
 {p2colset 0 12 32 2}{...}
 {p2colreset}{...}
 
@@ -1214,6 +1211,7 @@ Wald test, begin with full model:
 {hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {space 10}EDU1 {c |}{col 16}{res}{space 2}-.0060344{col 28}{space 2} .0025948{col 39}{space 1}   -2.33{col 48}{space 3}0.020{col 56}{space 4}-.0111203{col 69}{space 3}-.0009485
 {txt}{space 10}EDU2 {c |}{col 16}{res}{space 2}-.0039337{col 28}{space 2} .0016973{col 39}{space 1}   -2.32{col 48}{space 3}0.020{col 56}{space 4}-.0072605{col 69}{space 3}-.0006069
+{txt}currentagecube {c |}{col 16}{res}{space 2} 1.95e-06{col 28}{space 2} 7.31e-07{col 39}{space 1}    2.67{col 48}{space 3}0.008{col 56}{space 4} 5.19e-07{col 69}{space 3} 3.39e-06
 {txt}{space 4}state_dum1 {c |}{col 16}{res}{space 2} .0220433{col 28}{space 2} .0216877{col 39}{space 1}    1.02{col 48}{space 3}0.309{col 56}{space 4}-.0204647{col 69}{space 3} .0645512
 {txt}{space 4}state_dum2 {c |}{col 16}{res}{space 2} .0092974{col 28}{space 2} .0213739{col 39}{space 1}    0.43{col 48}{space 3}0.664{col 56}{space 4}-.0325955{col 69}{space 3} .0511903
 {txt}{space 4}state_dum3 {c |}{col 16}{res}{space 2} .0057221{col 28}{space 2} .0213715{col 39}{space 1}    0.27{col 48}{space 3}0.789{col 56}{space 4}-.0361659{col 69}{space 3} .0476102
@@ -1266,7 +1264,6 @@ Wald test, begin with full model:
 {txt}{space 3}state_dum50 {c |}{col 16}{res}{space 2} .0165727{col 28}{space 2} .0281485{col 39}{space 1}    0.59{col 48}{space 3}0.556{col 56}{space 4}-.0385984{col 69}{space 3} .0717438
 {txt}{space 3}state_dum51 {c |}{col 16}{res}{space 2} .0490934{col 28}{space 2} .0262294{col 39}{space 1}    1.87{col 48}{space 3}0.061{col 56}{space 4}-.0023164{col 69}{space 3} .1005031
 {txt}{space 4}currentage {c |}{col 16}{res}{space 2} .0087569{col 28}{space 2} .0038098{col 39}{space 1}    2.30{col 48}{space 3}0.022{col 56}{space 4} .0012898{col 69}{space 3} .0162241
-{txt}currentagecube {c |}{col 16}{res}{space 2} 1.95e-06{col 28}{space 2} 7.31e-07{col 39}{space 1}    2.67{col 48}{space 3}0.008{col 56}{space 4} 5.19e-07{col 69}{space 3} 3.39e-06
 {txt}{space 6}occ_dum1 {c |}{col 16}{res}{space 2}-.0216333{col 28}{space 2} .0131249{col 39}{space 1}   -1.65{col 48}{space 3}0.099{col 56}{space 4}-.0473582{col 69}{space 3} .0040916
 {txt}{space 6}occ_dum2 {c |}{col 16}{res}{space 2}-.0005298{col 28}{space 2} .0061194{col 39}{space 1}   -0.09{col 48}{space 3}0.931{col 56}{space 4}-.0125239{col 69}{space 3} .0114643
 {txt}{space 6}occ_dum3 {c |}{col 16}{res}{space 2} -.012185{col 28}{space 2} .0074529{col 39}{space 1}   -1.63{col 48}{space 3}0.102{col 56}{space 4}-.0267928{col 69}{space 3} .0024228
@@ -1792,7 +1789,7 @@ Wald test, begin with full model:
       {txt}name:  {res}log1
        {txt}log:  {res}/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/MainAnalysis.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res} 1 Jun 2025, 22:48:58
+ {txt}closed on:  {res} 9 Jun 2025, 02:20:48
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}
