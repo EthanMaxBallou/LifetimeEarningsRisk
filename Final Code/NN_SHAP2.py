@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jan  9 14:36:36 2025
-
-@author: ethanballou
-"""
 
 
 import shap
@@ -12,6 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import pyreadstat
+import tensorflow as tf
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
@@ -28,68 +22,20 @@ from sklearn.linear_model import LassoCV
 
 
 
-# Load the .dta file
-dta_file_path = "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta"
-data, meta = pyreadstat.read_dta(dta_file_path)
 
-# Display the first few rows of the dataframe
-print(data.head())
-
-# Optionally, inspect metadata
-print(meta.column_names)
-
-
-# Columns to drop from the dataset
-columns_to_keep = [
-    'year', 'personid', 'state', 'occ', 'twoind', 'race', 
-    'currentage', 'veteran', 'rGDPgrow', 
-    'PrRecess', 'OLF', 'tenure', 'currentagesq', 
-    'currentagecube', 'cohort', 'ma5aep', 
-    'fhwage0_P0', 'gammaP_WEIGHTED', 'edmaxyrs'
-]
-
-
-# Drop columns not in columns_to_keep
-data = data[columns_to_keep]
+nn1 = tf.keras.models.load_model("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN1.keras")
 
 
 
-
-# Create a vector with the names of the columns to convert
-columns_to_convert = ['race', 'occ', 'year', 'state', 'cohort', 'twoind']
-
-# Create dummy variables for all specified columns in one line
-data = pd.get_dummies(data, columns=columns_to_convert, drop_first=False)
-
-# Generate education level indicators
-data['EDU1'] = (data['edmaxyrs'] < 12).astype(int)
-data['EDU2'] = ((data['edmaxyrs'] >= 12) & (data['edmaxyrs'] < 14)).astype(int)
-data['EDU3'] = ((data['edmaxyrs'] >= 14) & (data['edmaxyrs'] < 16)).astype(int)
+# Load the CSV file
+data_path = '/Users/ethanballou/Documents/Data/Risk/GAM_data_NN.csv'
+data = pd.read_csv(data_path)
 
 
+# Load the target variable
+target_path = '/Users/ethanballou/Documents/Data/Risk/GAM_target_NN.csv'
+target = pd.read_csv(target_path)
 
-
-# Separate the target variable from the data
-target = data[['gammaP_WEIGHTED']]  # Extract the target column
-data = data.drop(columns=['gammaP_WEIGHTED'])  # Remove the target column from the data
-
-
-# Drop 'personid' column from the dataset
-data = data.drop(columns=['personid', 'edmaxyrs'], errors='ignore')
-
-
-
-# Export the processed data to a CSV file
-processed_data_path = "/Users/ethanballou/Documents/Data/Risk/GAM_data_NN.csv"
-
-data.to_csv(processed_data_path, index=False)
-print(f"Processed data exported to {processed_data_path}")
-
-
-# Save the target variable to a separate CSV file
-target_data_path = "/Users/ethanballou/Documents/Data/Risk/GAM_target_NN.csv"
-target.to_csv(target_data_path, index=False)
-print(f"Target data exported to {target_data_path}")
 
 
 X = data.values  # Features
@@ -122,42 +68,6 @@ y_val = scaler_y.transform(y_val)
 y_test = scaler_y.transform(y_test)
 
 
-num_variables = X_train.shape[1]
-
-
-# 1000 or 2000, 2-3 layers?, sigmoid
-
-nn1 = Sequential()
-nn1.add(Input((num_variables,)))
-
-nn1.add(Dense(1000, activation="sigmoid"))
-nn1.add(Dropout(0.3))
-nn1.add(Dense(1000, activation="sigmoid"))
-nn1.add(Dense(1000, activation="sigmoid"))
-
-nn1.add(Dense(1, activation="linear"))
-
-
-# Print model summary
-nn1.summary()
-
-nn1.compile(optimizer="adam", loss="mse", metrics=["mse"])
-
-
-
-
-early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
-Network1 = nn1.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), verbose=1, callbacks=[early_stopping])
-
-
-
-test_loss, test_mse = nn1.evaluate(X_test, y_test, verbose=0)
-print(f"Test MSE after training: {test_mse}")
-
-
-
-
-nn1.save("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN1.keras")
 
 
 
@@ -218,7 +128,7 @@ X_test_top_cont = X_test[:, top_cont_indices]
 # Visualize the SHAP summary plot for the test set with top_cont variables
 shap.summary_plot(shap_values_top_cont, X_test_top_cont, feature_names=top_cont, max_display=len(top_cont))
 
-plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/shap_summary_plot.png', bbox_inches='tight')
+#plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/shap_summary_plot.png')
 
 
 # Print all variable names in the dataset
@@ -228,17 +138,12 @@ print(data.columns.tolist())
 
 
 
-feature_x = 'rGDPgrow'  # First variable
-feature_y = 'currentage'      # Second variable
-
-feature_x = 'rGDPgrow'  # First variable
-feature_y = 'currentagesq'      # Second variable
 
 
 
 # Generate SHAP dependence plot for interaction between two specific variables
 feature_x = 'rGDPgrow'  # First variable
-feature_y = 'fhwage0_P0'      # Second variable
+feature_y = 'currentagecube'      # Second variable
 
 # Get indices of the features
 feature_x_index = data.columns.get_loc(feature_x)
@@ -249,19 +154,44 @@ shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_name
 
 
 
+
+
+# Generate SHAP dependence plot for interaction between two specific variables
+feature_x = 'rGDPgrow'  # First variable
+feature_y = 'currentagesq'      # Second variable
+
+# Get indices of the features
+feature_x_index = data.columns.get_loc(feature_x)
+feature_y_index = data.columns.get_loc(feature_y)
+
+# Create the dependence plot
+shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_names=data.columns, interaction_index=feature_y_index)
+
+
+
+
+
+# Generate SHAP dependence plot for interaction between two specific variables
+feature_x = 'rGDPgrow'  # First variable
+feature_y = 'currentage'      # Second variable
+
+# Get indices of the features
+feature_x_index = data.columns.get_loc(feature_x)
+feature_y_index = data.columns.get_loc(feature_y)
+
+# Create the dependence plot
+shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_names=data.columns, interaction_index=feature_y_index)
+
+
+
+
+
+
+
+
+
 # Generate SHAP dependence plots for the top continuous features
 for feature in top_cont:
     feature_index = data.columns.get_loc(feature)
     shap.dependence_plot(feature_index, shap_values_reshaped, X_test, feature_names=data.columns)
-
-
-
-
-
-
-
-
-
-
-
 
