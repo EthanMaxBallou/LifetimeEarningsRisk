@@ -6,6 +6,9 @@
 \usepackage{booktabs}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{caption}
+\usepackage{float}
+
 
 \geometry{margin=1in}
 \bibliographystyle{plain}
@@ -50,65 +53,123 @@ Abstract.  This is our abstract.  It is abstract.
 \begin{center}
 %PRELIMINARY: DO NOT CIRCULATE OR QUOTE
 \end{center}
+
+
+
+
 \section{Introduction}
 
 This is an example citation \cite{exampleCitation}.
-\section{Introduction}
-
-
-\section{Data}
 
 Multiply all Coefficients by 100?
 
+
+%\section{Literature Review}
+
+%\section{Data and Model}
+
+%\section{Empirical Strategy}
+
+%\section{Results}
+
+%\section{Conclusion}
+
+
+
+
+%Results \\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \vspace{4cm}
 
-\begin{table}[ht]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png}
+    \caption{Distribution of gammaP\_WEIGHTED}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png}
+    \caption{Scatterplot of Age vs. gammaP\_WEIGHTED}
+\end{figure}
+
+
+
+
+
+
+\begin{table}[H]
 \centering
-\caption{OLS Estimates for $\gamma$}
-
-
+\caption{OLS Estimates for $\gamma$ (Coefficients $\times$ 100)}
 
 \begin{tabular}{lccccc}
-
 
 \toprule
                     & (1)     & (2)   & (3)    & (4)      & (5)         \\
 \midrule
-EDU1                & $-0.004$  & $-0.004$    & $-0.005$  & $-0.006$   & $-0.006$    \\
-                    & (0.003)   & (0.003)     & (0.003)   & (0.003)    & (0.003)     \\
-EDU2                & $-0.003$  & $-0.003$    & $-0.004$  & $-0.004$   & $-0.005$    \\
-                    & (0.002)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-EDU3                & $-0.001$  & $-0.001$    & $-0.001$  & $-0.001$   & $-0.001$    \\
-                    & (0.002)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-PrRecess            & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-rGDPgrow            & $0.000$   & $0.001$     & $0.001$   & $0.001$    & $0.001$     \\
-                    & (0.000)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-fhwage0\_P0         & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-ma5aep              & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-veteran             & $0.000$   & $0.000$     & $0.001$   & $0.000$    & $0.000$     \\
-                    & (0.001)   & (0.002)     & (0.002)   & (0.002)    & (0.002)     \\
-OLF                 & $0.006$   & $0.006$     & $0.005$   & $0.006$    & $0.006$     \\
-                    & (0.006)   & (0.006)     & (0.006)   & (0.006)    & (0.006)     \\
-tenure              & $0.000$   & $0.000$     & $0.000$   & $0.000$    & $0.000$     \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-currentage          & $0.009$   & $0.009$     & $0.009$   & $0.009$    & $0.009$     \\
-                    & (0.004)   & (0.004)     & (0.004)   & (0.004)    & (0.004)     \\
-currentagesq        & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
-currentagecube      & $-0.000$  & $-0.000$    & $-0.000$  & $-0.000$   & $-0.000$    \\
-                    & (0.000)   & (0.000)     & (0.000)   & (0.000)    & (0.000)     \\
+EDU1                & $-0.361$  & $-0.360$    & $-0.522^{*}$  & $-0.597^{*}$   & $-0.630^{**}$    \\
+                    & (0.255)   & (0.273)     & (0.286)   & (0.307)    & (0.310)     \\
+EDU2                & $-0.283$  & $-0.315^{*}$    & $-0.418^{**}$  & $-0.417^{*}$   & $-0.455^{**}$    \\
+                    & (0.175)   & (0.181)     & (0.193)   & (0.216)    & (0.218)     \\
+EDU3                & $-0.089$  & $-0.063$    & $-0.138$  & $-0.114$   & $-0.147$    \\
+                    & (0.206)   & (0.209)     & (0.216)   & (0.228)    & (0.230)     \\
+PrRecess            & $-0.006$   & $-0.038$     & $-0.037$   & $-0.040$    & $-0.039$     \\
+                    & (0.005)   & (0.036)     & (0.036)   & (0.036)    & (0.036)     \\
+rGDPgrow            & $-0.033$   & $0.076$     & $0.071$   & $0.063$    & $0.058$     \\
+                    & (0.033)   & (0.172)     & (0.172)   & (0.172)    & (0.172)     \\
+fhwage0\_P0         & $-0.006$   & $0.004$     & $0.005$   & $0.002$    & $0.004$     \\
+                    & (0.025)   & (0.027)     & (0.027)   & (0.028)    & (0.028)     \\
+ma5aep              & $0.004$   & $0.003$     & $0.004$   & $0.004$    & $0.004$     \\
+                    & (0.003)   & (0.003)     & (0.003)   & (0.003)    & (0.004)     \\
+veteran             & $0.021$   & $-0.003$     & $0.053$   & $0.018$    & $0.040$     \\
+                    & (0.141)   & (0.151)     & (0.153)   & (0.154)    & (0.155)     \\
+OLF                 & $0.627$   & $0.584$     & $0.550$   & $0.619$    & $0.625$     \\
+                    & (0.627)   & (0.628)     & (0.628)   & (0.629)    & (0.629)     \\
+tenure              & $-0.010$   & $-0.009$     & $-0.008$   & $-0.012$    & $-0.010$     \\
+                    & (0.011)   & (0.012)     & (0.012)   & (0.012)    & (0.012)     \\
+currentage          & $0.874^{**}$   & $0.936^{**}$     & $0.926^{**}$   & $0.919^{**}$    & $0.907^{**}$     \\
+                    & (0.380)   & (0.384)     & (0.385)   & (0.385)    & (0.385)     \\
+currentagesq        & $-0.023^{**}$  & $-0.025^{***}$    & $-0.025^{***}$  & $-0.025^{***}$   & $-0.024^{***}$    \\
+                    & (0.009)   & (0.009)     & (0.009)   & (0.009)    & (0.009)     \\
+currentagecube      & $0.0002^{***}$  & $0.0002^{***}$    & $0.0002^{***}$  & $0.0002^{***}$   & $0.0002^{***}$    \\
+                    & (0.0001)   & (0.0001)     & (0.0001)   & (0.0001)    & (0.0001)     \\
 
 \midrule
-Other Controls      &               & \checkmark      & \checkmark    & \checkmark    & \checkmark     \\
 Occupation Controls  &               &                 &               & \checkmark    & \checkmark     \\
 Industry Controls    &               &                 & \checkmark    &               & \checkmark     \\
+Other Controls      &               & \checkmark      & \checkmark    & \checkmark    & \checkmark     \\
 \bottomrule
 \end{tabular}%
 \newline
-\textit{Notes:}vjhhvhj
+\textit{Notes:} Standard errors in parentheses also multiplied by 100. Other controls include state, year, race, and cohort fixed effects. Statistical significance: $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$. All coefficients and standard errors are multiplied by 100 for easier interpretation.
 
 \end{table}
 
@@ -117,7 +178,7 @@ Industry Controls    &               &                 & \checkmark    &        
 
 
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{Stepwise Results for $\gamma$}
 
@@ -169,7 +230,7 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 
 
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{Lasso Results for $\gamma$}
 
@@ -220,7 +281,7 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 
 
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{Lasso and SHAP Results for Occupations}
 
@@ -281,7 +342,7 @@ Economist (9) & (24) & (14) & Manufacturer (94) & Not selected & (78) \\
 
 
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{Lasso and SHAP Results for Industries}
 
@@ -330,6 +391,32 @@ Other industries & Not selected & Various \\
 
 
 
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png}
+    \caption{SHAP Summary Plot}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png}
+        \caption{GDP by Age}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png}
+        \caption{GDP by Income}
+    \end{minipage}
+\end{figure}
 
 
 

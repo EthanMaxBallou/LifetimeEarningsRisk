@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  6 JUN 2025 21:24
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  9 JUN 2025 00:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -266,31 +266,55 @@ File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen176
 \Gin@req@width=\dimen177
+) (/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+ (/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen178
+\captionmargin=\dimen179
+\caption@leftmargin=\dimen180
+\caption@rightmargin=\dimen181
+\caption@width=\dimen182
+\caption@indent=\dimen183
+\caption@parindent=\dimen184
+\caption@hangindent=\dimen185
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count299
+\c@continuedfloat=\count300
+Package caption Info: hyperref package is loaded.
+) (/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count301
+\float@exts=\toks20
+\float@box=\box98
+\@float@everytoks=\toks21
+\@floatcapt=\box99
 ) (/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count299
-\l__pdf_internal_box=\box98
+\l__color_backend_stack_int=\count302
+\l__pdf_internal_box=\box100
 ) (DescriptiveLifeRisk.aux)
 \openout1 = `DescriptiveLifeRisk.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -326,39 +350,42 @@ LaTeX Font Info:    ... okay on input line 20.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 20.
+Package hyperref Info: Link coloring OFF on input line 23.
 (DescriptiveLifeRisk.out) (DescriptiveLifeRisk.out)
 \@outlinefile=\write3
 \openout3 = `DescriptiveLifeRisk.out'.
 
  (/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count300
-\scratchdimen=\dimen178
-\scratchbox=\box99
-\nofMPsegments=\count301
-\nofMParguments=\count302
-\everyMPshowfont=\toks20
-\MPscratchCnt=\count303
-\MPscratchDim=\dimen179
-\MPnumerator=\count304
-\makeMPintoPDFobject=\count305
-\everyMPtoPDFconversion=\toks21
+\scratchcounter=\count303
+\scratchdimen=\dimen186
+\scratchbox=\box101
+\nofMPsegments=\count304
+\nofMParguments=\count305
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count306
+\MPscratchDim=\dimen187
+\MPnumerator=\count307
+\makeMPintoPDFobject=\count308
+\everyMPtoPDFconversion=\toks23
 ) (/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
  (/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/00miktex/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-LaTeX Font Info:    Trying to load font information for U+msa on input line 22.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 25.
  (/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 22.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 25.
  (/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 10000) in paragraph at lines 39--42
+Underfull \hbox (badness 10000) in paragraph at lines 42--45
 
  []
 
@@ -368,24 +395,30 @@ Underfull \hbox (badness 10000) in paragraph at lines 39--42
 
 {/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map}]
 
-LaTeX Warning: Citation `exampleCitation' on page 1 undefined on input line 55.
+LaTeX Warning: Citation `exampleCitation' on page 1 undefined on input line 62.
 
-(DescriptiveLifeRisk.bbl
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png, id=19, 813.0375pt x 487.8225pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png Graphic file (type png)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png  used on input line 112.
+(pdftex.def)             Requested size: 469.75502pt x 281.85048pt.
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png, id=20, 813.0375pt x 487.8225pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png Graphic file (type png)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png  used on input line 120.
+(pdftex.def)             Requested size: 469.75502pt x 281.85048pt.
 
-LaTeX Warning: Empty `thebibliography' environment on input line 3.
-
-)
 
 
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.341 \end{document}
-                     [1
+l.123 
+       [1
 
-]
+ </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png>]
 
-[2]
+[2 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png>]
 
 [3]
 
@@ -393,7 +426,32 @@ l.341 \end{document}
 
 [5]
 
-[6] (DescriptiveLifeRisk.aux)
+[6]
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png, id=58, 578.16pt x 339.669pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png Graphic file (type png)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png  used on input line 400.
+(pdftex.def)             Requested size: 469.75502pt x 275.98038pt.
+
+
+[7]
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png, id=65, 542.025pt x 361.35pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png Graphic file (type png)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png  used on input line 410.
+(pdftex.def)             Requested size: 230.18253pt x 153.45317pt.
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png, id=66, 542.025pt x 361.35pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png Graphic file (type png)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png  used on input line 416.
+(pdftex.def)             Requested size: 230.18253pt x 153.45317pt.
+ (DescriptiveLifeRisk.bbl
+
+LaTeX Warning: Empty `thebibliography' environment on input line 3.
+
+)
+
+[8 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png> </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png> </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png>] (DescriptiveLifeRisk.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -403,20 +461,20 @@ L3 programming layer <2025-01-18>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `DescriptiveLifeRisk.out' has not changed.
-(rerunfilecheck)             Checksum: BD21F498101171B880436C9E1735728B;269.
+(rerunfilecheck)             Checksum: 9814C2D956916ADB9290ECA4E25C967A;103.
  ) 
 Here is how much of TeX's memory you used:
- 9775 strings out of 475466
- 155663 string characters out of 5763911
- 590493 words of memory out of 5000000
- 32625 multiletter control sequences out of 15000+600000
+ 11190 strings out of 475466
+ 185742 string characters out of 5763911
+ 594017 words of memory out of 5000000
+ 34026 multiletter control sequences out of 15000+600000
  569913 words of font info for 78 fonts, out of 8000000 for 9000
  0 hyphenation exceptions out of 8191
- 75i,11n,79p,559b,438s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0700.pk> </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr8.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on DescriptiveLifeRisk.pdf (7 pages, 162026 bytes).
+ 75i,11n,79p,559b,434s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0700.pk> </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr8.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy8.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msam10.pfb>
+Output written on DescriptiveLifeRisk.pdf (9 pages, 440306 bytes).
 PDF statistics:
- 123 PDF objects out of 1000 (max. 8388607)
- 16 named destinations out of 1000 (max. 500000)
- 25 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 142 PDF objects out of 1000 (max. 8388607)
+ 20 named destinations out of 1000 (max. 500000)
+ 34 words of extra memory for PDF output out of 10000 (max. 10000000)
 

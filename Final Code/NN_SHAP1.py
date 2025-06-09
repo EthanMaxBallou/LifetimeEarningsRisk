@@ -146,7 +146,7 @@ nn1.compile(optimizer="adam", loss="mse", metrics=["mse"])
 
 
 
-early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
+early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 Network1 = nn1.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), verbose=1, callbacks=[early_stopping])
 
 
@@ -158,107 +158,6 @@ print(f"Test MSE after training: {test_mse}")
 
 
 nn1.save("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN1.keras")
-
-
-
-X_background = X_train[:50]
-explainer = shap.DeepExplainer(nn1, X_background)
-
-shap_values = explainer.shap_values(X_test)
-
-
-# Reshape to remove the singleton dimension (100, 8086, 1) -> (100, 8086)
-shap_values_reshaped = shap_values.squeeze(axis=-1)
-
-
-
-
-sample_indices = np.random.choice(X_test.shape[0], 5, replace=False)
-X_test_sample = X_test[sample_indices]
-
-
-
-# Average SHAP values across the 100 samples for each feature
-ABSaverage_shap_values = np.mean(np.abs(shap_values_reshaped), axis=0)
-
-
-# Create a DataFrame for better readability
-shap_summary_df = pd.DataFrame({
-    'Feature': data.columns,  # Feature names from the dataset
-    'Average SHAP Value': ABSaverage_shap_values
-})
-
-# Sort by the absolute average SHAP value to find the most important features
-shap_summary_df = shap_summary_df.sort_values(by='Average SHAP Value', ascending=False)
-
-# Display the sorted SHAP summary
-print(shap_summary_df.head(10))
-
-shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/shap_summary.csv', index=False)
-
-
-top_cont = [
-    'currentage', 'rGDPgrow', 
-    'PrRecess', 'tenure', 'currentagesq', 
-    'currentagecube', 'ma5aep', 
-    'fhwage0_P0'
-]
-
-
-# Verify the shapes of shap_values and X_test
-print(f"SHAP values shape: {shap_values[:,:,0].shape}")
-print(f"X_test shape: {X_test.shape}")
-
-
-# Filter SHAP values and feature names to only include top_cont variables
-top_cont_indices = [data.columns.get_loc(feature) for feature in top_cont]
-shap_values_top_cont = shap_values_reshaped[:, top_cont_indices]
-X_test_top_cont = X_test[:, top_cont_indices]
-
-# Visualize the SHAP summary plot for the test set with top_cont variables
-shap.summary_plot(shap_values_top_cont, X_test_top_cont, feature_names=top_cont, max_display=len(top_cont))
-
-plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/shap_summary_plot.png', bbox_inches='tight')
-
-
-# Print all variable names in the dataset
-print("Variable names in the dataset:")
-print(data.columns.tolist())
-
-
-
-
-feature_x = 'rGDPgrow'  # First variable
-feature_y = 'currentage'      # Second variable
-
-feature_x = 'rGDPgrow'  # First variable
-feature_y = 'currentagesq'      # Second variable
-
-
-
-# Generate SHAP dependence plot for interaction between two specific variables
-feature_x = 'rGDPgrow'  # First variable
-feature_y = 'fhwage0_P0'      # Second variable
-
-# Get indices of the features
-feature_x_index = data.columns.get_loc(feature_x)
-feature_y_index = data.columns.get_loc(feature_y)
-
-# Create the dependence plot
-shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_names=data.columns, interaction_index=feature_y_index)
-
-
-
-# Generate SHAP dependence plots for the top continuous features
-for feature in top_cont:
-    feature_index = data.columns.get_loc(feature)
-    shap.dependence_plot(feature_index, shap_values_reshaped, X_test, feature_names=data.columns)
-
-
-
-
-
-
 
 
 
