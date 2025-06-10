@@ -179,6 +179,8 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 
 
 
+
+
 \begin{table}[H]
 \centering
 \caption{Stepwise Results for $\gamma$}
@@ -288,56 +290,61 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 
 \begin{tabular}{lcc|lcc}
 \toprule
-Occupation & LASSO Order & SHAP Rank & Occupation & LASSO Order & SHAP Rank \\
+Occupation & SHAP Rank & LASSO Order & Occupation & SHAP Rank & LASSO Order \\
 \midrule
-Fisher/Hunter (64) & (1) & (67) & Salesperson (49) & (24) & (54) \\
-Aerospace/Marine Engineer (4) & (2) & (17) & Spinner/Weaver (75) & (25) & (64) \\
-Music/Perform (17) & (3) & (29) & Bricklay/Carpt (95) & (25) & (19) \\
-Dr./Dentist/Vet (6) & (4) & (22) & Bookkeepr/Cash (33) & (26) & (52) \\
-Transp. Attend (35) & (5) & (72) & ComputerOperat (34) & (26) & (34) \\
-Lumbrman/Axman (73) & (5) & (48) & Rest./StoreMgr (50) & (26) & (39) \\
-Prof. Athlete (18) & (7) & (47) & SecurityServic (58) & (26) & (38) \\
-Buyer (42) & (7) & (49) & Machine Fitter (84) & (26) & (3) \\
-Eng. Tech. Expert (3) & (9) & (44) & Convey. Oper. (97) & (27) & (12) \\
-Service Worker (59) & (10) & (35) & Domestic Help (54) & (28) & (41) \\
-Farm Manager (61) & (10) & (4) & Forestry Work (63) & (28) & (59) \\
-Jewelry Maker (88) & (10) & (60) & RelatMedicalJob (7) & Not selected & (36) \\
-Chemist (1) & (13) & (5) & Mathematician (8) & Not selected & (24) \\
-Lawyer (12) & (13) & (66) & Cleric (14) & Not selected & (40) \\
-Educator (13) & (13) & (13) & Sculptr/Paintr (16) & Not selected & (71) \\
-Author (15) & (13) & (45) & Scientist (19) & Not selected & (30) \\
-Stenographer (32) & (13) & (46) & Agriculturist (21) & Not selected & (1) \\
-Transport. Oper (98) & (13) & (8) & Office Manager (30) & Not selected & (69) \\
-Insurance Rep. (44) & (17) & (53) & Administrator (31) & Not selected & (50) \\
-Broadcaster (86) & (17) & (56) & Conductor (36) & Not selected & (65) \\
-Painter (93) & (17) & (25) & Mailman (37) & Not selected & (9) \\
-Tailor (79) & (19) & (20) & Tel. Operator (38) & Not selected & (42) \\
-Stat. Mach. Oper (96) & (19) & (41) & Ofc.Worker Etc (39) & Not selected & (55) \\
-Architect/Engineer (2) & (20) & (11) & HH Supervisor (52) & Not selected & (77) \\
-Vendor (45) & (20) & (10) & Dry-Cleaner (56) & Not selected & (63) \\
-Legislator (20) & (21) & (27) & Hair Stylist (57) & Not selected & (75) \\
-Tech.Salespers (43) & (21) & (58) & Farm Hand (62) & Not selected & (51) \\
-Janitor (55) & (21) & (26) & Inspector (70) & Not selected & (7) \\
-Agriculturladm (60) & (21) & (2) & Miner (71) & Not selected & (70) \\
-Food Producer (77) & (21) & (37) & Foundry Worker (72) & Not selected & (68) \\
-Tool/Die Maker (83) & (21) & (16) & ChemicalWorker (74) & Not selected & (61) \\
-Pipe Fitter (87) & (21) & (43) & Shoemaker (80) & Not selected & (62) \\
-Labor/Craftsmn (99) & (22) & (18) & Cabinet Maker (81) & Not selected & (73) \\
-Accountant (11) & (23) & (15) & Stone Cutter (82) & Not selected & (76) \\
-BusinessManagr (40) & (23) & (33) & Electr. Enginr (85) & Not selected & (21) \\
-Cook/Waiter (53) & (23) & (28) & Glazier (89) & Not selected & (74) \\
-Life/Physical Scientist (5) & (24) & (31) & Printer Etc. (92) & Not selected & (57) \\
-Economist (9) & (24) & (14) & Manufacturer (94) & Not selected & (78) \\
-& & & Soldier (101) & Not selected & (23) \\
-& & & Other (999) & Not selected & (32) \\
+occ\_21 & 1 & Not Selected & occ\_60 & 2 & 16 \\
+occ\_84 & 3 & 26 & occ\_61 & 4 & 13 \\
+occ\_1 & 5 & 14 & occ\_45 & 6 & 20 \\
+occ\_70 & 7 & Not Selected & occ\_98 & 8 & 14 \\
+occ\_37 & 9 & Not Selected & occ\_97 & 10 & 27 \\
+occ\_2 & 11 & 20 & occ\_99 & 12 & 22 \\
+occ\_13 & 13 & 14 & occ\_9 & 14 & 24 \\
+occ\_11 & 15 & 23 & occ\_83 & 16 & 21 \\
+occ\_4 & 17 & 3 & occ\_101 & 18 & Not Selected \\
+occ\_95 & 19 & 25 & occ\_79 & 20 & 15 \\
+occ\_85 & 21 & Not Selected & occ\_6 & 22 & 8 \\
+occ\_999 & 23 & Not Selected & occ\_8 & 24 & Not Selected \\
+occ\_93 & 25 & 17 & occ\_55 & 26 & 21 \\
+occ\_20 & 27 & 16 & occ\_53 & 28 & 23 \\
+occ\_17 & 29 & 6 & occ\_19 & 30 & Not Selected \\
+occ\_5 & 31 & 18 & occ\_40 & 32 & 23 \\
+occ\_58 & 33 & 26 & occ\_34 & 34 & 19 \\
+occ\_59 & 35 & 13 & occ\_7 & 36 & Not Selected \\
+occ\_77 & 37 & 21 & occ\_87 & 38 & 21 \\
+occ\_50 & 39 & 19 & occ\_14 & 40 & Not Selected \\
+occ\_54 & 41 & 28 & occ\_96 & 42 & 15 \\
+occ\_38 & 43 & 20 & occ\_3 & 44 & 12 \\
+occ\_15 & 45 & 14 & occ\_32 & 46 & 14 \\
+occ\_18 & 47 & 11 & occ\_42 & 48 & 11 \\
+occ\_73 & 49 & Not Selected & occ\_31 & 50 & Not Selected \\
+occ\_62 & 51 & 21 & occ\_44 & 52 & 17 \\
+occ\_33 & 53 & 19 & occ\_63 & 54 & 28 \\
+occ\_49 & 55 & 18 & occ\_86 & 56 & 17 \\
+occ\_36 & 57 & Not Selected & occ\_43 & 58 & 16 \\
+occ\_39 & 59 & Not Selected & occ\_74 & 60 & 17 \\
+occ\_72 & 61 & Not Selected & occ\_64 & 62 & 2 \\
+occ\_56 & 63 & Not Selected & occ\_92 & 64 & Not Selected \\
+occ\_80 & 65 & Not Selected & occ\_88 & 66 & 13 \\
+occ\_12 & 67 & 14 & occ\_75 & 68 & 25 \\
+occ\_81 & 69 & Not Selected & occ\_30 & 70 & Not Selected \\
+occ\_35 & 71 & 9 & occ\_57 & 72 & Not Selected \\
+occ\_89 & 73 & Not Selected & occ\_71 & 74 & Not Selected \\
+occ\_16 & 75 & 29 & occ\_94 & 76 & 25 \\
+occ\_82 & 77 & Not Selected & occ\_52 & 78 & Not Selected \\
 \bottomrule
 \end{tabular}%
 \newline
 
 \footnotesize
-\textit{Notes:} This table reports occupations selected by Lasso regression with Bayesian Information Criterion (BIC) for predicting earnings risk. "LASSO Order" indicates the order in which variables would enter the model if the penalty were relaxed. "SHAP Rank" shows the variable importance ranking based on SHAP values (lower numbers indicate greater importance). Note that the BIC-optimal model contained no occupation variables.
+\textit{Notes:} This table reports occupations selected by Lasso regression with Bayesian Information Criterion (BIC) for predicting earnings risk. "SHAP Rank" shows the variable importance ranking based on SHAP values (lower numbers indicate greater importance). "LASSO Order" indicates the order in which variables would enter the model if the penalty were relaxed. Note that the BIC-optimal model contained no occupation variables.
 
 \end{table}
+
+
+
+
+
+
 
 
 
@@ -348,37 +355,38 @@ Economist (9) & (24) & (14) & Manufacturer (94) & Not selected & (78) \\
 \begin{tabular}{lcc}
 
 \toprule
-Industry & LASSO Selection Order & SHAP Ranking \\
+Industry & SHAP Ranking & LASSO Selection Order\\
 \midrule
-Construction (14) & (1) & (7) \\
-Other Services (30) & (1) & (4) \\
-Clothing/Text. (12) & (3) & (18) \\
-Educ./Sport (27) & (3) & (22) \\
-Public Admin. (33) & (3) & (10) \\
-Chemicals (5) & (6) & (9) \\
-Health Service (28) & (6) & (29) \\
-Agric.,Forestry (1) & (8) & (20) \\
-Other Trans. (21) & (9) & (6) \\
-Service Indust (25) & (9) & (21) \\
-Postal System (20) & (11) & (24) \\
-Mechanical Eng. (9) & (12) & (2) \\
-Wood/Paper/Print (11) & (12) & (17) \\
-Earth/Clay/Stone (7) & (14) & (16) \\
-Volunt./Church (31) & (14) & (28) \\
-Wholesale (16) & (16) & (5) \\
-Train System (19) & (17) & (3) \\
-Insurance (23) & (17) & (25) \\
-Electrical Eng. (10) & (19) & (11) \\
-Legal Services (29) & (19) & (13) \\
-Synthetics (6) & (21) & (23) \\
-Volunt./Church (31) & (21) & (28) \\
-Food Industry (13) & (23) & (30) \\
-Financial Inst. (22) & (24) & (19) \\
-Iron/Steel (8) & (25) & (26) \\
-Energy/Water (3) & (26) & (1) \\
-Mining (4) & (27) & (12) \\
-Restaurants (24) & (28) & (27) \\
-Other industries & Not selected & Various \\
+twoind\_3 & 1 & 28 \\
+twoind\_9 & 2 & 10 \\
+twoind\_19 & 3 & 18 \\
+twoind\_30 & 4 & 2 \\
+twoind\_16 & 5 & 19 \\
+twoind\_21 & 6 & 8 \\
+twoind\_14 & 7 & Not Selected \\
+twoind\_18 & 8 & Not Selected \\
+twoind\_5 & 9 & 7 \\
+twoind\_33 & 10 & 3 \\
+twoind\_10 & 11 & 21 \\
+twoind\_4 & 12 & 27 \\
+twoind\_29 & 13 & 21 \\
+twoind\_999 & 14 & 17 \\
+twoind\_15 & 15 & 16 \\
+twoind\_7 & 16 & 13 \\
+twoind\_11 & 17 & 16 \\
+twoind\_12 & 18 & 3 \\
+twoind\_22 & 19 & 27 \\
+twoind\_1 & 20 & 11 \\
+twoind\_25 & 21 & 10 \\
+twoind\_27 & 22 & 3 \\
+twoind\_6 & 23 & 23 \\
+twoind\_20 & 24 & 11 \\
+twoind\_23 & 25 & 18 \\
+twoind\_8 & 26 & 28 \\
+twoind\_24 & 27 & 29 \\
+twoind\_31 & 28 & 23 \\
+twoind\_28 & 29 & 7 \\
+twoind\_13 & 30 & 25 \\
 \bottomrule
 \end{tabular}%
 \newline
