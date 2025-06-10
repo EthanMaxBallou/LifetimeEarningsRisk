@@ -175,8 +175,13 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 
 
 
+Table 1 shows the OLS estimates of gamma using the different specifications. 
 
-
+- The coeffiecnts are quite small. However the gamma is centered very tigthly around 0
+- The only coefficents are that are signifcant are EDU1, EDU2, currentage, currentagesq, and currentagecube.
+- EDU1 and EDU2 are only somewhat significant, EDU2 being more significant with insutry controls
+- Education as a trend at least is negative in all cases. 
+- Age is positive and signiicant while the squared term is negative and more significant.
 
 
 
@@ -229,6 +234,12 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 
 
 
+Table 2 shows the stepwise estimates of gamma using the different specifications. 
+
+- Similar to OLS, All the age variables have explnatory power, and EDU1 and EDU2 are mildy explanatory in some cases.
+- Occupation and state controls are selected in all cases
+- Probability of recession, and real GDP growth, are top 4 every time
+- veteran, wages, and many of the controls are seen as the least important variables in just about all the models  
 
 
 \begin{table}[H]
@@ -280,6 +291,17 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 
 
 
+Table 3 shows the lasso of gamma using the different specifications. 
+
+- The are quite different from the stepwise results. All controls are selected in all cases
+- PrRecess and rGDPgrow are not selected in any case across lambda values except in the first model
+- Non of the continuous variables are selected in any of the models once the optimal lambda is selected by cv 
+- Howvever the EDU1 and EDU2 are the most important varaibles after the selected varaibles in most cases
+- MA5 and OLF are also quite strong and come after EDU1 and EDU2 in most cases
+- In the lasso models the age varaibles aren't selected and in some cases are the last variables considered across lambda values
+
+
+
 
 
 \begin{table}[H]
@@ -290,7 +312,7 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 
 \begin{tabular}{lcc|lcc}
 \toprule
-Occupation & SHAP Rank & LASSO Order & Occupation & SHAP Rank & LASSO Order \\
+Occupation & SHAP Rank & LASSO Rank & Occupation & SHAP Rank & LASSO Rank \\
 \midrule
 occ\_21 & 1 & Not Selected & occ\_60 & 2 & 16 \\
 occ\_84 & 3 & 26 & occ\_61 & 4 & 13 \\
@@ -348,6 +370,8 @@ occ\_82 & 77 & Not Selected & occ\_52 & 78 & Not Selected \\
 
 
 
+
+
 \begin{table}[H]
 \centering
 \caption{Lasso and SHAP Results for Industries}
@@ -355,7 +379,7 @@ occ\_82 & 77 & Not Selected & occ\_52 & 78 & Not Selected \\
 \begin{tabular}{lcc}
 
 \toprule
-Industry & SHAP Ranking & LASSO Selection Order\\
+Industry & SHAP Rank & LASSO Rank\\
 \midrule
 twoind\_3 & 1 & 28 \\
 twoind\_9 & 2 & 10 \\
