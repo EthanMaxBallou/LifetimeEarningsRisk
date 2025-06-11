@@ -59,34 +59,103 @@ Abstract.  This is our abstract.  It is abstract.
 
 \section{Introduction}
 
-This is an example citation \cite{exampleCitation}.
-
-Multiply all Coefficients by 100?
+This is an example citation \cite{exampleCitation}. \\ 
 
 
-%\section{Literature Review}
+\section{Literature Review}
 
-%\section{Data and Model}
+\section{Data and Model}
 
-%\section{Empirical Strategy}
+\section{Empirical Strategy}
 
-%\section{Results}
+\section{Results}
 
-%\section{Conclusion}
+\section{Conclusion}
 
 
 
 
-%Results \\
-
-
+% EDU1 - less than high school
+% EDU2 - high school or some college
+% EDU3 - bachelor's but less than master's
 
 
 
 
 
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png}
+    \caption{Distribution of gammaP\_WEIGHTED}
+\end{figure}
 
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png}
+    \caption{Scatterplot of Age vs. gammaP\_WEIGHTED}
+\end{figure}
+
+
+
+
+% does the sign matter? Address this 
+
+
+
+Gamma is a centered heavily around 0 with a standard deviation of 0.1686 as seen in Figure 1. Being centered at 0 is due to its derivation and as seen in Figure 2 there is not a clear correlation with age which might be expected.
+
+
+The beginning of the analysis is just simple OLS regressions of gamma. The further analysis will focus on the which variables are most significant or important and less on the actual size of the effect. However size of coefficents is something OLS can easily address. While gamma is centered around zero, variables do still have effects despite being small. Table 1 shows the OLS estimates for gamma across different specifications. 
+
+The different specifications include different sets of controls, such as occupation and industry controls along wiht other controls such as state, year, cohort, and race.
+
+The coefficents are quite small however some are larger than others. Less than high school and high school or some college education are lightly significant in some cases. They have some of the larger effects compared to many of the variables with less than high school being somewhare around -0.004 and -0.006 and highschool and some college being around -0.003 to -0.005. 
+
+The bachelors degree and less than a masters variable is smaller than the other two education variables which would imply college education does provide stabler employment and earnings overall. Howvever despite this the variable is not significant in any of the models suggests larger variation in earnings for those with a bachelor's degree or less than a master's degree. This variation could be due to variation in fields of study which would explain the larger coefficents in models 3, 4, and 5 where industry or occupation controls are included.
+
+% EDU3 and industry interaction? FE regression with industry controls and industry controls with EDU3 interaction
+
+The other variables that are significant are the age variables. The age, age squared, and age cubed varaibles are all significant in all models. The interesting results is that the age squared and cubed variables are slightly more significant than the regular age variable. On some level it is expected that towards the end of a person's career they would become more risk averse and it is possible the squared and cubed terms capture this variation. 
+
+Overall the OLS results show that education and age are important in explaining lifetime earnings risk. This pattern contrinues in the stepwise and lasso results.
+
+
+
+TABLE 2 HERE
+
+
+Table 2 shows the stepwise results for the same 5 models. The stepwise results are based on a p-value threshold of 0.05. The stepsie regression results are able to assign cardinal rankings to how significant certain variables are in explaining lifetime earnings risk. In the stepwise regression the controls are treated as groups of variables such that the model cannot remove single variables from a set of controls and must remove the entire set of controls at once. The numbers assigned to the variables not selected indicate the the order in which they were removed usch that 1 is the last variable removed before the model is finalized.
+
+The stewise models show similar results to OLS in that both education and age play an important role in predicting lifetime earnigns risk. Simlar to OLS less than highschool and high school and some college are the two important to the model while the bachelors degreee and less than a masters is not selected and not relevant in the model. And for the two models where the two important education variables aren't selected they are still the last two variables to be removed before the cutoff. 
+
+
+The other interesting variables that show up are the probability of recession and real GDP growth. These two variables are in the last 4 variables to be removed in all models suggesting their importance. Specifically probability of recession was the last variable removed in 3 of the models despite different controls. Probability of recession and real GDP growth were both important with and without industry controls which would be where one would expect at least some of their variation to be captured. This implies that variation across industry sensitivity to macroeconomic outcomes may not actually have much explanatory power in lifetime earnings risk.
+
+Some surprising results regarding items not in the model is that industry controls are not selected by the stepwise regression in either of the models it is included in. This is despite the first model not including occupation controls.
+
+
+Table 2 shows the stepwise estimates of gamma using the different specifications. 
+
+- Similar to OLS, All the age variables have explnatory power, and EDU1 and EDU2 are mildy explanatory in some cases.
+- Occupation and state controls are selected in all cases
+- Probability of recession, and real GDP growth, are top 4 every time
+- veteran, wages, and many of the controls are seen as the least important variables in just about all the models  
+
+
+
+% report mse or r2
+
+Table 3 shows the lasso of gamma using the different specifications. 
+
+- The are quite different from the stepwise results. All controls are selected in all cases
+- PrRecess and rGDPgrow are not selected in any case across lambda values except in the first model
+- Non of the continuous variables are selected in any of the models once the optimal lambda is selected by cv 
+- Howvever the EDU1 and EDU2 are the most important varaibles after the selected varaibles in most cases
+- MA5 and OLF are also quite strong and come after EDU1 and EDU2 in most cases
+- In the lasso models the age varaibles aren't selected and in some cases are the last variables considered across lambda values
 
 
 
@@ -107,20 +176,6 @@ Multiply all Coefficients by 100?
 \vspace{4cm}
 
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png}
-    \caption{Distribution of gammaP\_WEIGHTED}
-\end{figure}
-
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png}
-    \caption{Scatterplot of Age vs. gammaP\_WEIGHTED}
-\end{figure}
-
 
 
 
@@ -135,11 +190,11 @@ Multiply all Coefficients by 100?
 \toprule
                     & (1)     & (2)   & (3)    & (4)      & (5)         \\
 \midrule
-EDU1                & $-0.361$  & $-0.360$    & $-0.522^{*}$  & $-0.597^{*}$   & $-0.630^{**}$    \\
+Education (less than 12)                & $-0.361$  & $-0.360$    & $-0.522^{*}$  & $-0.597^{*}$   & $-0.630^{**}$    \\
                     & (0.255)   & (0.273)     & (0.286)   & (0.307)    & (0.310)     \\
-EDU2                & $-0.283$  & $-0.315^{*}$    & $-0.418^{**}$  & $-0.417^{*}$   & $-0.455^{**}$    \\
+Education (12 to 14)                & $-0.283$  & $-0.315^{*}$    & $-0.418^{**}$  & $-0.417^{*}$   & $-0.455^{**}$    \\
                     & (0.175)   & (0.181)     & (0.193)   & (0.216)    & (0.219)     \\
-EDU3                & $-0.089$  & $-0.063$    & $-0.138$  & $-0.114$   & $-0.147$    \\
+Education (14 to 16)                & $-0.089$  & $-0.063$    & $-0.138$  & $-0.114$   & $-0.147$    \\
                     & (0.206)   & (0.209)     & (0.216)   & (0.228)    & (0.230)     \\
 PrRecess            & $-0.006$   & $-0.038$     & $-0.037$   & $-0.040$    & $-0.039$     \\
                     & (0.005)   & (0.036)     & (0.036)   & (0.036)    & (0.036)     \\
@@ -174,14 +229,6 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 \end{table}
 
 
-
-Table 1 shows the OLS estimates of gamma using the different specifications. 
-
-- The coeffiecnts are quite small. However the gamma is centered very tigthly around 0
-- The only coefficents are that are signifcant are EDU1, EDU2, currentage, currentagesq, and currentagecube.
-- EDU1 and EDU2 are only somewhat significant, EDU2 being more significant with insutry controls
-- Education as a trend at least is negative in all cases. 
-- Age is positive and signiicant while the squared term is negative and more significant.
 
 
 
@@ -234,12 +281,6 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 
 
 
-Table 2 shows the stepwise estimates of gamma using the different specifications. 
-
-- Similar to OLS, All the age variables have explnatory power, and EDU1 and EDU2 are mildy explanatory in some cases.
-- Occupation and state controls are selected in all cases
-- Probability of recession, and real GDP growth, are top 4 every time
-- veteran, wages, and many of the controls are seen as the least important variables in just about all the models  
 
 
 \begin{table}[H]
@@ -291,14 +332,6 @@ Other Controls      &               & \checkmark      & \checkmark    & \checkma
 
 
 
-Table 3 shows the lasso of gamma using the different specifications. 
-
-- The are quite different from the stepwise results. All controls are selected in all cases
-- PrRecess and rGDPgrow are not selected in any case across lambda values except in the first model
-- Non of the continuous variables are selected in any of the models once the optimal lambda is selected by cv 
-- Howvever the EDU1 and EDU2 are the most important varaibles after the selected varaibles in most cases
-- MA5 and OLF are also quite strong and come after EDU1 and EDU2 in most cases
-- In the lasso models the age varaibles aren't selected and in some cases are the last variables considered across lambda values
 
 
 
@@ -308,7 +341,7 @@ Table 3 shows the lasso of gamma using the different specifications.
 \centering
 \caption{Lasso and SHAP Results for Occupations}
 
-\scriptsize  % Controls the font size of the table content
+\footnotesize  % Controls the font size of the table content
 
 \begin{tabular}{lcc|lcc}
 \toprule
@@ -374,6 +407,7 @@ occ\_82 & 77 & Not Selected & occ\_52 & 78 & Not Selected \\
 
 \begin{table}[H]
 \centering
+
 \caption{Lasso and SHAP Results for Industries}
 
 \begin{tabular}{lcc}

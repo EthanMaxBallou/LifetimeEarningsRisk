@@ -36,7 +36,7 @@ twoway (scatter gammaP_WEIGHTED currentage), title("Distribution of Age and Gamm
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png", replace
 
 
-histogram gammaP_WEIGHTED, title("Distribution of gammaP_WEIGHTED") xlabel(, grid) ylabel(, grid)
+histogram gammaP_WEIGHTED, title("Distribution of Gamma") xlabel(, grid) ylabel(, grid)
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png", replace
 
 
@@ -44,6 +44,10 @@ log using "MainAnalysis.smcl", name(log1) replace
 
 log using "MainAnalysis.txt", text name(log2) replace
 
+
+* Calculate and display the standard deviation of gammaP_WEIGHTED
+summarize gammaP_WEIGHTED
+display "The standard deviation of gammaP_WEIGHTED is: " r(sd)
 
 
 * OLS

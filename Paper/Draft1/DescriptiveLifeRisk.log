@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  10 JUN 2025 07:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  11 JUN 2025 12:52
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -397,15 +397,20 @@ Underfull \hbox (badness 10000) in paragraph at lines 42--45
 
 LaTeX Warning: Citation `exampleCitation' on page 1 undefined on input line 62.
 
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png, id=19, 813.0375pt x 487.8225pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 62--63
+
+ []
+
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png, id=39, 813.0375pt x 487.8225pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png  used on input line 112.
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png  used on input line 89.
 (pdftex.def)             Requested size: 469.75502pt x 281.85048pt.
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png, id=20, 813.0375pt x 487.8225pt>
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png, id=40, 813.0375pt x 487.8225pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png  used on input line 120.
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png  used on input line 97.
 (pdftex.def)             Requested size: 469.75502pt x 281.85048pt.
 
 
@@ -413,7 +418,7 @@ Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRis
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.123 
+l.100 
        [1
 
  </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png>]
@@ -427,23 +432,25 @@ l.123
 [5]
 
 [6]
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png, id=58, 578.16pt x 339.669pt>
+
+[7]
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png, id=81, 578.16pt x 339.669pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png  used on input line 431.
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png  used on input line 465.
 (pdftex.def)             Requested size: 469.75502pt x 275.98038pt.
 
 
-[7]
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png, id=65, 542.025pt x 361.35pt>
+[8]
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png, id=88, 542.025pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png  used on input line 441.
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png  used on input line 475.
 (pdftex.def)             Requested size: 230.18253pt x 153.45317pt.
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png, id=66, 542.025pt x 361.35pt>
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png, id=89, 542.025pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png  used on input line 447.
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png  used on input line 481.
 (pdftex.def)             Requested size: 230.18253pt x 153.45317pt.
  (DescriptiveLifeRisk.bbl
 
@@ -451,7 +458,7 @@ LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
 )
 
-[8 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png> </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png> </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png>] (DescriptiveLifeRisk.aux)
+[9 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png> </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Age.png> </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/GDP_Income.png>] (DescriptiveLifeRisk.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -461,20 +468,20 @@ L3 programming layer <2025-01-18>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `DescriptiveLifeRisk.out' has not changed.
-(rerunfilecheck)             Checksum: 9814C2D956916ADB9290ECA4E25C967A;103.
+(rerunfilecheck)             Checksum: 8D8FE9DE2BB05013238CCB1B600F55FC;660.
  ) 
 Here is how much of TeX's memory you used:
- 11190 strings out of 475466
- 185742 string characters out of 5763911
- 596017 words of memory out of 5000000
- 34026 multiletter control sequences out of 15000+600000
+ 11201 strings out of 475466
+ 185848 string characters out of 5763911
+ 597019 words of memory out of 5000000
+ 34031 multiletter control sequences out of 15000+600000
  569913 words of font info for 78 fonts, out of 8000000 for 9000
  0 hyphenation exceptions out of 8191
- 75i,11n,79p,559b,434s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0700.pk> </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr8.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy8.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on DescriptiveLifeRisk.pdf (9 pages, 434862 bytes).
+ 75i,11n,79p,774b,438s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0700.pk> </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy8.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msam10.pfb>
+Output written on DescriptiveLifeRisk.pdf (10 pages, 430165 bytes).
 PDF statistics:
- 142 PDF objects out of 1000 (max. 8388607)
- 20 named destinations out of 1000 (max. 500000)
- 34 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 162 PDF objects out of 1000 (max. 8388607)
+ 26 named destinations out of 1000 (max. 500000)
+ 74 words of extra memory for PDF output out of 10000 (max. 10000000)
 
