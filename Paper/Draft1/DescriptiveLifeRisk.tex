@@ -10,7 +10,7 @@
 \usepackage{float}
 \usepackage{setspace}
 \usepackage{amsmath}
-
+\usepackage{comment}
 
 
 
@@ -60,10 +60,6 @@ Abstract.  This is our abstract.  It is abstract.
 
 
 
-\section{Introduction}
-
-
-\section{Literature Review}
 
 
 
@@ -71,8 +67,45 @@ Abstract.  This is our abstract.  It is abstract.
 
 
 
+\begin{comment}
 
 
+1.	Opening motivation
+	•	Importance of understanding earnings risk for individual welfare and policy
+	•	Distinction between annual vs. lifetime risk and why lifetime risk matters for major life choices
+	2.	Classic RIP vs. HIP debate
+	•	RIP (“Restricted Income Profile”) models assume homogeneous expected growth; HIP (“Heterogeneous Income Profile”) allow individual growth rates  ￼
+	•	Implications for estimated variance and persistence of earnings shocks
+	•	Summary of Drewianka & Oberg (2025): moment-statistic approach to test for heterogeneity in profiles  ￼
+	3.	Literature on annual vs. lifetime earnings risk
+	•	Annual-risk measures (e.g. Meghir & Pistaferri 2004) capture temporary vs. permanent shocks
+	•	Previous work estimating lifetime risk (Drewianka & Oberg, “Heterogeneous Lifetime Earnings Risk”): formulas for present-value variance, empirical patterns  ￼
+	•	Gaps: annual moments and lifetime‐risk measures have not been fully integrated
+	4.	Identification of the gap
+	•	Neither RIP/HIP moment tests nor lifetime-risk measures alone address how profile heterogeneity affects lifetime risk
+	•	Existing RIP/HIP tests focus on bias in σ²η but ignore full present-value implications
+	•	Lifetime-risk studies allow heterogeneity in σ²η and θ but do not leverage moment-condition diagnostics
+	5.	This paper’s contributions
+	1.	Unify moment-statistic diagnostics (γ‐ and α‐based tests) with lifetime present-value framework
+	2.	Extend RIP/HIP bias analysis to show how mis-specifying growth heterogeneity distorts lifetime risk estimates
+	3.	Estimate a jointly-specified model of expected growth, σ²η(t), and σ²ν(t) across horizons to produce individual-level lifetime-risk measures
+	4.	Empirical application to PSID 1970–2015: document how profile heterogeneity alters conventional lifetime-risk patterns
+	6.	Key findings (brief)
+	•	Moment-statistics show only modest heterogeneity in expected growth once autoregressive shocks are allowed
+	•	Lifetime-risk estimates shift meaningfully when you incorporate profile heterogeneity diagnostics
+	•	Behavioral validation: lifetime-risk better predicts major life decisions than annual-risk metrics
+	7.	Roadmap of the paper
+	•	Section 2: Theoretical framework—RIP/HIP specs, moment γ/α statistics, present-value formulas
+	•	Section 3: Empirical strategy—PSID sample, construction of γ, α, and out-of-sample forecasts of σ²η, σ²ν, G(τ)
+	•	Section 4: Intermediate results—patterns in annual growth and risks across cohorts, ages, controls
+	•	Section 5: Main results—joint estimation of profile heterogeneity and lifetime-risk measures; bias diagnostics
+	•	Section 6: Behavioral validation—predictive power for major decisions
+	•	Section 7: Conclusion and policy implications
+
+
+
+
+\end{comment}
 
 
 
@@ -88,23 +121,6 @@ Abstract.  This is our abstract.  It is abstract.
 
 
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png}
-    \caption{Distribution of gammaP\_WEIGHTED}
-\end{figure}
-
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png}
-    \caption{Scatterplot of Age vs. gammaP\_WEIGHTED}
-\end{figure}
-
-
-
-
 
 
 
@@ -112,16 +128,37 @@ Abstract.  This is our abstract.  It is abstract.
 
 
 
+
+\section{Introduction}
+
+
+% motivation
+
+
+Understanding the nature of earnings risk is central to both individual decision making and policy. People are often thought to be risk averse not risk neutral and therefore earnings risk has an effect on how individuals make intertemporal decisions such as saving. Especially in analyisis side, structural life cycle models have to make assumptions about the nature of earnings dispersion and risk. Misspecifying the earnings process can lead to inaccurate or incorrect conclusions in many cases and this is why understanding the nature of earnings risk and the earnings process is so important.
+
+
+
+% RIP vs HIP
+
+
+Restricted Income Profile (RIP) models posit that all individuals with the same observed characteristics follow the same earnings trajectory. Deviations then being attributed to shocks to the individuals income process. In RIP, dispersion is then attributed to the variance of these shocks. (Abowd and Card, 1989; Meghir and Pistaferri, 2004) This is in contrast to Heterogeneous Income Profile (HIP) models which allow for different expected income processes for individuals with the same observed characteristics. This means that the variance of shocks is no the only source of dispersion in earnings. While some of the variance is due to shocks the rest od the variance is due to the different expected income processes. (Guvenen, 2007) 
+
+Choosing between RIP and HIP can dramatically change the estimation of the variance of earnings shocks and hence change the estimation of earnings risk. This paper builds on the work of Drewianka and Oberg (2025) \cite{drewianka2025} which uses a moment condition approach to test for heterogeneity in expected income processes.
+
+
+% key findings
+
+
+
+
+The rest of the paper is strucutrded as follows. Section 2 discusses the theoratical model and data, Section 3 discusses the empirical strategy, Section 4 discusses the results, and Section 5 concludes the paper. 
+
+
+
 \section{Data and Model}
 
 
-
-
-start with model
-- Income process and equations 
-- explain lightly RIP
-- Omega function 
-- Then gamma function
 
 
 
@@ -216,14 +253,7 @@ The following mized regression is used to estiamte gamma based on the above equa
 
 
 
-From here a regression is run across fixed effects for each combination of j and q with year effects absorbed. This 
-
-
-
-- add mixed regression equation here
-- maybe FE regression?
-
-
+From here a regression is run across fixed effects for each combination of j and q with year effects absorbed. Weights are then calculated for each combination of j and q based on their accuracy in predicting gamma. Then the weighted gamma is calculated consolidating across j and q so that there are only individual-year gamma values.
 
 
 
@@ -246,7 +276,28 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 % does the sign matter? Address this 
 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png}
+    \caption{Distribution of gammaP\_WEIGHTED}
+\end{figure}
+
+
+
+
 Gamma is a centered heavily around 0 with a standard deviation of 0.1686 as seen in Figure 1. Being centered at 0 is due to its derivation and as seen in Figure 2 there is not a clear correlation with age which might be expected. However there does seem to be a slight tightening past the age of 60 as the variance of gamma appears to decrease at least somewhat.
+
+
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png}
+    \caption{Scatterplot of Age vs. gammaP\_WEIGHTED}
+\end{figure}
 
 
 \end{onehalfspace}
