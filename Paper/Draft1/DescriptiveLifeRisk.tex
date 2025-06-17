@@ -18,7 +18,7 @@
 \geometry{margin=1in}
 \bibliographystyle{plain}
 
-\title{Lifetime Earnings Risk with Machine Learning}
+\title{Determinants of Lifetime Earnings Risk with Machine Learning}
 
 \author{Ethan Ballou\thanks{University of Wisconsin - Milwaukee}}
 
@@ -46,7 +46,7 @@ Abstract.  This is our abstract.  It is abstract.
 \end{abstract}
 \noindent
 \textbf{Keywords}: \\
-\textbf{JEL Codes}: \\
+\textbf{JEL Codes}: D8, J0, D3\\
 
 
 
@@ -132,11 +132,15 @@ Abstract.  This is our abstract.  It is abstract.
 
 Understanding the nature of earnings risk is central to both individual decision making and policy. People are often thought to be risk averse not risk neutral and therefore earnings risk has an effect on how individuals make intertemporal decisions such as saving. Especially on the analysis side, structural life cycle models have to make assumptions about the nature of earnings dispersion and risk. Misspecifying the earnings process can lead to inaccurate or incorrect conclusions in many cases and this is why understanding the nature of earnings risk and the earnings process is so important.
 
-To better pin down the quantitative importance of shocks versus profile heterogeneity, this paper builds on the work of Drewianka and Oberg (2025) \cite{drewianka2025} which uses a moment condition approach to test for heterogeneity in expected income processes. The paper uses a Restricted Income Profile (RIP) model to estimate lifetime earnings risk and then tests for heterogeneity in expected income processes using a moment condition approach. 
+To better pin down the quantitative importance of shocks versus profile heterogeneity, this paper builds on the work of (Drewianka and Oberg 2025, 2019) \cite{drewianka2025,drewianka_oberg2019} which uses a moment condition approach to test for heterogeneity in expected income processes. The paper uses a Restricted Income Profile (RIP) model to estimate lifetime earnings risk and then tests for heterogeneity in expected income processes using a moment condition approach. 
 
-Restricted Income Profile (RIP) models posit that all individuals with the same observed characteristics follow the same earnings trajectory. Deviations then being attributed to shocks to the individuals income process. In RIP, dispersion is then attributed to the variance of these shocks. (Abowd and Card, 1989; Meghir and Pistaferri, 2004) To appreciate the implications of these differing assumptions, it is helpful to compare RIP directly with HIP models.Heterogeneous Income Profile (HIP) models allow for different expected income processes for individuals with the same observed characteristics. This means that the variance of shocks is not the only source of dispersion in earnings. While some of the variance is due to shocks the rest of the variance is due to the different expected income processes. (Guvenen, 2007) Choosing between RIP and HIP can dramatically change the estimation of the variance of earnings shocks and hence change the estimation of earnings risk. 
+Restricted Income Profile (RIP) models posit that all individuals with the same observed characteristics follow the same earnings trajectory. Deviations then being attributed to shocks to the individuals income process. In RIP, dispersion is then attributed to the variance of these shocks. (Abowd and Card, 1989; Meghir and Pistaferri, 2004) \cite{abowd_card1989,meghir_pistaferri2004} To appreciate the implications of these differing assumptions, it is helpful to compare RIP directly with HIP models. Heterogeneous Income Profile (HIP) models allow for different expected income processes for individuals with the same observed characteristics. This means that the variance of shocks is not the only source of dispersion in earnings. While some of the variance is due to shocks the rest of the variance is due to the different expected income processes. (Guvenen 2007; Baker 1997) \cite{guvenen2009,baker1997}Choosing between RIP and HIP can dramatically change the estimation of the variance of earnings shocks and hence change the estimation of earnings risk. 
 
 This paper looks beyond that and tests for determinants of lifetime earnings risk as parameterized by the model in Drewianka and Oberg (2025) \cite{drewianka2025}. This paper finds that education and age are important in explaining lifetime earnings risk. The paper also finds that macroeconomic variables such as probability of recession and real GDP growth are important and play at least a small role and that the inclusion of state controls may further the hypothesis of government policy playing a role. Finally, the paper finds that occupation controls are important while industry controls do not appear to play a large role.
+
+
+
+This paper contributes to multiple strands of literature. The first is the literature around (RIP) models and their use in life cycle models. (MaCurdy 1982; Abowd and Card 1989; Hryshko 2012). \cite{macurdy1982, abowd_card1989, hryshko2012} In addition to that it also contributes to a second strand of literature focusing on lifetime earnings risk. (Drewianka and Oberg 2025; Guvenen 2007; Meghir and Pistaferri 2004). \cite{drewianka2025,guvenen2007,meghir_pistaferri2004} Finally the paper contributes to the literature on machine learning and its use in economics by utilizing neural networks and SHAP values to interpret the results (Lundberg and Lee, 2017). \cite{lundberq} 
 
 The rest of the paper is structured as follows. Section 2 discusses the model and data, Section 3 discusses the empirical strategy, Section 4 discusses the results, and Section 5 concludes the paper. 
 
@@ -188,7 +192,7 @@ E[\gamma_{itjq}]
 + \delta\,\bigl[\sigma^2_{\eta_i(t+1)} - s_i(t-j+1,t)\bigr]\,j
 \end{align}
 
-The data used is the 1970-2015 waves of the Panel Study of Income Dynamics (PSID). The sample is of men between the ages of 22 and 69 with students being excluded. With the theoretical framework and data laid out, the following section turns to the empirical implementation of the model.
+The data used is the 1970-2015 waves of the Panel Study of Income Dynamics (PSID 2017). \cite{psid2017} The sample is of men between the ages of 22 and 69 with students being excluded. Many of the men in the sample come from the Survey of Economic Opportunity which has been shown to be representative of the main PSID sample (SEO; Hill 1992; Drewianka 2010). \cite{hill1992, drewianka2010} Income is calculated in 2015 dollars using the Consumer Price Index (CPI 2017). \cite{cpi2017} The analysis uses several key variables, including education (categorized as less than high school, high school or some college, and bachelor's degree but less than a master's degree), age (with higher-order polynomial terms Age$^2$ and Age$^3$ to capture non-linear effects), and macroeconomic indicators such as the probability of a recession (P(Recession)) and real GDP growth. Individual-specific variables include fixed effects for wages, a moving average of income over the last five years (MA(Last 5 years income)), employment status (Employed), veteran status (Veteran), and job tenure (years in the current job). The primary outcome variable, gamma ($\gamma$), measures lifetime earnings risk derived from the variance of persistent income shocks. Additionally, the analysis incorporates fixed effects for occupation, industry, state of residence, and other controls such as year, race, and cohort. With the theoretical framework and data laid out, the following section turns to the empirical implementation of the model.
 
 % define variables used?
 
@@ -198,7 +202,7 @@ The empirical strategy of this paper is broken into two parts. The first part is
 
 For the estimation of gamma and consolidation across j and q is done by using a mixed regression for the gamma and then a fixed effects regression to get the composite or weighted gamma for each person year.
 
-The following mixed regression is used to estimate gamma based on the above equation. This is done to get an estimate of gamma for each individual in each year across j and q. A mixed regression used as in standard OLS $\sigma^2_{\eta_i}$ is correlated with both the constant and the coefficient on (j+k+q) as seen in equation 8 and therefore a mixed regression is used to account for this by allowing the residuals to be separately correlated with (j+k+q) for each individual i in year t. (For more on this see Drewianka and Oberg (2025) \cite{drewianka2025}) The mixed regression is as follows:
+The following mixed regression is used to estimate gamma based on the above equation. This is done to get an estimate of gamma for each individual in each year across j and q. A mixed regression used instead of standard OLS because $\sigma^2_{\eta_i}$ is correlated with both the constant and the coefficient on (j+k+q) as seen in equation 8 and therefore a mixed regression is used to account for this by allowing the residuals to be separately correlated with (j+k+q) for each individual i in year t. (For more on this see Drewianka and Oberg (2025) \cite{drewianka2025}) The mixed regression is as follows:
 
 \begin{align}
 \gamma_{itjq}
@@ -233,8 +237,8 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png}
-    \caption{Distribution of gammaP\_WEIGHTED}
+    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/Graph2.png}
+    \caption{Distribution of Gamma}
 \end{figure}
 
 
@@ -247,11 +251,22 @@ Gamma is a centered heavily around 0 with a standard deviation of 0.1686 as seen
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png}
-    \caption{Scatterplot of Age vs. gammaP\_WEIGHTED}
+    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/Graph1.png}
+    \caption{Scatterplot of Age vs. Gamma}
 \end{figure}
 
 
+
+
+The beginning of the analysis is just simple OLS regressions of gamma. The further analysis will focus on which variables are most significant or important and less on the actual size of the effect. However size of coefficients is something OLS can easily address. While gamma is centered around zero, variables do still have effects despite being small. Table 1 shows the OLS estimates for gamma across different specifications. 
+
+The different specifications include different sets of controls, such as occupation and industry controls along with other controls such as state, year, cohort, and race.
+
+
+
+The coefficients are quite small however some are larger than others. Less than high school and high school or some college education are lightly significant in some cases. They have some of the larger effects compared to many of the variables with less than high school being somewhere around -0.004 and -0.006 and high school and some college being around -0.003 to -0.005. 
+
+The bachelor's degree and less than a master's variable is smaller than the other two education variables which would imply college education does provide stabler employment and earnings overall. However despite this the variable is not significant in any of the models suggesting larger variation in earnings for those with a bachelor's degree or less than a master's degree. This variation could be due to variation in fields of study which would explain the larger coefficients in models 3, 4, and 5 where industry or occupation controls are included.
 
 
 \end{onehalfspace}
@@ -308,20 +323,9 @@ Observations        & 62,900        & 62,900          & 62,900        & 62,900  
 
 \begin{onehalfspace}
 
-
-The beginning of the analysis is just simple OLS regressions of gamma. The further analysis will focus on which variables are most significant or important and less on the actual size of the effect. However size of coefficients is something OLS can easily address. While gamma is centered around zero, variables do still have effects despite being small. Table 1 shows the OLS estimates for gamma across different specifications. 
-
-The different specifications include different sets of controls, such as occupation and industry controls along with other controls such as state, year, cohort, and race.
-
-The coefficients are quite small however some are larger than others. Less than high school and high school or some college education are lightly significant in some cases. They have some of the larger effects compared to many of the variables with less than high school being somewhere around -0.004 and -0.006 and high school and some college being around -0.003 to -0.005. 
-
-The bachelor's degree and less than a master's variable is smaller than the other two education variables which would imply college education does provide stabler employment and earnings overall. However despite this the variable is not significant in any of the models suggesting larger variation in earnings for those with a bachelor's degree or less than a master's degree. This variation could be due to variation in fields of study which would explain the larger coefficients in models 3, 4, and 5 where industry or occupation controls are included.
-
 % EDU3 and industry interaction? FE regression with industry controls and industry controls with EDU3 interaction
 
-The other variables that are significant are the age variables. The age, age squared, and age cubed variables are all significant in all models. The interesting result is that the age squared and cubed variables are slightly more significant than the regular age variable. On some level it is expected that towards the end of a person's career they would become more risk averse and it is possible the squared and cubed terms capture this variation occurring right before retirement. 
-
-Overall the OLS results show that education and age are important in explaining lifetime earnings risk. This pattern continues in the stepwise and lasso results.
+The other variables that are significant are the age variables. The age, age squared, and age cubed variables are all significant in all models. The interesting result is that the age squared and cubed variables are slightly more significant than the regular age variable. On some level it is expected that towards the end of a person's career they would become more risk averse and it is possible the squared and cubed terms capture this variation occurring right before retirement. Overall the OLS results show that education and age are important in explaining lifetime earnings risk. This pattern continues in the stepwise and lasso results.
 
 
 
@@ -456,16 +460,16 @@ Moving on from the controls, the two education variables that were important in 
 
 However one pattern that does break here is the age variables. The age variables are among the least relevant variables in this analysis. Particularly the age squared variable which is often one of the last variables selected by the model. This is in contrast to the OLS results where the higher order age variables were slightly more significant than the regular age variable. The hypothesis there being that these higher order age terms are capturing a decrease in variation right before retirement. However in the lasso models this is not the case when it comes to the age squared variable. However it could be that this variation is better captured in the age cubed variable which is seen as more important than even the regular age variable in 3 of the models.
 
-The other observation to be made is regarding the probability of recession and real GDP growth variables. These two variables are not selected in any of the models except for the first model. This is in contrast to the stepwise results where they were both important. To complement the insights from penalized regression, we turn to a non-linear model interpretation via SHAP values.
-
-
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/ShapSummaryPlot.png}
+    \includegraphics[width=1\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/SHAPsummaryPLOT_Edit.png}
     \caption{SHAP Summary Plot}
 \end{figure}
 
+
+
+The other observation to be made is regarding the probability of recession and real GDP growth variables. These two variables are not selected in any of the models except for the first model. This is in contrast to the stepwise results where they were both important. To complement the insights from penalized regression, we turn to a non-linear model interpretation via SHAP values.
 
 
 Finally a summary of the shapley values are shown in Figure 3. This can add some detail to the analysis that linear models cannot by representing the effects of a variable not in a scalar way but in a distributional way.
@@ -477,13 +481,25 @@ The table shows just the continuous (or at least somewhat continuous) variables.
 
 %Throughout all the analysis occupation controls were included in every possible model. These occupations and industries are now further analyzed in Tables 4 and 5. The results are shown in a similar way to the previous tables by ranking the variables. The LASSO ranking is based on the order in which variables would enter the model if the penalty were relaxed (across values of lambda) and the SHAP ranking is based on the importance of the variable in predicting lifetime earnings risk.
 
+
+\vspace{2cm}
+
 \section{Conclusion}
+
+
+
+
 
 To conclude the analysis, the results show that education and age are important in explaining lifetime earnings risk. The stepwise and lasso results show that macroeconomic variables such as probability of recession and real GDP growth are important and that the inclusion of state controls may further the hypothesis of government policy playing a large role. Finally, the stepwise results show that occupation controls are important while industry controls do not appear to play a large role.
 
 Some limitations of the analysis are that the data is only men and that a household level model may be able to give more insight into the mechanisms at play. The data is also only from the PSID which may not be representative of the entire population. 
 
 Some areas for further analysis whether in an estimation or life cycle structural way would be to look at the interaction of education and occupation or even occupation with some macroeconomic variables. It seems that macroeconomic variables play at least some small role depending on the controls included suggesting that an interaction with the controls may lend some insight into the mechanisms at play.
+
+
+
+
+
 
 \end{onehalfspace}
 
@@ -493,6 +509,7 @@ Some areas for further analysis whether in an estimation or life cycle structura
 
 
 
+\vspace{13cm}
 
 
 
@@ -630,32 +647,22 @@ twoind\_13 & 30 & 25 \\
 
 
 \begin{thebibliography}{99}
-\bibitem{drewianka2025}
-Drewianka, S. and Oberg, E. (2025). "Earnings Risk and Heterogeneous Expected Earnings Profiles" 
-
+\bibitem{drewianka2025}Drewianka, Scott and Oberg, Phillip. (2020). Earnings Risk and Heterogeneous Expected Earnings Profiles. SSRN Electronic Journal. 10.2139/ssrn.3630330.  
+\bibitem{hill1992} Hill, M.~S. (1992). \textit{The Panel Study of Income Dynamics: A User’s Guide}, Volume~2. Newbury Park, CA: Sage Publications.
+\bibitem{drewianka_oberg2019} Drewianka, S. and Oberg, P. (2019). Estimating Heterogeneity in Lifetime Earnings Risk. Unpublished manuscript, University of Wisconsin--Milwaukee and Illinois Wesleyan University. Available at \url{http://dx.doi.org/10.2139/ssrn.3630477}.
+\bibitem{psid2017} Panel Study of Income Dynamics (2017). Public use dataset. Ann Arbor, MI: Institute for Social Research, Survey Research Center, University of Michigan.
+\bibitem{cpi2017} Consumer Price Index for All Urban Consumers (2017). Data set, series CUUR0000SA0. Washington, D.C.: U.S. Bureau of Labor Statistics.
+\bibitem{drewianka2010} Drewianka, S. (2010). Cross-Sectional Variation in Individuals’ Earnings Instability. \textit{Review of Income and Wealth}, 56(2), 291--326.
 \bibitem{abowd_card1989} Abowd, J.~M. and Card, D. (1989). On the Covariance Structure of Earnings and Hours Changes. \textit{Econometrica}, 57(2), 411--445.
 \bibitem{baker1997} Baker, M. (1997). Growth-Rate Heterogeneity and the Covariance Structure of Life-Cycle Earnings. \textit{Journal of Labor Economics}, 15(2), 338--375.
-\bibitem{burkhauser2000} Burkhauser, R.~V., Butrica, B.~A., Daly, M.~C., and Lillard, D.~R. (2000). The Cross-National Equivalent File: A Product of Cross-National Research. Unpublished manuscript, Cornell University. Available at \url{http://cnef.ehe.osu.edu/files/2012/11/P25-2.pdf}.
-\bibitem{carroll_samwick1997} Carroll, C.~D. and Samwick, A.~A. (1997). The Nature of Precautionary Wealth. \textit{Journal of Monetary Economics}, 40(1), 41--71.
-\bibitem{cpi2017} Consumer Price Index for All Urban Consumers (2017). Data set, series CUUR0000SA0. Washington, D.C.: U.S. Bureau of Labor Statistics.
-\bibitem{cnef2013} Cross-National Equivalent File (2013). Data set, 1970--2010. Ithaca, NY: Department of Policy Analysis, Cornell University.
-\bibitem{drewianka2010} Drewianka, S. (2010). Cross-Sectional Variation in Individuals’ Earnings Instability. \textit{Review of Income and Wealth}, 56(2), 291--326.
-\bibitem{drewianka_oberg2019} Drewianka, S. and Oberg, P. (2019). Estimating Heterogeneity in Lifetime Earnings Risk. Unpublished manuscript, University of Wisconsin--Milwaukee and Illinois Wesleyan University. Available at \url{http://dx.doi.org/10.2139/ssrn.3630477}.
 \bibitem{guvenen2007} Guvenen, F. (2007). Learning Your Earning: Are Labor Income Shocks Really Very Persistent? \textit{American Economic Review}, 97(3), 687--712.
 \bibitem{guvenen2009} Guvenen, F. (2009). An Empirical Investigation of Labor Income Processes. \textit{Review of Economic Dynamics}, 12, 58--79.
-\bibitem{guvenen_mckay_ryan2023} Guvenen, F., McKay, A., and Ryan, C.~B. (2023). A Tractable Income Process for Business Cycle Analysis. \textit{NBER Working Paper} No.\ 30959.
-\bibitem{guvenen_smith2014} Guvenen, F. and Smith, A.~A. Jr. (2014). Inferring Labor Income Risk and Partial Insurance from Economic Choices. \textit{Econometrica}, 82(6), 2085--2129.
-\bibitem{haider2001} Haider, S.~J. (2001). Earnings Instability and Earnings Inequality of Males in the United States: 1967--1991. \textit{Journal of Labor Economics}, 19(4), 799--836.
-\bibitem{hill1992} Hill, M.~S. (1992). \textit{The Panel Study of Income Dynamics: A User’s Guide}, Volume~2. Newbury Park, CA: Sage Publications.
-\bibitem{hoffmann2019} Hoffmann, F. (2019). HIP, RIP, and the Robustness of Empirical Earnings Processes. \textit{Quantitative Economics}, 10, 1279--1315.
 \bibitem{hryshko2012} Hryshko, D. (2012). Labor Income Profiles Are Not Heterogeneous: Evidence from Income Growth Rates. \textit{Quantitative Economics}, 3, 177--209.
-\bibitem{karahan_ozkan2013} Karahan, F. and Ozkan, S. (2013). On the Persistence of Income Shocks Over the Life Cycle: Evidence, Theory, and Implications. \textit{Review of Economic Dynamics}, 16, 452--477.
 \bibitem{macurdy1982} MaCurdy, T.~E. (1982). The Use of Time Series Processes to Model the Error Structure of Earnings in a Longitudinal Data Analysis. \textit{Journal of Econometrics}, 18(1), 83--114.
 \bibitem{meghir_pistaferri2004} Meghir, C. and Pistaferri, L. (2004). Income Variance Dynamics and Heterogeneity. \textit{Econometrica}, 72(1), 1--32.
-\bibitem{psid2017} Panel Study of Income Dynamics (2017). Public use dataset. Ann Arbor, MI: Institute for Social Research, Survey Research Center, University of Michigan.
-\bibitem{saks_shore2005} Saks, R.~E. and Shore, S.~H. (2005). Risk and Career Choice. \textit{The B.E.\ Journal of Economic Analysis \& Policy}, 5(1), Article~1.
-\bibitem{storesletten_telmer_yaron2004} Storesletten, K., Telmer, C.~I., and Yaron, A. (2004). Cyclical Dynamics in Idiosyncratic Labor Market Risk. \textit{Journal of Political Economy}, 112(3), 695--717.
-\bibitem{subrahmanyam1972} Subrahmanyam, M. (1972). A Property of Simple Least Squares Estimates. \textit{Sankhy\=a: The Indian Journal of Statistics, Series B}, 34(3), 355--356.
+\bibitem{lundberq} Lundberg, S. M., and Lee, S. I. (2017). A unified approach to interpreting model predictions. Advances in neural information processing systems, 30.
+
+
 
 
 \end{thebibliography}
