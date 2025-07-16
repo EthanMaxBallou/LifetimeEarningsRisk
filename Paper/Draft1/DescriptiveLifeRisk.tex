@@ -18,7 +18,7 @@
 \geometry{margin=1in}
 \bibliographystyle{plain}
 
-\title{Determinants of Lifetime Earnings Risk with Machine Learning}
+\title{Determinants of Earnings Risk with Machine Learning}
 
 \author{Ethan Ballou\thanks{University of Wisconsin - Milwaukee}}
 
@@ -40,15 +40,20 @@
 
 \begin{abstract}
 \begin{singlespace}
-\noindent 
-Abstract.  This is our abstract.  It is abstract.  
+
+
+\noindent This paper looks at the determinants of lifetime earnings risk under a Restricted Income Profile (RIP) model using traditional and machine learning methods such as lasso and SHAP values. The paper builds on the work of Drewianka and Oberg (2025) which uses a moment condition approach derive a parameter that captures permanent income risk. The paper finds that education and age are important in explaining lifetime earnings risk. The paper also finds that macroeconomic variables such as probability of recession and real GDP growth are important and along with state controls may further imply a role of government policy. Finally, the paper finds that occupation controls are important while industry controls do not appear to play a strong role. 
+
 \end{singlespace}
 \end{abstract}
+
+
+\vspace{1cm}
+
 \noindent
-\textbf{Keywords}: \\
-\textbf{JEL Codes}: D8, J0, D3\\
 
-
+\textbf{Keywords}: machine learning, restricted income profile, earnings instability, risk \\
+\indent \textbf{JEL Codes}: D8, J0, D3\\
 
 
 
@@ -147,7 +152,7 @@ The rest of the paper is structured as follows. Section 2 discusses the model an
 \section{Data and Model}
 
 As mentioned before, the model used is the same model from Drewianka and Oberg (2025) \cite{drewianka2025}. The model is a standard RIP model where people's income are modeled as a function of characteristics, but where there are no individual level effects. Then each individual has a deviation from the expected income process which is modeled as a shock. For example all 22 year old men from the US will have the same expected income process based off of those characteristics. However their actual income will deviate from this expected income process due to shocks. 
-
+\vspace{-0.75cm} % Adjust the value as needed to reduce spacing
 \begin{align}
 u_{it} 
 &= \pi_{it} + \nu_{it} \\[1ex]
@@ -155,9 +160,13 @@ u_{it}
 &= \rho\,\pi_{i(t-1)} + \eta_{it},
 \end{align}
 
+\vspace{-0.25cm}
+
 $u_{it}$ is the shock or deviation from the expected income process for a given person i in time t. This process of shocks can be decomposed into two types of shocks: persistent and temporary shocks as outlined in equation 1. $\pi_{it}$ is the cumulative effect from the persistent shocks which are further modeled in equation 2 while $\nu_{it}$ are the temporary shocks. The temporary shocks along with $\eta_{it}$ are assumed to be mean zero and independent across individuals and time. The persistent shocks are further modeled as an autoregressive process with $\rho$ being the persistence of the shocks and $\eta_{it}$ being the actual shock.
 
 To get a measure of earnings risk the variance of $\eta_{it}$ across time is calculated. This is capturing the correlation of permanent income shocks across time for each individual. To calculate this the following equation is used:
+
+\vspace{-0.75cm}
 
 \begin{align}
 \Omega_i(t,t+k)
@@ -167,7 +176,11 @@ To get a measure of earnings risk the variance of $\eta_{it}$ across time is cal
   + \sum_{j=1}^k \eta_{i(t+j)}.
 \end{align}
 
+\vspace{-0.25cm}
+
 This omega equation differences $u_{it}$ across a window t to t+k. This is then multiplied by another omega function across the window t-j to t+k+q. This will result in the persistent shocks in the interval (t, t+k) showing up twice while the other persistent shocks don't necessarily show up twice. This results in the variance of the shocks across time k as follows:
+
+\vspace{-0.5cm}
 
 \begin{gather}
 E\Bigl[\tfrac{1}{k}\,\Omega_i(t,t+k)\,\Omega_i(t-j,t+k+q)\Bigr]
@@ -177,6 +190,8 @@ E\Bigl[\tfrac{1}{k}\,\Omega_i(t,t+k)\,\Omega_i(t-j,t+k+q)\Bigr]
 \end{gather}
 
 This is then further used to get the following moment condition for the variance of $\eta_{it}$ that is a function of (j+k+q) and j and can be estimated in a regression framework to get a measure of lifetime earnings risk $\gamma_{itjq}$. For more on the derivation see Drewianka and Oberg (2025) \cite{drewianka2025}:
+
+\vspace{-0.75cm}
 
 \begin{align}
 E[\gamma_{itjq}]
@@ -204,6 +219,11 @@ For the estimation of gamma and consolidation across j and q is done by using a 
 
 The following mixed regression is used to estimate gamma based on the above equation. This is done to get an estimate of gamma for each individual in each year across j and q. A mixed regression used instead of standard OLS because $\sigma^2_{\eta_i}$ is correlated with both the constant and the coefficient on (j+k+q) as seen in equation 8 and therefore a mixed regression is used to account for this by allowing the residuals to be separately correlated with (j+k+q) for each individual i in year t. (For more on this see Drewianka and Oberg (2025) \cite{drewianka2025}) The mixed regression is as follows:
 
+
+\vspace{-0.75cm}
+
+
+
 \begin{align}
 \gamma_{itjq}
 &= \beta_{0}
@@ -222,7 +242,7 @@ From here a regression is run across fixed effects for each combination of j and
 
 The second part of the empirical strategy uses various models to estimate lifetime earnings risk (gamma). We begin with the simplest specification to establish a baseline before introducing more sophisticated selection and machine-learning methods. The first model is a standard OLS regression of the lifetime earnings risk variable, gamma, on various controls and variables. The second model is a stepwise regression which selects variables based on a p-value threshold. The third model is a lasso regression which penalizes the size of the coefficients to select variables. Finally, the fourth model uses a multi-layer perceptron and SHAP values to interpret the results.
 
-The OLS regressions are standard however the stepwise and lasso models do have components that are worth mentioning. For the stepwise regression model a cutoff p-value of 0.05 is used to select variables. The model removes the least significant variable (or group of variables in the case of a set of controls) in rounds until it reaches the cutoff. 0.05 was selected so that the model would still select some variables but the rankings of the many of the variables would be clear. A higher cutoff and most of the variables would be selected and cardinal rankings would not be visible. Too low of a cutoff value and many of the variables would not be selected at all. 
+The OLS regressions are fairly standard however the stepwise and lasso models do have components that are worth mentioning. For the stepwise regression model a cutoff p-value of 0.05 is used to select variables. The model removes the least significant variable (or group of variables in the case of a set of controls) in rounds until it reaches the cutoff. 0.05 was selected so that the model would still select some variables but the rankings of the many of the variables would be clear. A higher cutoff and most of the variables would be selected and cardinal rankings would not be visible. Too low of a cutoff value and many of the variables would not be selected at all. 
 
 As for the lasso model, the model is set up to select variables based on the Bayesian Information Criterion (BIC) which is a common method for selecting variables in penalized regression. While the model selects lambda based on cross-validation, the selected model isn't very relevant to the analysis as the rankings are so the selected model isn't discussed. It is worth mentioning however that the lasso model is a penalized regression and therefore some weight is assigned to the size of the coefficients when selecting variables. This is different from the stepwise regression which is indiscriminate regarding the size of the coefficient and only considered the significance of a variable.
 
@@ -249,6 +269,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 Gamma is a centered heavily around 0 with a standard deviation of 0.1686 as seen in Figure 1. Being centered at 0 is due to its derivation and as seen in Figure 2 there is not a clear correlation with age which might be expected. However there does seem to be a slight tightening past the age of 60 as the variance of gamma appears to decrease at least somewhat. To formally quantify these patterns, we next present regression estimates of gamma across several specifications.
 
 
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/Graph1.png}
@@ -258,15 +279,6 @@ Gamma is a centered heavily around 0 with a standard deviation of 0.1686 as seen
 
 
 
-The beginning of the analysis is just simple OLS regressions of gamma. The further analysis will focus on which variables are most significant or important and less on the actual size of the effect. However size of coefficients is something OLS can easily address. While gamma is centered around zero, variables do still have effects despite being small. Table 1 shows the OLS estimates for gamma across different specifications. 
-
-The different specifications include different sets of controls, such as occupation and industry controls along with other controls such as state, year, cohort, and race.
-
-
-
-The coefficients are quite small however some are larger than others. Less than high school and high school or some college education are lightly significant in some cases. They have some of the larger effects compared to many of the variables with less than high school being somewhere around -0.004 and -0.006 and high school and some college being around -0.003 to -0.005. 
-
-The bachelor's degree and less than a master's variable is smaller than the other two education variables which would imply college education does provide stabler employment and earnings overall. However despite this the variable is not significant in any of the models suggesting larger variation in earnings for those with a bachelor's degree or less than a master's degree. This variation could be due to variation in fields of study which would explain the larger coefficients in models 3, 4, and 5 where industry or occupation controls are included.
 
 
 \end{onehalfspace}
@@ -325,6 +337,15 @@ Observations        & 62,900        & 62,900          & 62,900        & 62,900  
 
 % EDU3 and industry interaction? FE regression with industry controls and industry controls with EDU3 interaction
 
+
+The beginning of the analysis is just simple OLS regressions of gamma. The further analysis will focus on which variables are most significant or important and less on the actual size of the effect. However size of coefficients is something OLS can easily address. While gamma is centered around zero, variables do still have effects despite being small. Table 1 shows the OLS estimates for gamma across different specifications. The different specifications include different sets of controls, such as occupation and industry controls along with other controls such as state, year, cohort, and race.
+
+
+The coefficients are quite small however some are larger than others. Less than high school and high school or some college education are lightly significant in some cases. They have some of the larger effects compared to many of the variables with less than high school being somewhere around -0.004 and -0.006 and high school and some college being around -0.003 to -0.005. 
+
+The bachelor's degree and less than a master's variable is smaller than the other two education variables which would imply college education does provide stabler employment and earnings overall. However despite this the variable is not significant in any of the models suggesting larger variation in earnings for those with a bachelor's degree or less than a master's degree. This variation could be due to variation in fields of study which would explain the larger coefficients in models 3, 4, and 5 where industry or occupation controls are included.
+
+
 The other variables that are significant are the age variables. The age, age squared, and age cubed variables are all significant in all models. The interesting result is that the age squared and cubed variables are slightly more significant than the regular age variable. On some level it is expected that towards the end of a person's career they would become more risk averse and it is possible the squared and cubed terms capture this variation occurring right before retirement. Overall the OLS results show that education and age are important in explaining lifetime earnings risk. This pattern continues in the stepwise and lasso results.
 
 
@@ -334,7 +355,7 @@ The other variables that are significant are the age variables. The age, age squ
 
 \begin{table}[H]
 \centering
-\caption{Stepwise Results for $\gamma$}
+\caption{Stepwise Cardinal Ranking of Importance Results for $\gamma$}
 
 \begin{tabular}{lccccc}
 
@@ -401,7 +422,9 @@ All in all the stepwise results show that education and age are important in exp
 
 \begin{table}[H]
 \centering
-\caption{Lasso Results for $\gamma$}
+\setlength{\tabcolsep}{3pt} % Adjust column spacing
+\renewcommand{\arraystretch}{1} % Adjust row spacing
+\caption{Lasso Cardinal Ranking of Importance Results for $\gamma$}
 
 \begin{tabular}{lccccc}
 
@@ -452,13 +475,16 @@ Observations        & 62,900        & 62,900          & 62,900        & 62,900  
 % report mse or r2
 
 
-Now moving on to the lasso results shown in Table 3. As mentioned before lasso is a penalized regression and tries to force coefficients to zero. This means lasso gives some weight to the size of the coefficients (relatively speaking) compared to stepwise which cares only about the p-value. 
-
-The first point to be made is that all the controls are selected in all cases. The configuration of this lasso model is the same as the stepwise model in that it can either include an entire set of controls or none of them. 
+Now moving on to the lasso results shown in Table 3. As mentioned before lasso is a penalized regression and tries to force coefficients to zero. This means lasso gives some weight to the size of the coefficients (relatively speaking) compared to stepwise which cares only about the p-value. The first point to be made is that all the controls are selected in all cases. The configuration of this lasso model is the same as the stepwise model in that it can either include an entire set of controls or none of them. 
 
 Moving on from the controls, the two education variables that were important in the stepwise and OLS models are ranked quite high in importance as they were in the top three variables in every case. This continues the pattern of the less than high school and high school or some college variables playing an important role while the bachelor's degree and less than a master's variable is not as relevant. 
 
 However one pattern that does break here is the age variables. The age variables are among the least relevant variables in this analysis. Particularly the age squared variable which is often one of the last variables selected by the model. This is in contrast to the OLS results where the higher order age variables were slightly more significant than the regular age variable. The hypothesis there being that these higher order age terms are capturing a decrease in variation right before retirement. However in the lasso models this is not the case when it comes to the age squared variable. However it could be that this variation is better captured in the age cubed variable which is seen as more important than even the regular age variable in 3 of the models.
+
+
+
+
+
 
 
 \begin{figure}[H]
@@ -467,12 +493,14 @@ However one pattern that does break here is the age variables. The age variables
     \caption{SHAP Summary Plot}
 \end{figure}
 
-
+\vspace{1cm}
 
 The other observation to be made is regarding the probability of recession and real GDP growth variables. These two variables are not selected in any of the models except for the first model. This is in contrast to the stepwise results where they were both important. To complement the insights from penalized regression, we turn to a non-linear model interpretation via SHAP values.
 
 
+
 Finally a summary of the shapley values are shown in Figure 3. This can add some detail to the analysis that linear models cannot by representing the effects of a variable not in a scalar way but in a distributional way.
+
 
 The table shows just the continuous (or at least somewhat continuous) variables. Tenure, wage, and real GDP growth are shown to have relatively small effects regardless of the values. However the age variables display an interesting pattern. First the values are distributed such that lower values have a negative effect on gamma. However the more interesting observation is the skewness. All of the variables are skewed to the right as based on this for the really high values of age (which show up less often) the effect is positive. This is in contrast to the hypothesis that higher age may be related to a decrease in risk before retirement. However this is supported by the OLS results somewhat in that the cubed age variable was positive and very significant. That being said, based on the table the age squared variable has the most variation in effects compared to the rest of the age variables which does still support the result that age becomes important towards the end of a person's career. In the next section, we synthesize these findings and discuss their broader implications for understanding lifetime earnings risk.
 
@@ -482,7 +510,7 @@ The table shows just the continuous (or at least somewhat continuous) variables.
 %Throughout all the analysis occupation controls were included in every possible model. These occupations and industries are now further analyzed in Tables 4 and 5. The results are shown in a similar way to the previous tables by ranking the variables. The LASSO ranking is based on the order in which variables would enter the model if the penalty were relaxed (across values of lambda) and the SHAP ranking is based on the importance of the variable in predicting lifetime earnings risk.
 
 
-\vspace{2cm}
+%\vspace{2cm}
 
 \section{Conclusion}
 
@@ -666,6 +694,128 @@ twoind\_13 & 30 & 25 \\
 
 
 \end{thebibliography}
+
+
+
+
+
+
+
+
+
+
+\begin{table}[H]
+\centering
+\caption{Lasso and SHAP Results for Occupations}
+
+\footnotesize  % Controls the font size of the table content
+
+\begin{tabular}{lcc|lcc}
+\toprule
+Occupation & SHAP Rank & LASSO Rank & Occupation & SHAP Rank & LASSO Rank \\
+\midrule
+occ\_21 & 1 & Not Selected & occ\_60 & 2 & 16 \\
+occ\_84 & 3 & 26 & occ\_61 & 4 & 13 \\
+occ\_1 & 5 & 14 & occ\_45 & 6 & 20 \\
+occ\_70 & 7 & Not Selected & occ\_98 & 8 & 14 \\
+occ\_37 & 9 & Not Selected & occ\_97 & 10 & 27 \\
+occ\_2 & 11 & 20 & occ\_99 & 12 & 22 \\
+occ\_13 & 13 & 14 & occ\_9 & 14 & 24 \\
+occ\_11 & 15 & 23 & occ\_83 & 16 & 21 \\
+occ\_4 & 17 & 3 & occ\_101 & 18 & Not Selected \\
+occ\_95 & 19 & 25 & occ\_79 & 20 & 15 \\
+occ\_85 & 21 & Not Selected & occ\_6 & 22 & 8 \\
+occ\_999 & 23 & Not Selected & occ\_8 & 24 & Not Selected \\
+occ\_93 & 25 & 17 & occ\_55 & 26 & 21 \\
+occ\_20 & 27 & 16 & occ\_53 & 28 & 23 \\
+occ\_17 & 29 & 6 & occ\_19 & 30 & Not Selected \\
+occ\_5 & 31 & 18 & occ\_40 & 32 & 23 \\
+occ\_58 & 33 & 26 & occ\_34 & 34 & 19 \\
+occ\_59 & 35 & 13 & occ\_7 & 36 & Not Selected \\
+occ\_77 & 37 & 21 & occ\_87 & 38 & 21 \\
+occ\_50 & 39 & 19 & occ\_14 & 40 & Not Selected \\
+occ\_54 & 41 & 28 & occ\_96 & 42 & 15 \\
+occ\_38 & 43 & 20 & occ\_3 & 44 & 12 \\
+occ\_15 & 45 & 14 & occ\_32 & 46 & 14 \\
+occ\_18 & 47 & 11 & occ\_42 & 48 & 11 \\
+occ\_73 & 49 & Not Selected & occ\_31 & 50 & Not Selected \\
+occ\_62 & 51 & 21 & occ\_44 & 52 & 17 \\
+occ\_33 & 53 & 19 & occ\_63 & 54 & 28 \\
+occ\_49 & 55 & 18 & occ\_86 & 56 & 17 \\
+occ\_36 & 57 & Not Selected & occ\_43 & 58 & 16 \\
+occ\_39 & 59 & Not Selected & occ\_74 & 60 & 17 \\
+occ\_72 & 61 & Not Selected & occ\_64 & 62 & 2 \\
+occ\_56 & 63 & Not Selected & occ\_92 & 64 & Not Selected \\
+occ\_80 & 65 & Not Selected & occ\_88 & 66 & 13 \\
+occ\_12 & 67 & 14 & occ\_75 & 68 & 25 \\
+occ\_81 & 69 & Not Selected & occ\_30 & 70 & Not Selected \\
+occ\_35 & 71 & 9 & occ\_57 & 72 & Not Selected \\
+occ\_89 & 73 & Not Selected & occ\_71 & 74 & Not Selected \\
+occ\_16 & 75 & 29 & occ\_94 & 76 & 25 \\
+occ\_82 & 77 & Not Selected & occ\_52 & 78 & Not Selected \\
+\bottomrule
+\end{tabular}%
+\newline
+
+\footnotesize
+\textit{Notes:} This table reports occupations selected by Lasso regression with Bayesian Information Criterion (BIC) for predicting earnings risk. "SHAP Rank" shows the variable importance ranking based on SHAP values (lower numbers indicate greater importance). "LASSO Order" indicates the order in which variables would enter the model if the penalty were relaxed. Note that the BIC-optimal model contained no occupation variables.
+
+\end{table}
+
+
+
+
+
+\begin{table}[H]
+\centering
+
+\caption{Lasso and SHAP Results for Industries}
+
+\begin{tabular}{lcc}
+
+\toprule
+Industry & SHAP Rank & LASSO Rank\\
+\midrule
+twoind\_3 & 1 & 28 \\
+twoind\_9 & 2 & 10 \\
+twoind\_19 & 3 & 18 \\
+twoind\_30 & 4 & 2 \\
+twoind\_16 & 5 & 19 \\
+twoind\_21 & 6 & 8 \\
+twoind\_14 & 7 & Not Selected \\
+twoind\_18 & 8 & Not Selected \\
+twoind\_5 & 9 & 7 \\
+twoind\_33 & 10 & 3 \\
+twoind\_10 & 11 & 21 \\
+twoind\_4 & 12 & 27 \\
+twoind\_29 & 13 & 21 \\
+twoind\_999 & 14 & 17 \\
+twoind\_15 & 15 & 16 \\
+twoind\_7 & 16 & 13 \\
+twoind\_11 & 17 & 16 \\
+twoind\_12 & 18 & 3 \\
+twoind\_22 & 19 & 27 \\
+twoind\_1 & 20 & 11 \\
+twoind\_25 & 21 & 10 \\
+twoind\_27 & 22 & 3 \\
+twoind\_6 & 23 & 23 \\
+twoind\_20 & 24 & 11 \\
+twoind\_23 & 25 & 18 \\
+twoind\_8 & 26 & 28 \\
+twoind\_24 & 27 & 29 \\
+twoind\_31 & 28 & 23 \\
+twoind\_28 & 29 & 7 \\
+twoind\_13 & 30 & 25 \\
+\bottomrule
+\end{tabular}%
+\newline
+
+\footnotesize
+\textit{Notes:} This table reports industries selected by Lasso regression with Bayesian Information Criterion (BIC) for predicting earnings risk. "LASSO Selection Order" indicates the order in which variables would enter the model if the penalty were relaxed. "SHAP Ranking" shows the variable importance ranking based on SHAP values (lower numbers indicate greater importance).
+
+\end{table}
+
+
 
 
 
