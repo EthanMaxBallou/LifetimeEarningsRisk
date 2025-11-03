@@ -96,6 +96,9 @@ personid year over sex age relation edyrs state earnings annhrs annwks race OLF 
 - Cohort
 
 
+- CAN BASCIALLY SKIP MOST OF THE STEPS WITH CNEF SINCE IT IS ALREADY CLEANED
+- HOWEVER CNEF DOES HAVE RISK TOLERANCE OR UNION OR SOME OF THE OTHER VARIABLES - No Race, annual weeks worked, or student status
+
 
 */
 
