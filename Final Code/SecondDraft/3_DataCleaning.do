@@ -581,9 +581,7 @@ forval i = 1971/2009 {
 replace personid = substr(personid, 3, .)
 destring personid, replace force
 
-replace annhrs=. if annhrs>6500
-replace relation=999 if relation==.|relation==.s
-replace earnings=. if earnings==.m|earnings==.s
+
 
 
 
@@ -595,6 +593,44 @@ append using `temp_2017'
 append using `temp_2019'
 append using `temp_2021'
 append using `temp_2023'
+
+
+replace annhrs=. if annhrs>6500
+replace relation=999 if relation==.|relation==.s
+replace earnings=. if earnings==.m|earnings==.s
+
+
+
+
+
+
+preserve
+
+
+** Importing annual Consumer Price Index for Urban Consumers (series CUUR0000SA0)
+
+import delimited "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/AnnualCpi.csv", clear
+
+
+keep year annual
+ren annual cpi
+
+** moving year forward by 1 because earnings are reported to PSID in following year
+
+replace year=year+1
+
+
+tempfile cpi_data
+save `cpi_data'
+
+
+restore
+
+
+
+
+
+
 
 
 
