@@ -88,7 +88,7 @@ mixed `y' i.year i.censdiv i.currentage c.currentagesq c.currentagecube c.curren
 compress
 
 
-save "$DATA/permVtemp7-REtrends-NoGr.dta", replace
+save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_simpleSPEC.dta", replace
 
 
 ***********************************************************************
@@ -112,16 +112,18 @@ foreach x in `DVLIST' {
 		}
 	}
 	compress
-	save "$TEMPDATA/Residuals-REtrends-NoGr.dta", replace
+	save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_simpleSPEC_difference.dta", replace
+
 
 }
 
 
 
-save "$DATA/Residuals-REtrends-NoGr.dta", replace
+save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_simpleSPEC_difference.dta", replace
 
 
- 
+
+/*
 
 
 *** Extended Specification
@@ -181,7 +183,8 @@ mixed `y' i.year i.censdiv##c.year i.currentage i.(group postgrad)##(c.currentag
 	move fhwage1_P1 fhwage1
 
 compress
-save"$DATA/permVtemp7-REtrends.dta", replace
+
+save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_extendedSPEC.dta", replace
 
 
 ***********************************************************************
@@ -205,15 +208,291 @@ foreach x in `DVLIST' {
 		}
 	}
 	compress
-	save "$TEMPDATA/Residuals-REtrends.dta", replace
+	save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_extendedSPEC_difference.dta", replace
 
 }
 
-save "$DATA/Residuals-REtrends.dta", replace
+save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_extendedSPEC_difference.dta", replace
 
 
 
 
+*/
+
+
+
+
+
+
+*****************************************************
+**			 GAMMA			   **
+*****************************************************
+
+   * gam_[VAR]_jjqq     = (1/2)*(G2_[VAR])*(Ljj.G[jj+2+qq]_[VAR])
+
+
+
+global DVLIST "fearn fhwage"	
+global MAXORDER "1"				
+global MODELLIST "A"	
+
+
+
+
+
+
+
+tempfile stats_long_gamma
+preserve
+    clear
+    * create an empty shell dataset for gamma results
+    set obs 0
+    gen personid   = .
+    gen year  = .
+    gen J     = .
+    gen Q     = .
+    gen JplusQ = .
+    gen JJQQ   = .
+	gen gam_fearn0_A_ = .
+	gen gam_fearn1_A_ = .
+	gen gam_fhwage0_A_ = .
+	gen gam_fhwage1_A_ = .
+
+	label variable JplusQ "=J+Q"
+	label variable JJQQ "1st two dig=J, 2nd two dig=Q"
+
+    save `stats_long_gamma', replace
+restore
+
+
+
+
+gen gam_fearn0_A_ = .
+gen gam_fearn1_A_ = .
+gen gam_fhwage0_A_ = .
+gen gam_fhwage1_A_ = .
+
+
+
+forvalues j=2(1)32 {
+	forvalues q=2(1)`=(35-`j')' {
+
+
+
+**NOTE: HERE IS WHERE WE ARE COMPUTING THE GAMMA STATISTICS
+**NOTE: BY STARTING J AND Q FROM 2, WE ARE IMPOSING THE BELIEF THAT TRANSITORY SHOCKS ARE MA(1)
+**NOTE: WE WOULD START J AND Q FROM 3 IF WE WANT TO ALLOW FOR TRANSITORY SHOCKS TO BE MA(2)
+
+		foreach x in $DVLIST {
+			forvalues y=0/$MAXORDER { 
+				foreach model in $MODELLIST {
+
+	
+					replace gam_`x'`y'_`model'_ = (1/2)*(G2_`x'`y')*(L`j'.G`=`j'+2+`q''_`x'`y') 
+
+				}
+			}
+		}
+
+		preserve
+            keep personid year gam_*
+            
+			egen anygamma = rownonmiss(gam_*)
+			keep if anygamma > 0
+			drop anygamma
+
+            * If no obs have non-missing gamma, skip
+            count
+            if r(N) {
+                gen J       = `j'
+                gen Q       = `q'
+                gen JplusQ  = J + Q
+                gen JJQQ    = 100*J + Q
+
+
+                append using `stats_long_gamma'
+                save `stats_long_gamma', replace
+            }
+        restore
+
+	}
+}
+
+
+
+
+*****************************************************
+**			 ALPHA			   **
+*****************************************************
+
+   *  alph_[VAR]_jjqq    = -1*(Gqq_[VAR])*(Ljj.Gjj_[VAR])
+
+
+
+global DVLIST "fearn fhwage"	
+global MAXORDER "1"				
+global MODELLIST "A"	
+
+
+
+tempfile stats_long_alpha
+preserve
+    clear
+    * create an empty shell dataset for gamma results
+    set obs 0
+    gen personid   = .
+    gen year  = .
+    gen J     = .
+    gen Q     = .
+    gen JplusQ = .
+    gen JJQQ   = .
+	gen alph_fearn0_A_ = .
+	gen alph_fearn1_A_ = .
+	gen alph_fhwage0_A_ = .
+	gen alph_fhwage1_A_ = .
+
+	label variable JplusQ "=J+Q"
+	label variable JJQQ "1st two dig=J, 2nd two dig=Q"
+
+    save `stats_long_alpha', replace
+restore
+
+
+gen alph_fearn0_A_ = .
+gen alph_fearn1_A_ = .
+gen alph_fhwage0_A_ = .
+gen alph_fhwage1_A_ = .
+
+
+
+forvalues j=2(1)32 {
+	forvalues q=2(1)`=(35-`j')' {
+
+
+
+**NOTE: HERE IS WHERE WE ARE COMPUTING THE ALPHA STATISTICS
+**NOTE: BY STARTING J AND Q FROM 2, WE ARE IMPOSING THE BELIEF THAT TRANSITORY SHOCKS ARE MA(1)
+**NOTE: WE WOULD START J AND Q FROM 3 IF WE WANT TO ALLOW FOR TRANSITORY SHOCKS TO BE MA(2)
+
+		foreach x in $DVLIST {
+			forvalues y=0/$MAXORDER { 
+				foreach model in $MODELLIST {
+
+	
+					replace alph_`x'`y'_`model'_ = -1*(G`q'_`x'`y')*(L`j'.G`j'_`x'`y')
+
+				}
+			}
+		}
+
+		preserve
+            keep personid year alph_*
+            
+			egen anyalpha = rownonmiss(alph_*)
+			keep if anyalpha > 0
+			drop anyalpha
+			
+            * If no obs have non-missing alpha, skip
+            count
+            if r(N) {
+                gen J       = `j'
+                gen Q       = `q'
+                gen JplusQ  = J + Q
+                gen JJQQ    = 100*J + Q
+
+
+                append using `stats_long_alpha'
+                save `stats_long_alpha', replace
+            }
+        restore
+
+	}
+}
+
+
+preserve
+use `stats_long_gamma', clear
+save "/Users/ethanballou/Documents/Data/Risk/GammaRaw.dta", replace
+restore
+
+preserve
+use `stats_long_alpha', clear
+save "/Users/ethanballou/Documents/Data/Risk/AlphaRaw.dta", replace
+restore
+
+
+
+
+keep personid year
+
+
+
+merge 1:m personid year using "/Users/ethanballou/Documents/Data/Risk/AlphaRaw.dta"
+
+drop JplusQ JJQQ
+
+keep if _merge==3
+drop _merge
+
+
+
+
+merge 1:1 personid year J Q using "/Users/ethanballou/Documents/Data/Risk/GammaRaw.dta"
+
+drop JplusQ JJQQ
+
+drop _merge
+
+
+
+gen JplusQ = J + Q
+gen JJQQ = 100*J + Q
+label variable JplusQ "=J+Q"
+label variable JJQQ "1st two dig=J, 2nd two dig=Q"
+
+
+save "/Users/ethanballou/Documents/Data/Risk/AlphaGammaRaw.dta", replace
+
+
+
+
+
+
+* Merge to get demographic variables
+
+**** DROP THE G VARS BEFORE MERGING
+
+merge m:1 personid year using "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_simpleSPEC_difference.dta", 
+
+keep if _merge == 3
+drop _merge
+
+
+
+
+save "/Users/ethanballou/Documents/Data/Risk/AlphaGammaRaw.dta", replace
+
+
+
+
+
+
+
+
+
+******* DO THIS IN DATA CLEANING FILE I GUESS
+
+
+
+clear
+
+
+do "/Users/ethanballou/Documents/Data/LER_Draft2/PSID_VETERANMARRIAGE/J354995.do"
+
+do "/Users/ethanballou/Documents/Data/LER_Draft2/PSID_VETERANMARRIAGE/J354995_formats.do"
+
+
+gen personid=(ER30001*1000) + ER30002
 
 
 
