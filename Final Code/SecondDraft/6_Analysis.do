@@ -24,10 +24,10 @@ use "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta", clear
 
 clear all
 
-use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma.dta", replace
+use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", replace
 
 
-
+ssc install estout
 
 
 tabulate twoind, generate(twoind_)
@@ -92,24 +92,26 @@ display "The standard deviation of gammaP_WEIGHTED is: " r(sd)
 
 * OLS
 
-* No controls
-regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube
 
+eststo clear
+
+* No controls
+eststo m1: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube
 
 * controls - no occ or ind
-regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
-
+eststo m2: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
 
 * controls - no occ
-regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
-
+eststo m3: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
 
 * controls - no ind
-regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
-
+eststo m4: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
 
 * All controls
-regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+eststo m5: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+
+* Export to LaTeX
+esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex", replace se r2 label
 
 
 
