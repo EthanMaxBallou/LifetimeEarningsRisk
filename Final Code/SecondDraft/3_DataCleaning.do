@@ -646,6 +646,7 @@ forvalues x=1999(2)2023 {
 	gen racehead3_`x'=.
 	gen racehead4_`x'=.
 }
+
 replace relation1968= ER30003
 replace racehead1_1968= V181
 
@@ -1476,6 +1477,285 @@ restore
 
 
 
+
+
+
+****** VETERAN AND OTHER
+
+
+* can add marriage and child data later if needed
+
+
+preserve
+
+
+clear
+
+
+do "/Users/ethanballou/Documents/Data/LER_Draft2/PSID_VETERANMARRIAGE/J354995.do"
+
+do "/Users/ethanballou/Documents/Data/LER_Draft2/PSID_VETERANMARRIAGE/J354995_formats.do"
+
+
+gen personid=(ER30001*1000) + ER30002
+
+
+
+forvalues x=1968(1)1997  {
+	gen seqno`x'=.
+	gen relation`x'=.
+	gen vet`x'=.
+
+}
+
+forvalues x=1999(2)2023 {
+	gen seqno`x'=.
+	gen relation`x'=.
+	gen vet`x'=.
+
+}
+
+
+replace vet1968 =1 if V315==1
+replace vet1969 =1 if V796==1
+replace vet1970 =1 if V1487==1
+replace vet1971 =1 if V2199==1
+replace vet1972 =1 if V2825==1
+replace vet1973 =1 if V3243==1
+replace vet1974 =1 if V3665==1
+replace vet1975 =1 if V4140==1
+replace vet1976 =1 if V4683==1
+replace vet1977 =1 if V5603==1
+replace vet1978 =1 if V6152==1
+replace vet1979 =1 if V6749==1
+replace vet1980 =1 if V7382==1
+replace vet1981 =1 if V8034==1
+replace vet1982 =1 if V8658==1
+replace vet1983 =1 if V9344==1
+replace vet1984 =1 if V10991==1
+replace vet1985 =1 if V11940==1
+replace vet1986 =1 if V13567==1
+replace vet1987 =1 if V14614==1
+replace vet1988 =1 if V16088==1
+replace vet1989 =1 if V17485==1
+replace vet1990 =1 if V18816==1
+replace vet1991 =1 if V20116==1
+replace vet1992 =1 if V21422==1
+replace vet1993 =1 if V23278==1
+replace vet1994 =1 if ER3947==1
+replace vet1995 =1 if ER6817==1
+replace vet1996 =1 if ER9063==1
+replace vet1997 =1 if ER11852==1
+replace vet1999 =1 if ER15935==1
+replace vet2001 =1 if ER19996==1
+replace vet2003 =1 if ER23433==1
+replace vet2005 =1 if ER27400==1
+replace vet2007 =1 if ER40572==1
+replace vet2009 =1 if ER46550==1
+replace vet2011 =1 if ER51911==1
+replace vet2013 =1 if ER57666==1
+replace vet2015 =1 if ER64818==1
+replace vet2017 =1 if ER70890==1
+replace vet2019 =1 if ER76905==1
+replace vet2021 =1 if ER81152==1
+replace vet2023 =1 if ER85129==1
+
+
+replace relation1968= ER30003
+
+replace relation1969= ER30022
+replace seqno1969= ER30021
+
+replace relation1970= ER30045
+replace seqno1970= ER30044
+
+replace relation1971= ER30069
+replace seqno1971= ER30068
+
+replace relation1972 =ER30093
+replace seqno1972= ER30092
+
+replace relation1973= ER30119
+replace seqno1973= ER30118
+
+replace relation1974= ER30140
+replace seqno1974= ER30139
+
+replace relation1975= ER30162
+replace seqno1975= ER30161
+
+replace relation1976= ER30190
+replace seqno1976 =ER30189
+
+replace relation1977= ER30219
+replace seqno1977= ER30218
+
+replace relation1978= ER30248
+replace seqno1978= ER30247
+
+replace relation1979= ER30285
+replace seqno1979= ER30284
+
+replace relation1980= ER30315
+replace seqno1980= ER30314
+
+replace relation1981= ER30345
+replace seqno1981= ER30344
+
+replace relation1982= ER30375
+replace seqno1982= ER30374
+
+replace relation1983= ER30401
+replace seqno1983= ER30400
+
+replace relation1984 =ER30431
+replace seqno1984= ER30430
+
+replace relation1985= ER30465
+replace seqno1985= ER30464
+
+replace relation1986      =  ER30500
+replace seqno1986          =  ER30499
+
+replace relation1987      =  ER30537
+replace seqno1987          =  ER30536
+
+replace relation1988      =  ER30572
+replace seqno1988          =  ER30571
+
+replace relation1989      =  ER30608
+replace seqno1989          =  ER30607
+
+replace relation1990      =  ER30644
+replace seqno1990          =  ER30643
+
+replace relation1991      =  ER30691
+replace seqno1991          =  ER30690
+
+replace relation1992      =  ER30735
+replace seqno1992          =  ER30734
+
+replace relation1993      =  ER30808
+replace seqno1993          =  ER30807
+
+replace relation1994      =  ER33103
+replace seqno1994          =  ER33102
+
+replace relation1995      =  ER33203
+replace seqno1995          =  ER33202
+
+replace relation1996      =  ER33303
+replace seqno1996          =  ER33302
+
+replace relation1997      =  ER33403
+replace seqno1997          =  ER33402
+
+replace relation1999      =  ER33503
+replace seqno1999          =  ER33502
+
+replace relation2001      =  ER33603
+replace seqno2001          =  ER33602
+
+replace relation2003      =  ER33703
+replace seqno2003          =  ER33702
+
+replace relation2005      =  ER33803
+replace seqno2005          =  ER33802
+
+replace relation2007      =  ER33903
+replace seqno2007          =  ER33902
+
+replace relation2009      =  ER34003
+replace seqno2009          =  ER34002
+
+replace relation2011     =  ER34103
+replace seqno2011          =  ER34102
+
+replace relation2013     =  ER34203
+replace seqno2013          =  ER34202
+
+replace relation2015     =  ER34303
+replace seqno2015          =  ER34302
+
+replace relation2017     =  ER34503
+replace seqno2017          =  ER34502
+
+replace relation2019     =  ER34703
+replace seqno2019          =  ER34702
+
+replace relation2021     =  ER34903
+replace seqno2021          =  ER34902
+
+replace relation2023     =  ER35103
+replace seqno2023          =  ER35102
+
+
+
+keep personid vet* relation* seqno*
+
+
+
+reshape long vet relation seqno, i(personid) j(year)
+
+
+
+ren relation relation_orig
+
+gen relation= . if year>=1983 & relation_orig < 10 & relation_orig > 0
+		** NOTE: There should not be any such individuals, but this would clear any errors from the intended range of codes
+	replace relation=1 if year>=1983 & relation_orig==10 
+	replace relation=5 if year>=1983 & relation_orig==10 & seqno!=1
+	replace relation=2 if year>=1983 & relation_orig==20|relation_orig==22|relation_orig==90 
+	replace relation=3 if year>=1983 & (relation_orig >= 30 & relation_orig <= 35)|relation_orig==38
+	replace relation=4 if year>=1983 & relation_orig==40|relation_orig==50|(relation_orig>=60 & relation_orig<= 65)
+	replace relation=4 if year>=1983 & relation_orig==37|(relation_orig>=47 & relation_orig<=48)|(relation_orig>=57 & relation_orig<=58)
+	replace relation=4 if year>=1983 & (relation_orig>=66 & relation_orig <=75)|(relation_orig>=95 & relation_orig<=101)
+	replace relation=5 if year>=1983 & (relation_orig>=83 & relation_orig <=88)|relation_orig==98
+	replace relation=0 if year>=1983 & relation_orig==0
+	replace relation=5 if year>=1983 & relation_orig==.
+replace relation=1 if year<1983 & relation_orig == 1
+	replace relation=5 if year<1983 & relation_orig == 1 & seqno!=1
+	replace relation=2 if year<1983 & (relation_orig==2|(relation_orig==9 & year>1968)) 
+	replace relation=3 if year<1983 & relation_orig==3
+	replace relation=4 if year<1983 & relation_orig>3 & relation_orig<8
+	replace relation=5 if year<1983 & relation_orig==8
+	replace relation=0 if year<1983 & relation_orig==0
+	replace relation=5 if year<1983 & relation_orig==.
+
+
+
+
+
+
+replace vet = 0 if relation != 1
+
+* Fill forward veteran status for each person
+sort personid year
+by personid: egen first_vet_while_head = max((vet == 1 & relation == 1) * year)
+by personid: replace vet = 1 if year > first_vet_while_head & first_vet_while_head > 0
+
+
+rename vet veteran
+
+drop first_vet_while_head relation_orig relation seqno
+
+
+
+tempfile vet_data
+save `vet_data'
+
+
+
+restore 
+
+
+
+
+
+
+
+****** MACRO DATA IMPORTS *********
+
 preserve
 
 
@@ -1503,12 +1783,73 @@ restore
 
 
 
+preserve
+
+
+import delimited "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/PrRecess_VAR.csv", clear
+
+
+
+gen year = real(substr(observation_date, 1, 4))
+drop observation_date
+
+rename recprousm156n PrRecess
+
+
+replace year=year+1
+
+
+tempfile recess_data
+save `recess_data'
+
+
+restore
+
+
+
+
+
+
+preserve
+
+
+import delimited "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/rGDP_VAR.csv", clear
+
+
+gen year = real(substr(observation_date, 1, 4))
+drop observation_date
+
+rename a191rl1q225sbea rGDPgrow
+
+
+replace year=year+1
+
+
+
+tempfile rgdp_data
+save `rgdp_data'
+
+
+restore
+
+
+
+
+
+
+
+
+
+
+
 use "/Users/ethanballou/Documents/Data/LER_Draft2/CNEF_Combined.dta", clear
 
 
 merge 1:1 personid year using `olf_data', keep(1 3) nogenerate
 
 merge 1:1 personid year using `race_data', keep(1 3) nogenerate
+
+merge 1:1 personid year using `vet_data', keep(1 3) nogenerate
 
 
 
@@ -1532,6 +1873,20 @@ merge m:1 year using `cpi_data'
 	drop _merge
 
 label variable cpi "CPI-U for preceding year"
+
+
+merge m:1 year using `recess_data' 
+
+	keep if _merge==3
+	drop _merge
+
+label variable PrRecess "Probability of Recession"
+
+
+merge m:1 year using `rgdp_data' 
+	keep if _merge==3
+	drop _merge
+label variable rGDPgrow "Real GDP growth rate"
 
 
 
