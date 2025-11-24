@@ -97,21 +97,56 @@ eststo clear
 
 * No controls
 eststo m1: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube
+estadd local state_fe "No": m1
+estadd local year_fe  "No": m1
+estadd local race_fe  "No": m1
+estadd local cohort_fe "No": m1
+estadd local occ_fe   "No": m1
+estadd local ind_fe   "No": m1
 
 * controls - no occ or ind
 eststo m2: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
+estadd local state_fe "Yes": m2
+estadd local year_fe  "Yes": m2
+estadd local race_fe  "Yes": m2
+estadd local cohort_fe "Yes": m2
+estadd local occ_fe   "No": m2
+estadd local ind_fe   "No": m2
 
 * controls - no occ
 eststo m3: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
+estadd local state_fe "Yes": m3
+estadd local year_fe  "Yes": m3
+estadd local race_fe  "Yes": m3
+estadd local cohort_fe "Yes": m3
+estadd local occ_fe   "No": m3
+estadd local ind_fe   "Yes": m3
 
 * controls - no ind
 eststo m4: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
+estadd local state_fe "Yes": m4
+estadd local year_fe  "Yes": m4
+estadd local race_fe  "Yes": m4
+estadd local cohort_fe "Yes": m4
+estadd local occ_fe   "Yes": m4
+estadd local ind_fe   "No": m4
 
 * All controls
 eststo m5: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+estadd local state_fe "Yes": m5
+estadd local year_fe  "Yes": m5
+estadd local race_fe  "Yes": m5
+estadd local cohort_fe "Yes": m5
+estadd local occ_fe   "Yes": m5
+estadd local ind_fe   "Yes": m5
 
 * Export to LaTeX
-esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex", replace se r2 label
+esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex", ///
+    replace se r2 label ///
+    keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube) ///
+    stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
+          labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
+          fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
 
 
 
@@ -228,20 +263,60 @@ display "The standard deviation of alphaP_WEIGHTED is: " r(sd)
 
 * OLS
 
+eststo clear
+
 * No controls
-regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube
+eststo m1: regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube
+estadd local state_fe "No": m1
+estadd local year_fe  "No": m1
+estadd local race_fe  "No": m1
+estadd local cohort_fe "No": m1
+estadd local occ_fe   "No": m1
+estadd local ind_fe   "No": m1
 
 * controls - no occ or ind
-regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
+eststo m2: regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
+estadd local state_fe "Yes": m2
+estadd local year_fe  "Yes": m2
+estadd local race_fe  "Yes": m2
+estadd local cohort_fe "Yes": m2
+estadd local occ_fe   "No": m2
+estadd local ind_fe   "No": m2
 
 * controls - no occ
-regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
+eststo m3: regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
+estadd local state_fe "Yes": m3
+estadd local year_fe  "Yes": m3
+estadd local race_fe  "Yes": m3
+estadd local cohort_fe "Yes": m3
+estadd local occ_fe   "No": m3
+estadd local ind_fe   "Yes": m3
 
 * controls - no ind
-regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
+eststo m4: regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
+estadd local state_fe "Yes": m4
+estadd local year_fe  "Yes": m4
+estadd local race_fe  "Yes": m4
+estadd local cohort_fe "Yes": m4
+estadd local occ_fe   "Yes": m4
+estadd local ind_fe   "No": m4
 
 * All controls
-regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+eststo m5: regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+estadd local state_fe "Yes": m5
+estadd local year_fe  "Yes": m5
+estadd local race_fe  "Yes": m5
+estadd local cohort_fe "Yes": m5
+estadd local occ_fe   "Yes": m5
+estadd local ind_fe   "Yes": m5
+
+* Export to LaTeX
+esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex", ///
+        replace se r2 label ///
+        keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow fhwage0_P0 ma5aep veteran OLF tenure currentage currentagesq currentagecube) ///
+        stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
+                  labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
+                  fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
 
 
 
@@ -327,4 +402,3 @@ lassoknots
 
 log close log1
 log close log2
-

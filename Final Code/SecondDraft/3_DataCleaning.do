@@ -2234,15 +2234,28 @@ label variable fhwage "log real hourly wage next year (2015 dollars)"
 
 
 * Generate income percentile by year based on lnrearn
-bysort year: egen ma5aep = rank(lnrearn), field
-bysort year: egen max_rank = max(ma5aep)
-replace ma5aep = (ma5aep / max_rank) * 100
+bysort year: egen AEP = rank(lnrearn), field
+bysort year: egen max_rank = max(AEP)
+replace AEP = (AEP / max_rank) * 100
 drop max_rank
 
-label variable ma5aep "Annual earnings percentile (within year)"
+label variable AEP "Annual earnings percentile (within year)"
 
 
 
+
+* 5-year centered moving average of AEP (uses available years in window)
+
+sort personid year
+
+by personid: gen _AEP_L1 = AEP[_n-1]
+by personid: gen _AEP_L2 = AEP[_n-2]
+by personid: gen _AEP_F1 = AEP[_n+1]
+by personid: gen _AEP_F2 = AEP[_n+2]
+egen ma5aep = rowmean(_AEP_L2 _AEP_L1 AEP _AEP_F1 _AEP_F2)
+drop _AEP_L2 _AEP_L1 _AEP_F1 _AEP_F2
+
+label variable ma5aep "5-year moving average of AEP"
 
 
 

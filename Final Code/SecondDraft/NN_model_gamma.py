@@ -157,20 +157,7 @@ print(f"Test MSE after training: {test_mse}")
 
 
 
-nn1.save("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN1.keras")
-
-
-
-
-
-
-
-
-
-
-
-
-
+nn1.save("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN_Gamma.keras")
 
 
 

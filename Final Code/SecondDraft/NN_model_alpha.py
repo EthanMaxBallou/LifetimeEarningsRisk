@@ -45,7 +45,7 @@ columns_to_keep = [
     'currentage', 'veteran', 'rGDPgrow', 
     'PrRecess', 'OLF', 'tenure', 'currentagesq', 
     'currentagecube', 'cohort', 'ma5aep', 
-    'fhwage0_P0', 'gammaP_WEIGHTED', 'edmaxyrs'
+    'fhwage0_P0', 'alphaP_WEIGHTED', 'edmaxyrs'
 ]
 
 
@@ -70,8 +70,8 @@ data['EDU3'] = ((data['edmaxyrs'] >= 14) & (data['edmaxyrs'] < 16)).astype(int)
 
 
 # Separate the target variable from the data
-target = data[['gammaP_WEIGHTED']]  # Extract the target column
-data = data.drop(columns=['gammaP_WEIGHTED'])  # Remove the target column from the data
+target = data[['alphaP_WEIGHTED']]  # Extract the target column
+data = data.drop(columns=['alphaP_WEIGHTED'])  # Remove the target column from the data
 
 
 # Drop 'personid' column from the dataset
@@ -80,14 +80,14 @@ data = data.drop(columns=['personid', 'edmaxyrs'], errors='ignore')
 
 
 # Export the processed data to a CSV file
-processed_data_path = "/Users/ethanballou/Documents/Data/Risk/GAM_data_NN.csv"
+processed_data_path = "/Users/ethanballou/Documents/Data/Risk/ALP_data_NN.csv"
 
 data.to_csv(processed_data_path, index=False)
 print(f"Processed data exported to {processed_data_path}")
 
 
 # Save the target variable to a separate CSV file
-target_data_path = "/Users/ethanballou/Documents/Data/Risk/GAM_target_NN.csv"
+target_data_path = "/Users/ethanballou/Documents/Data/Risk/ALP_target_NN.csv"
 target.to_csv(target_data_path, index=False)
 print(f"Target data exported to {target_data_path}")
 
@@ -157,20 +157,7 @@ print(f"Test MSE after training: {test_mse}")
 
 
 
-nn1.save("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN1.keras")
-
-
-
-
-
-
-
-
-
-
-
-
-
+nn1.save("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN_Alpha.keras")
 
 
 
