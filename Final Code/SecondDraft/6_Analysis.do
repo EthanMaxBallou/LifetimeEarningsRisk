@@ -181,6 +181,47 @@ quietly lasso linear gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ///
 estimates store Lasso_NoControls
 lassoknots
 
+
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/lassoknots_noctrl.csv", replace
+restore
+
+
+
+
+/* 
+
+* Alternative method to get lassoknots without logging and importing
+
+matrix knots = r(table)          // 15 x 4
+matrix colnames knots = id lambda n_nonzero r2
+
+preserve
+clear
+svmat double knots, names(col)   // creates id lambda n_nonzero r2
+rename id step
+order step lambda n_nonzero r2
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/lassoknots_noctrl.csv", replace
+restore
+
+
+*/
+
+
+
 * (2) “controls – no occ or ind”
 quietly lasso linear gammaP_WEIGHTED ///
         (i.(state year race cohort)) ///

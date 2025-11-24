@@ -1,0 +1,14 @@
+step,action,vars,v1,v2,v3
+1,A,ma5aep,     2 , .0012125          1    0.0000 , A ma5aep                                                                                      
+2,A,EDU2                   currentagecube,     3 , .0011048          3    0.0000 , A EDU2                   currentagecube                                                       
+3,A,OLF                    EDU1,     6 , .0008357          5    0.0001 , A OLF                    EDU1                                                                 
+4,A,PrRecess,     7 , .0007615          6    0.0001 , A PrRecess                                                                                    
+5,A,tenure,    11 , .0005249          7    0.0002 , A tenure                                                                                      
+6,A,rGDPgrow,    12 , .0004782          8    0.0002 , A rGDPgrow                                                                                    
+7,A,fhwage0_P0,    21 ,  .000207          9    0.0002 , A fhwage0_P0                                                                                  
+8,A,EDU3,    24 , .0001566         10    0.0002 , A EDU3                                                                                        
+9,A,currentage,    25 , .0001427         11    0.0003 , A currentage                                                                                  
+10,A,veteran,    38 , .0000426         12    0.0003 , A veteran                                                                                     
+11,A,currentagesq,    50 , .0000139         12    0.0003 , A currentagesq                                                                                
+12,R,currentage,    50 , .0000139         12    0.0003 , R currentage                                                                                  
+13,A,currentage,    58 , 6.62e-06         13    0.0003 , A currentage                                                                                  
