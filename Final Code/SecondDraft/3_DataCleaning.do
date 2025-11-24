@@ -2231,6 +2231,23 @@ label variable fhwage "log real hourly wage next year (2015 dollars)"
 
 
 
+
+
+* Generate income percentile by year based on lnrearn
+bysort year: egen ma5aep = rank(lnrearn), field
+bysort year: egen max_rank = max(ma5aep)
+replace ma5aep = (ma5aep / max_rank) * 100
+drop max_rank
+
+label variable ma5aep "Annual earnings percentile (within year)"
+
+
+
+
+
+
+
+
 *********************************************************************
 * CREATE SAMPLE:                                                             
 *  At time of interview:
