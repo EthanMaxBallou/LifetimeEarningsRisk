@@ -204,8 +204,10 @@ drop if missing(gammaP_WEIGHTED) & missing(alphaP_WEIGHTED)
 
 
 
-
 save "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma.dta", replace
+
+
+
 
 
 

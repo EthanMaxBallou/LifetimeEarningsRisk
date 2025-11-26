@@ -610,6 +610,9 @@ save "/Users/ethanballou/Documents/Data/LER_Draft2/CNEF_Combined.dta", replace
 
 
 
+
+
+
 clear all
 
 
@@ -1841,7 +1844,6 @@ restore
 
 
 
-
 use "/Users/ethanballou/Documents/Data/LER_Draft2/CNEF_Combined.dta", clear
 
 
@@ -2256,6 +2258,20 @@ egen ma5aep = rowmean(_AEP_L2 _AEP_L1 AEP _AEP_F1 _AEP_F2)
 drop _AEP_L2 _AEP_L1 _AEP_F1 _AEP_F2
 
 label variable ma5aep "5-year moving average of AEP"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
