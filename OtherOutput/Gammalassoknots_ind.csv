@@ -1,0 +1,21 @@
+step,action,vars,v1,v2,v3
+1,A,30.twoind              32.twoind,     2 , .0019155          2    0.0000 , A 30.twoind              32.twoind                                                            
+2,A,29.twoind,     3 , .0017453          3    0.0001 , A 29.twoind                                                                                   
+3,A,14.twoind              22.twoind,     5 ,  .001449          5    0.0003 , A 14.twoind              22.twoind                                                            
+4,A,28.twoind              33.twoind,     6 , .0013203          7    0.0003 , A 28.twoind              33.twoind                                                            
+5,A,12.twoind,     8 , .0010961          8    0.0005 , A 12.twoind                                                                                   
+6,A,1.twoind               9.twoind               18.twoind,    11 , .0008292         11    0.0007 , A 1.twoind               9.twoind               18.twoind                                     
+7,A,3.twoind               34.twoind,    12 , .0007555         13    0.0008 , A 3.twoind               34.twoind                                                            
+8,A,5.twoind               7.twoind               27.twoind,    13 , .0006884         16    0.0008 , A 5.twoind               7.twoind               27.twoind                                     
+9,A,15.twoind              31.twoind,    15 , .0005715         18    0.0009 , A 15.twoind              31.twoind                                                            
+10,A,4.twoind,    17 , .0004745         19    0.0010 , A 4.twoind                                                                                    
+11,A,11.twoind,    18 , .0004323         20    0.0010 , A 11.twoind                                                                                   
+12,A,10.twoind,    19 , .0003939         21    0.0010 , A 10.twoind                                                                                   
+13,A,8.twoind,    20 , .0003589         22    0.0011 , A 8.twoind                                                                                    
+14,A,2.twoind,    21 ,  .000327         23    0.0011 , A 2.twoind                                                                                    
+15,A,6.twoind               16.twoind,    22 ,  .000298         25    0.0011 , A 6.twoind               16.twoind                                                            
+16,A,13.twoind,    29 , .0001554         26    0.0012 , A 13.twoind                                                                                   
+17,A,20.twoind,    34 , .0000976         27    0.0012 , A 20.twoind                                                                                   
+18,A,19.twoind,    38 , .0000673         28    0.0012 , A 19.twoind                                                                                   
+19,A,24.twoind,    43 , .0000422         29    0.0012 , A 24.twoind                                                                                   
+20,A,23.twoind,    56 , .0000126         30    0.0012 , A 23.twoind                                                                                   

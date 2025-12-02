@@ -1,0 +1,12 @@
+step,action,vars,v1,v2,v3
+1,A,2.occ                  3.occ                  4.occ,   * 1 , .0000945        198    0.0119 , A 2.occ                  3.occ                  4.occ                                         
+2,A,veteran,     2 , .0000861        199    0.0119 , A veteran                                                                                     
+3,A,OLF,     4 , .0000715        200    0.0120 , A OLF                                                                                         
+4,A,EDU2,     9 , .0000449        201    0.0121 , A EDU2                                                                                        
+5,A,EDU1                   ma5aep                 tenure,    14 , .0000282        204    0.0122 , A EDU1                   ma5aep                 tenure                                        
+6,A,currentage,    18 , .0000194        205    0.0122 , A currentage                                                                                  
+7,A,currentagecube,    20 , .0000161        206    0.0123 , A currentagecube                                                                              
+8,A,EDU3,    33 , 4.82e-06        207    0.0127 , A EDU3                                                                                        
+9,A,currentagesq,    53 , 7.49e-07        208    0.0128 , A currentagesq                                                                                
+10,R,currentage,    55 , 6.22e-07        207    0.0128 , R currentage                                                                                  
+11,A,currentage,    62 , 3.24e-07        208    0.0128 , A currentage                                                                                  

@@ -1,4 +1,3 @@
-
 /*
 
 
@@ -181,20 +180,135 @@ esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarning
 
 * Stepwise regression
 
-* No controls
-stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube 
+eststo clear
 
-* controls - no occ or ind
-stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+* No controls - capture output
+tempfile stepwise_log1
+log using `stepwise_log1', text replace
+eststo step1: stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube 
+log close
 
-* controls - no occ
-stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+* Extract removal order from log
+preserve
+import delimited using `stepwise_log1', delim(":") varnames(nonames) clear stringcols(_all)
+keep if strpos(v1, "removing") > 0
+gen variable = regexs(1) if regexm(v1, "removing ([a-zA-Z0-9_]+)")
+gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
+keep if variable != ""
+gen order = _n
+keep order variable pvalue
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise_removal_noctrl.csv", replace
+restore
 
-* controls - no ind
-stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+estadd local state_fe "No": step1
+estadd local year_fe  "No": step1
+estadd local race_fe  "No": step1
+estadd local cohort_fe "No": step1
+estadd local occ_fe   "No": step1
+estadd local ind_fe   "No": step1
 
-* All controls
-stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+* controls - no occ or ind - capture output
+tempfile stepwise_log2
+log using `stepwise_log2', text replace
+eststo step2: stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+log close
+
+preserve
+import delimited using `stepwise_log2', delim(":") varnames(nonames) clear stringcols(_all)
+keep if strpos(v1, "removing") > 0
+gen variable = regexs(1) if regexm(v1, "removing ([a-zA-Z0-9_]+)")
+gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
+keep if variable != ""
+gen order = _n
+keep order variable pvalue
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise_removal_nooccind.csv", replace
+restore
+
+estadd local state_fe "Yes": step2
+estadd local year_fe  "Yes": step2
+estadd local race_fe  "Yes": step2
+estadd local cohort_fe "Yes": step2
+estadd local occ_fe   "No": step2
+estadd local ind_fe   "No": step2
+
+* controls - no occ - capture output
+tempfile stepwise_log3
+log using `stepwise_log3', text replace
+eststo step3: stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+log close
+
+preserve
+import delimited using `stepwise_log3', delim(":") varnames(nonames) clear stringcols(_all)
+keep if strpos(v1, "removing") > 0
+gen variable = regexs(1) if regexm(v1, "removing ([a-zA-Z0-9_]+)")
+gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
+keep if variable != ""
+gen order = _n
+keep order variable pvalue
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise_removal_noocc.csv", replace
+restore
+
+estadd local state_fe "Yes": step3
+estadd local year_fe  "Yes": step3
+estadd local race_fe  "Yes": step3
+estadd local cohort_fe "Yes": step3
+estadd local occ_fe   "No": step3
+estadd local ind_fe   "Yes": step3
+
+* controls - no ind - capture output
+tempfile stepwise_log4
+log using `stepwise_log4', text replace
+eststo step4: stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+log close
+
+preserve
+import delimited using `stepwise_log4', delim(":") varnames(nonames) clear stringcols(_all)
+keep if strpos(v1, "removing") > 0
+gen variable = regexs(1) if regexm(v1, "removing ([a-zA-Z0-9_]+)")
+gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
+keep if variable != ""
+gen order = _n
+keep order variable pvalue
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise_removal_noind.csv", replace
+restore
+
+estadd local state_fe "Yes": step4
+estadd local year_fe  "Yes": step4
+estadd local race_fe  "Yes": step4
+estadd local cohort_fe "Yes": step4
+estadd local occ_fe   "Yes": step4
+estadd local ind_fe   "No": step4
+
+* All controls - capture output
+tempfile stepwise_log5
+log using `stepwise_log5', text replace
+eststo step5: stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+log close
+
+preserve
+import delimited using `stepwise_log5', delim(":") varnames(nonames) clear stringcols(_all)
+keep if strpos(v1, "removing") > 0
+gen variable = regexs(1) if regexm(v1, "removing ([a-zA-Z0-9_]+)")
+gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
+keep if variable != ""
+gen order = _n
+keep order variable pvalue
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise_removal_allctrl.csv", replace
+restore
+
+estadd local state_fe "Yes": step5
+estadd local year_fe  "Yes": step5
+estadd local race_fe  "Yes": step5
+estadd local cohort_fe "Yes": step5
+estadd local occ_fe   "Yes": step5
+estadd local ind_fe   "Yes": step5
+
+* Export stepwise results to LaTeX
+esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex", ///
+    replace se r2 label ///
+    stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
+          labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
+          fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
 
 
 
@@ -208,12 +322,6 @@ quietly lasso linear gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoControls
 lassoknots
-
-
-/*
-
-
-* Method for pulling lassoknots table?
 
 
 tempfile lk
@@ -230,33 +338,10 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/lassoknots_noctrl.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_noctrl.csv", replace
 restore
 
 
-
-*/
-
-
-
-
-/* 
-
-* Alternative method to get lassoknots without logging and importing
-
-matrix knots = r(table)          // 15 x 4
-matrix colnames knots = id lambda n_nonzero r2
-
-preserve
-clear
-svmat double knots, names(col)   // creates id lambda n_nonzero r2
-rename id step
-order step lambda n_nonzero r2
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/lassoknots_noctrl.csv", replace
-restore
-
-
-*/
 
 
 
@@ -269,6 +354,27 @@ quietly lasso linear gammaP_WEIGHTED ///
 estimates store Lasso_NoOccNoInd
 lassoknots
 
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_nooccind.csv", replace
+restore
+
+
+
+
+
 * (3) “controls – no occ”
 quietly lasso linear gammaP_WEIGHTED ///
         (i.(state year race cohort twoind)) ///
@@ -277,6 +383,26 @@ quietly lasso linear gammaP_WEIGHTED ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoOcc
 lassoknots
+
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_noocc.csv", replace
+restore
+
+
+
 
 * (4) “controls – no ind”
 quietly lasso linear gammaP_WEIGHTED ///
@@ -287,6 +413,26 @@ quietly lasso linear gammaP_WEIGHTED ///
 estimates store Lasso_NoInd
 lassoknots
 
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_noind.csv", replace
+restore
+
+
+
+
 * (5) “All controls”
 quietly lasso linear gammaP_WEIGHTED ///
         (i.(state year occ race cohort twoind)) ///
@@ -296,6 +442,26 @@ quietly lasso linear gammaP_WEIGHTED ///
 estimates store Lasso_AllControls
 lassoknots
 
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_all.csv", replace
+restore
+
+
+
+
 
 
 * LASSO across occ and ind
@@ -304,12 +470,46 @@ lassoknots
 quietly lasso linear gammaP_WEIGHTED i.(occ), selection(bic) rseed(12345)
 lassoknots
 
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_occ.csv", replace
+restore
+
+
+
 
 * ind
 quietly lasso linear gammaP_WEIGHTED i.(twoind), selection(bic) rseed(12345)
 lassoknots
 
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
 
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_ind.csv", replace
+restore
 
 
 
@@ -401,20 +601,138 @@ esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarning
 
 * Stepwise regression
 
-* No controls
-stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube 
+eststo clear
 
-* controls - no occ or ind
-stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+* No controls - capture output
+tempfile stepwise_log1_alpha
+log using `stepwise_log1_alpha', text replace
+eststo step1: stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube 
+log close
 
-* controls - no occ
-stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+* Extract removal order from log
+preserve
+import delimited using `stepwise_log1_alpha', delim(":") varnames(nonames) clear stringcols(_all)
+keep if strpos(v1, "removing") > 0
+gen variable = regexs(1) if regexm(v1, "removing ([a-zA-Z0-9_]+)")
+gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
+keep if variable != ""
+gen order = _n
+keep order variable pvalue
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise_removal_noctrl.csv", replace
+restore
 
-* controls - no ind
-stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+estadd local state_fe "No": step1
+estadd local year_fe  "No": step1
+estadd local race_fe  "No": step1
+estadd local cohort_fe "No": step1
+estadd local occ_fe   "No": step1
+estadd local ind_fe   "No": step1
 
-* All controls
-stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+* controls - no occ or ind - capture output
+tempfile stepwise_log2_alpha
+log using `stepwise_log2_alpha', text replace
+eststo step2: stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+log close
+
+preserve
+import delimited using `stepwise_log2_alpha', delim(":") varnames(nonames) clear stringcols(_all)
+keep if strpos(v1, "removing") > 0
+gen variable = regexs(1) if regexm(v1, "removing ([a-zA-Z0-9_]+)")
+gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
+keep if variable != ""
+gen order = _n
+keep order variable pvalue
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise_removal_nooccind.csv", replace
+restore
+
+estadd local state_fe "Yes": step2
+estadd local year_fe  "Yes": step2
+estadd local race_fe  "Yes": step2
+estadd local cohort_fe "Yes": step2
+estadd local occ_fe   "No": step2
+estadd local ind_fe   "No": step2
+
+* controls - no occ - capture output
+tempfile stepwise_log3_alpha
+log using `stepwise_log3_alpha', text replace
+eststo step3: stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+log close
+
+preserve
+import delimited using `stepwise_log3_alpha', delim(":") varnames(nonames) clear stringcols(_all)
+keep if strpos(v1, "removing") > 0
+gen variable = regexs(1) if regexm(v1, "removing ([a-zA-Z0-9_]+)")
+gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
+keep if variable != ""
+gen order = _n
+keep order variable pvalue
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise_removal_noocc.csv", replace
+restore
+
+estadd local state_fe "Yes": step3
+estadd local year_fe  "Yes": step3
+estadd local race_fe  "Yes": step3
+estadd local cohort_fe "Yes": step3
+estadd local occ_fe   "No": step3
+estadd local ind_fe   "Yes": step3
+
+* controls - no ind - capture output
+tempfile stepwise_log4_alpha
+log using `stepwise_log4_alpha', text replace
+eststo step4: stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+log close
+
+preserve
+import delimited using `stepwise_log4_alpha', delim(":") varnames(nonames) clear stringcols(_all)
+keep if strpos(v1, "removing") > 0
+gen variable = regexs(1) if regexm(v1, "removing ([a-zA-Z0-9_]+)")
+gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
+keep if variable != ""
+gen order = _n
+keep order variable pvalue
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise_removal_noind.csv", replace
+restore
+
+estadd local state_fe "Yes": step4
+estadd local year_fe  "Yes": step4
+estadd local race_fe  "Yes": step4
+estadd local cohort_fe "Yes": step4
+estadd local occ_fe   "Yes": step4
+estadd local ind_fe   "No": step4
+
+* All controls - capture output
+tempfile stepwise_log5_alpha
+log using `stepwise_log5_alpha', text replace
+eststo step5: stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+log close
+
+preserve
+import delimited using `stepwise_log5_alpha', delim(":") varnames(nonames) clear stringcols(_all)
+keep if strpos(v1, "removing") > 0
+gen variable = regexs(1) if regexm(v1, "removing ([a-zA-Z0-9_]+)")
+gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
+keep if variable != ""
+gen order = _n
+keep order variable pvalue
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise_removal_allctrl.csv", replace
+restore
+
+estadd local state_fe "Yes": step5
+estadd local year_fe  "Yes": step5
+estadd local race_fe  "Yes": step5
+estadd local cohort_fe "Yes": step5
+estadd local occ_fe   "Yes": step5
+estadd local ind_fe   "Yes": step5
+
+* Export stepwise results to LaTeX
+esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex", ///
+    replace se r2 label ///
+    stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
+          labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
+          fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
+
+
+
 
 
 
@@ -428,6 +746,28 @@ quietly lasso linear alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ///
 estimates store Lasso_NoControls
 lassoknots
 
+
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_noctrl.csv", replace
+restore
+
+
+
+
+
 * (2) “controls – no occ or ind”
 quietly lasso linear alphaP_WEIGHTED ///
         (i.(state year race cohort)) ///
@@ -436,6 +776,27 @@ quietly lasso linear alphaP_WEIGHTED ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoOccNoInd
 lassoknots
+
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_nooccind.csv", replace
+restore
+
+
+
+
 
 * (3) “controls – no occ”
 quietly lasso linear alphaP_WEIGHTED ///
@@ -446,6 +807,26 @@ quietly lasso linear alphaP_WEIGHTED ///
 estimates store Lasso_NoOcc
 lassoknots
 
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_noocc.csv", replace
+restore
+
+
+
+
 * (4) “controls – no ind”
 quietly lasso linear alphaP_WEIGHTED ///
         (i.(state year occ race cohort)) ///
@@ -454,6 +835,26 @@ quietly lasso linear alphaP_WEIGHTED ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoInd
 lassoknots
+
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_noind.csv", replace
+restore
+
+
+
 
 * (5) “All controls”
 quietly lasso linear alphaP_WEIGHTED ///
@@ -464,6 +865,26 @@ quietly lasso linear alphaP_WEIGHTED ///
 estimates store Lasso_AllControls
 lassoknots
 
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_all.csv", replace
+restore
+
+
+
+
 
 
 * LASSO across occ and ind
@@ -472,15 +893,48 @@ lassoknots
 quietly lasso linear alphaP_WEIGHTED i.(occ), selection(bic) rseed(12345)
 lassoknots
 
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_occ.csv", replace
+restore
+
+
+
 
 * ind
 quietly lasso linear alphaP_WEIGHTED i.(twoind), selection(bic) rseed(12345)
 lassoknots
 
+tempfile lk
+capture log close _all
+log using `lk', text replace
+lassoknots
+log close
+
+preserve
+import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
+keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
+gen action = substr(strtrim(v3),1,1)          // A/R/U
+gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
+drop if vars==""                              // keep rows with names
+gen step = _n
+order step action vars
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_ind.csv", replace
+restore
 
 
-log close log1
-log close log2
 
 
 

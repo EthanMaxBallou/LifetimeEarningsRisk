@@ -1,0 +1,13 @@
+variable,pvalue,order
+ma5aep,.98110002,1
+rGDPgrow,.85710001,2
+state_dum1,.85149997,3
+veteran,.49720001,4
+tenure,.46959999,5
+race_dum1,.47780001,6
+EDU3,.4219,7
+currentage,.34380001,8
+OLF,.28259999,9
+PrRecess,.18099999,10
+year_dum1,.23010001,11
+cohort_dum1,.73049998,12

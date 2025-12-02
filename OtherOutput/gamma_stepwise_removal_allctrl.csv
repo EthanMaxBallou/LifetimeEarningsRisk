@@ -1,0 +1,16 @@
+variable,pvalue,order
+PrRecess,.84780002,1
+EDU3,.75410002,2
+ma5aep,.70169997,3
+race_dum1,.55159998,4
+occ_dum1,.49039999,5
+EDU1,.31760001,6
+veteran,.28549999,7
+currentage,.3344,8
+tenure,.1829,9
+year_dum1,.13680001,10
+rGDPgrow,.67159998,11
+cohort_dum1,.62669998,12
+state_dum1,.13850001,13
+EDU2,.1795,14
+OLF,.117,15
