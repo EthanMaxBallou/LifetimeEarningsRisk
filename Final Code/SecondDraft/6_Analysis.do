@@ -329,6 +329,7 @@ estadd local ind_fe   "Yes": step5
 * Export stepwise results to LaTeX
 esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex", ///
     replace se r2 label ///
+    keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube) ///
     stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
           labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
           fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
@@ -750,6 +751,7 @@ estadd local ind_fe   "Yes": step5
 * Export stepwise results to LaTeX
 esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex", ///
     replace se r2 label ///
+    keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube) ///
     stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
           labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
           fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
