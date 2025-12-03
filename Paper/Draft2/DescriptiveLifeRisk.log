@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  2 DEC 2025 12:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  3 DEC 2025 09:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -360,17 +360,7 @@ LaTeX Info: Redefining \] on input line 2954.
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count314
 \l__pdf_internal_box=\box102
-) (DescriptiveLifeRisk.aux
-
-LaTeX Warning: Label `tab:alpha_regressions' multiply defined.
-
-
-LaTeX Warning: Label `tab:alpha_regressions' multiply defined.
-
-
-LaTeX Warning: Label `tab:alpha_regressions' multiply defined.
-
-)
+) (DescriptiveLifeRisk.aux)
 \openout1 = `DescriptiveLifeRisk.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
@@ -469,37 +459,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 55--57
 
 [1
 
-{/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map}] (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex)
-Overfull \hbox (373.07477pt too wide) in paragraph at lines 3--73
- [][] 
- []
+{/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map}] (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex) (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex)
 
+LaTeX Warning: Float too large for page by 616.1726pt on input line 85.
 
-LaTeX Warning: Float too large for page by 31.91806pt on input line 73.
+(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex) (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex)
 
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex)
-Overfull \hbox (327.3808pt too wide) in paragraph at lines 3--82
- [][] 
- []
-
-
-LaTeX Warning: Float too large for page by 31.91806pt on input line 82.
-
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex)
-Overfull \hbox (339.77513pt too wide) in paragraph at lines 3--90
- [][] 
- []
-
-
-LaTeX Warning: Float too large for page by 969.16455pt on input line 90.
-
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex)
-Overfull \hbox (327.3808pt too wide) in paragraph at lines 3--99
- [][] 
- []
-
-
-LaTeX Warning: Float too large for page by 7489.14014pt on input line 99.
+LaTeX Warning: Float too large for page by 5684.58694pt on input line 103.
 
 
 
@@ -507,7 +473,7 @@ LaTeX Warning: Float too large for page by 7489.14014pt on input line 99.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.102 \end{document}
+l.106 \end{document}
                      [1]
 
 [2]
@@ -519,23 +485,19 @@ l.102 \end{document}
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `DescriptiveLifeRisk.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 11874 strings out of 475466
- 194161 string characters out of 5763911
- 790530 words of memory out of 5000000
- 34693 multiletter control sequences out of 15000+600000
+ 11876 strings out of 475466
+ 194206 string characters out of 5763911
+ 828309 words of memory out of 5000000
+ 34695 multiletter control sequences out of 15000+600000
  568614 words of font info for 74 fonts, out of 8000000 for 9000
  0 hyphenation exceptions out of 8191
- 75i,11n,79p,875b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,875b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0700.pk> </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on DescriptiveLifeRisk.pdf (5 pages, 132576 bytes).
+Output written on DescriptiveLifeRisk.pdf (5 pages, 132739 bytes).
 PDF statistics:
  87 PDF objects out of 1000 (max. 8388607)
  9 named destinations out of 1000 (max. 500000)

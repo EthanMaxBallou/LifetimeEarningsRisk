@@ -97,13 +97,36 @@ gen rGDPsquare = rGDPgrow^2
 
 
 
+
+* CLEAN UP LABELS HERE
+
+label var EDU1 "Less than High School"
+label var EDU2 "High School Graduate"
+label var EDU3 "Some College"
+
+label var currentage "Age"
+label var currentagesq "Age Squared"
+label var currentagecube "Age Cubed"
+
+label var tenure "Tenure"
+
+label var OLF "Out of Labor Force"
+
+
+
+rename (gammaP_WEIGHTED alphaP_WEIGHTED) (Gamma Alpha)
+
+
+
+
+
 * Descriptive plots
 
-twoway (scatter gammaP_WEIGHTED currentage), title("Distribution of Age and Gamma") xlabel(, grid) ylabel(, grid)
+twoway (scatter Gamma currentage), title("Distribution of Age and Gamma") xlabel(, grid) ylabel(, grid)
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png", replace
 
 
-histogram gammaP_WEIGHTED, title("Distribution of Gamma") xlabel(, grid) ylabel(, grid)
+histogram Gamma, title("Distribution of Gamma") xlabel(, grid) ylabel(, grid)
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png", replace
 
 
@@ -113,7 +136,7 @@ log using "MainAnalysis.txt", text name(log2) replace
 
 
 * Calculate and display the standard deviation of gammaP_WEIGHTED
-summarize gammaP_WEIGHTED
+summarize Gamma
 display "The standard deviation of gammaP_WEIGHTED is: " r(sd)
 
 
@@ -123,7 +146,7 @@ display "The standard deviation of gammaP_WEIGHTED is: " r(sd)
 eststo clear
 
 * No controls
-eststo m1: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube
+eststo m1: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube
 estadd local state_fe "No": m1
 estadd local year_fe  "No": m1
 estadd local race_fe  "No": m1
@@ -132,7 +155,7 @@ estadd local occ_fe   "No": m1
 estadd local ind_fe   "No": m1
 
 * controls - no occ or ind
-eststo m2: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
+eststo m2: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
 estadd local state_fe "Yes": m2
 estadd local year_fe  "Yes": m2
 estadd local race_fe  "Yes": m2
@@ -141,7 +164,7 @@ estadd local occ_fe   "No": m2
 estadd local ind_fe   "No": m2
 
 * controls - no occ
-eststo m3: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
+eststo m3: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
 estadd local state_fe "Yes": m3
 estadd local year_fe  "Yes": m3
 estadd local race_fe  "Yes": m3
@@ -150,7 +173,7 @@ estadd local occ_fe   "No": m3
 estadd local ind_fe   "Yes": m3
 
 * controls - no ind
-eststo m4: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
+eststo m4: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
 estadd local state_fe "Yes": m4
 estadd local year_fe  "Yes": m4
 estadd local race_fe  "Yes": m4
@@ -159,7 +182,7 @@ estadd local occ_fe   "Yes": m4
 estadd local ind_fe   "No": m4
 
 * All controls
-eststo m5: regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+eststo m5: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
 estadd local state_fe "Yes": m5
 estadd local year_fe  "Yes": m5
 estadd local race_fe  "Yes": m5
@@ -185,7 +208,7 @@ eststo clear
 * No controls - capture output
 tempfile stepwise_log1
 log using `stepwise_log1', text replace
-eststo step1: stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube 
+eststo step1: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube 
 log close
 
 * Extract removal order from log
@@ -210,7 +233,7 @@ estadd local ind_fe   "No": step1
 * controls - no occ or ind - capture output
 tempfile stepwise_log2
 log using `stepwise_log2', text replace
-eststo step2: stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step2: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -234,7 +257,7 @@ estadd local ind_fe   "No": step2
 * controls - no occ - capture output
 tempfile stepwise_log3
 log using `stepwise_log3', text replace
-eststo step3: stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step3: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -258,7 +281,7 @@ estadd local ind_fe   "Yes": step3
 * controls - no ind - capture output
 tempfile stepwise_log4
 log using `stepwise_log4', text replace
-eststo step4: stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step4: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -282,7 +305,7 @@ estadd local ind_fe   "No": step4
 * All controls - capture output
 tempfile stepwise_log5
 log using `stepwise_log5', text replace
-eststo step5: stepwise, pr(.05): regress gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step5: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -317,7 +340,7 @@ esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/
 
 
 * (1) No controls
-quietly lasso linear gammaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ///
+quietly lasso linear Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ///
         ma5aep veteran OLF tenure currentage currentagesq currentagecube, ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoControls
@@ -346,7 +369,7 @@ restore
 
 
 * (2) “controls – no occ or ind”
-quietly lasso linear gammaP_WEIGHTED ///
+quietly lasso linear Gamma ///
         (i.(state year race cohort)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure ///
         currentage currentagesq currentagecube, ///
@@ -376,7 +399,7 @@ restore
 
 
 * (3) “controls – no occ”
-quietly lasso linear gammaP_WEIGHTED ///
+quietly lasso linear Gamma ///
         (i.(state year race cohort twoind)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure ///
         currentage currentagesq currentagecube, ///
@@ -405,7 +428,7 @@ restore
 
 
 * (4) “controls – no ind”
-quietly lasso linear gammaP_WEIGHTED ///
+quietly lasso linear Gamma ///
         (i.(state year occ race cohort)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure ///
         currentage currentagesq currentagecube, ///
@@ -434,7 +457,7 @@ restore
 
 
 * (5) “All controls”
-quietly lasso linear gammaP_WEIGHTED ///
+quietly lasso linear Gamma ///
         (i.(state year occ race cohort twoind)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure ///
         currentage currentagesq currentagecube, ///
@@ -467,7 +490,7 @@ restore
 * LASSO across occ and ind
 
 * occ
-quietly lasso linear gammaP_WEIGHTED i.(occ), selection(bic) rseed(12345)
+quietly lasso linear Gamma i.(occ), selection(bic) rseed(12345)
 lassoknots
 
 tempfile lk
@@ -491,7 +514,7 @@ restore
 
 
 * ind
-quietly lasso linear gammaP_WEIGHTED i.(twoind), selection(bic) rseed(12345)
+quietly lasso linear Gamma i.(twoind), selection(bic) rseed(12345)
 lassoknots
 
 tempfile lk
@@ -527,17 +550,17 @@ restore
 
 * Descriptive plots
 
-twoway (scatter alphaP_WEIGHTED currentage), title("Distribution of Age and Alpha") xlabel(, grid) ylabel(, grid)
+twoway (scatter Alpha currentage), title("Distribution of Age and Alpha") xlabel(, grid) ylabel(, grid)
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png", replace
 
 
-histogram alphaP_WEIGHTED, title("Distribution of Alpha") xlabel(, grid) ylabel(, grid)
+histogram Alpha, title("Distribution of Alpha") xlabel(, grid) ylabel(, grid)
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png", replace
 
 
 
 * Calculate and display the standard deviation of alphaP_WEIGHTED
-summarize alphaP_WEIGHTED
+summarize Alpha
 display "The standard deviation of alphaP_WEIGHTED is: " r(sd)
 
 * OLS
@@ -545,7 +568,7 @@ display "The standard deviation of alphaP_WEIGHTED is: " r(sd)
 eststo clear
 
 * No controls
-eststo m1: regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube
+eststo m1: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube
 estadd local state_fe "No": m1
 estadd local year_fe  "No": m1
 estadd local race_fe  "No": m1
@@ -554,7 +577,7 @@ estadd local occ_fe   "No": m1
 estadd local ind_fe   "No": m1
 
 * controls - no occ or ind
-eststo m2: regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
+eststo m2: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
 estadd local state_fe "Yes": m2
 estadd local year_fe  "Yes": m2
 estadd local race_fe  "Yes": m2
@@ -563,7 +586,7 @@ estadd local occ_fe   "No": m2
 estadd local ind_fe   "No": m2
 
 * controls - no occ
-eststo m3: regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
+eststo m3: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
 estadd local state_fe "Yes": m3
 estadd local year_fe  "Yes": m3
 estadd local race_fe  "Yes": m3
@@ -572,7 +595,7 @@ estadd local occ_fe   "No": m3
 estadd local ind_fe   "Yes": m3
 
 * controls - no ind
-eststo m4: regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
+eststo m4: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
 estadd local state_fe "Yes": m4
 estadd local year_fe  "Yes": m4
 estadd local race_fe  "Yes": m4
@@ -581,7 +604,7 @@ estadd local occ_fe   "Yes": m4
 estadd local ind_fe   "No": m4
 
 * All controls
-eststo m5: regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+eststo m5: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
 estadd local state_fe "Yes": m5
 estadd local year_fe  "Yes": m5
 estadd local race_fe  "Yes": m5
@@ -606,7 +629,7 @@ eststo clear
 * No controls - capture output
 tempfile stepwise_log1_alpha
 log using `stepwise_log1_alpha', text replace
-eststo step1: stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube 
+eststo step1: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube 
 log close
 
 * Extract removal order from log
@@ -631,7 +654,7 @@ estadd local ind_fe   "No": step1
 * controls - no occ or ind - capture output
 tempfile stepwise_log2_alpha
 log using `stepwise_log2_alpha', text replace
-eststo step2: stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step2: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -655,7 +678,7 @@ estadd local ind_fe   "No": step2
 * controls - no occ - capture output
 tempfile stepwise_log3_alpha
 log using `stepwise_log3_alpha', text replace
-eststo step3: stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step3: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -679,7 +702,7 @@ estadd local ind_fe   "Yes": step3
 * controls - no ind - capture output
 tempfile stepwise_log4_alpha
 log using `stepwise_log4_alpha', text replace
-eststo step4: stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step4: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -703,7 +726,7 @@ estadd local ind_fe   "No": step4
 * All controls - capture output
 tempfile stepwise_log5_alpha
 log using `stepwise_log5_alpha', text replace
-eststo step5: stepwise, pr(.05): regress alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step5: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -740,7 +763,7 @@ esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/
 
 
 * (1) No controls
-quietly lasso linear alphaP_WEIGHTED EDU1 EDU2 EDU3 PrRecess rGDPgrow ///
+quietly lasso linear Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ///
         ma5aep veteran OLF tenure currentage currentagesq currentagecube, ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoControls
@@ -769,7 +792,7 @@ restore
 
 
 * (2) “controls – no occ or ind”
-quietly lasso linear alphaP_WEIGHTED ///
+quietly lasso linear Alpha ///
         (i.(state year race cohort)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure ///
         currentage currentagesq currentagecube, ///
@@ -799,7 +822,7 @@ restore
 
 
 * (3) “controls – no occ”
-quietly lasso linear alphaP_WEIGHTED ///
+quietly lasso linear Alpha ///
         (i.(state year race cohort twoind)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure ///
         currentage currentagesq currentagecube, ///
@@ -828,7 +851,7 @@ restore
 
 
 * (4) “controls – no ind”
-quietly lasso linear alphaP_WEIGHTED ///
+quietly lasso linear Alpha ///
         (i.(state year occ race cohort)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure ///
         currentage currentagesq currentagecube, ///
@@ -857,7 +880,7 @@ restore
 
 
 * (5) “All controls”
-quietly lasso linear alphaP_WEIGHTED ///
+quietly lasso linear Alpha ///
         (i.(state year occ race cohort twoind)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure ///
         currentage currentagesq currentagecube, ///
@@ -890,7 +913,7 @@ restore
 * LASSO across occ and ind
 
 * occ
-quietly lasso linear alphaP_WEIGHTED i.(occ), selection(bic) rseed(12345)
+quietly lasso linear Alpha i.(occ), selection(bic) rseed(12345)
 lassoknots
 
 tempfile lk
@@ -914,7 +937,7 @@ restore
 
 
 * ind
-quietly lasso linear alphaP_WEIGHTED i.(twoind), selection(bic) rseed(12345)
+quietly lasso linear Alpha i.(twoind), selection(bic) rseed(12345)
 lassoknots
 
 tempfile lk
