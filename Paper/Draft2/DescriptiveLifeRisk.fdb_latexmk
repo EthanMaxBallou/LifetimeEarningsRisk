@@ -1,10 +1,14 @@
 # Fdb version 4
-["pdflatex"] 1764777376.94055 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1764777377.75887 0
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex" 1764777166.82406 4924 2fb4eff889c10ac6c9032836387d6152 ""
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex" 1764777182.72738 54752 762a660aec5e528ed1c8460353fbdf30 ""
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex" 1764777061.64778 4927 6d4ca7ac6d8a05b04bbf08cebe477051 ""
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex" 1764777073.15265 11207 63ac5050266b170ce27d8e9cc13412ef ""
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" 1764777376.22758 2764 ad1098253a667ecb9db4254d9e54fa32 ""
+["pdflatex"] 1764801259.95324 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1764801261.18394 0
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex" 1764800950.76308 4924 2fb4eff889c10ac6c9032836387d6152 ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex" 1764800964.48371 4109 f9f8113da6179e867a8280923b0db267 ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex" 1764800846.85702 4927 6d4ca7ac6d8a05b04bbf08cebe477051 ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex" 1764801131.67533 3013 8031be08ccdbda89b3159e9899a178ca ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" 1764801259.11668 3890 33c369d06edb2f0af5b218a8aa1a39f9 ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png" 1764800948.39318 54375 4778c6d38e199591e43c6009722cf8bf ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png" 1764800844.69541 55753 2238e20ee7e3698fb8fa5f4cf8b97438 ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png" 1764800947.82434 141459 1cfe975de3975664b0dc065bcf3ab27b ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png" 1764800844.17233 145589 34094a93c01b7b648a67ff3b798eb88d ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map" 1750043332.02054 81088 29d6fa367ac022d1b69251d68c0742e6 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0700.pk" 1740782457.2477 8268 ba405594e7d9975df0afaa5cd4f38a6e ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk" 1740352020.30047 11548 00b1f0567d483e9610dd30d5a4bb7d75 ""
@@ -101,9 +105,9 @@
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/setspace/setspace.sty" 1740369222.49227 22490 8cac309b79a4c53a4ffce4b1b07aead0 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/multicol.sty" 1740345468.67927 32879 f4cfa2226c995da5b04a89ee47abf182 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url/url.sty" 1740345494.98424 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "DescriptiveLifeRisk.aux" 1764777377.62399 1121 172833e510e407f2187df99d860a6139 "pdflatex"
-  "DescriptiveLifeRisk.out" 1764777377.53793 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "DescriptiveLifeRisk.tex" 1764777376.22758 2764 ad1098253a667ecb9db4254d9e54fa32 ""
+  "DescriptiveLifeRisk.aux" 1764801261.0449 1827 cbbc82efe20964a5d95439166576f9d0 "pdflatex"
+  "DescriptiveLifeRisk.out" 1764801260.52344 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "DescriptiveLifeRisk.tex" 1764801259.11668 3890 33c369d06edb2f0af5b218a8aa1a39f9 ""
   (generated)
   "DescriptiveLifeRisk.aux"
   "DescriptiveLifeRisk.log"

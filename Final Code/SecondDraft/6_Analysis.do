@@ -103,14 +103,12 @@ gen rGDPsquare = rGDPgrow^2
 label var EDU1 "Less than High School"
 label var EDU2 "High School Graduate"
 label var EDU3 "Some College"
-
 label var currentage "Age"
 label var currentagesq "Age Squared"
 label var currentagecube "Age Cubed"
-
 label var tenure "Tenure"
-
 label var OLF "Out of Labor Force"
+label var veteran "Veteran"
 
 
 
@@ -130,9 +128,14 @@ histogram Gamma, title("Distribution of Gamma") xlabel(, grid) ylabel(, grid)
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png", replace
 
 
+
+/*
+
 log using "MainAnalysis.smcl", name(log1) replace
 
 log using "MainAnalysis.txt", text name(log2) replace
+
+*/
 
 
 * Calculate and display the standard deviation of gammaP_WEIGHTED
@@ -327,9 +330,11 @@ estadd local occ_fe   "Yes": step5
 estadd local ind_fe   "Yes": step5
 
 * Export stepwise results to LaTeX
+* Note: Only include variables that are retained in at least some models
+* EDU3 may be dropped during stepwise regression in some/all models
 esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex", ///
     replace se r2 label ///
-    keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube) ///
+    drop(*_dum*) ///
     stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
           labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
           fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
@@ -751,7 +756,7 @@ estadd local ind_fe   "Yes": step5
 * Export stepwise results to LaTeX
 esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex", ///
     replace se r2 label ///
-    keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube) ///
+    drop(*_dum*) ///
     stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
           labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
           fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
