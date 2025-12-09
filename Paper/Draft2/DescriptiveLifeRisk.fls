@@ -124,10 +124,10 @@ INPUT ./DescriptiveLifeRisk.out
 INPUT ./DescriptiveLifeRisk.out
 INPUT DescriptiveLifeRisk.out
 INPUT DescriptiveLifeRisk.out
+OUTPUT DescriptiveLifeRisk.pdf
 INPUT ./DescriptiveLifeRisk.out
 INPUT ./DescriptiveLifeRisk.out
 OUTPUT DescriptiveLifeRisk.out
-OUTPUT DescriptiveLifeRisk.pdf
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
@@ -163,6 +163,8 @@ INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmbx10.tfm
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map
+INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmr17.tfm
+INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png
@@ -245,3 +247,5 @@ INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy8.pfb
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy8.pfb
+INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msam10.pfb
+INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msam10.pfb

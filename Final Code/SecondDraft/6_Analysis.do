@@ -232,6 +232,12 @@ estadd local race_fe  "No": step1
 estadd local cohort_fe "No": step1
 estadd local occ_fe   "No": step1
 estadd local ind_fe   "No": step1
+estadd local state_selected " ": step1
+estadd local year_selected  " ": step1
+estadd local race_selected  " ": step1
+estadd local cohort_selected " ": step1
+estadd local occ_selected   " ": step1
+estadd local ind_selected   " ": step1
 
 * controls - no occ or ind - capture output
 tempfile stepwise_log2
@@ -257,6 +263,54 @@ estadd local cohort_fe "Yes": step2
 estadd local occ_fe   "No": step2
 estadd local ind_fe   "No": step2
 
+* Check which FE sets were actually selected by examining the coefficient matrix
+local state_selected "No"
+local year_selected "No"
+local race_selected "No"
+local cohort_selected "No"
+matrix b = e(b)
+local varnames : colnames b
+foreach var of local varnames {
+    if regexm("`var'", "^state_dum") {
+        local state_selected "Yes"
+    }
+    if regexm("`var'", "^year_dum") {
+        local year_selected "Yes"
+    }
+    if regexm("`var'", "^race_dum") {
+        local race_selected "Yes"
+    }
+    if regexm("`var'", "^cohort_dum") {
+        local cohort_selected "Yes"
+    }
+}
+if "`state_selected'" == "Yes" {
+    estadd local state_selected "\checkmark": step2
+}
+else {
+    estadd local state_selected "": step2
+}
+if "`year_selected'" == "Yes" {
+    estadd local year_selected "\checkmark": step2
+}
+else {
+    estadd local year_selected "": step2
+}
+if "`race_selected'" == "Yes" {
+    estadd local race_selected "\checkmark": step2
+}
+else {
+    estadd local race_selected "": step2
+}
+if "`cohort_selected'" == "Yes" {
+    estadd local cohort_selected "\checkmark": step2
+}
+else {
+    estadd local cohort_selected "": step2
+}
+estadd local occ_selected "": step2
+estadd local ind_selected "": step2
+
 * controls - no occ - capture output
 tempfile stepwise_log3
 log using `stepwise_log3', text replace
@@ -280,6 +334,63 @@ estadd local race_fe  "Yes": step3
 estadd local cohort_fe "Yes": step3
 estadd local occ_fe   "No": step3
 estadd local ind_fe   "Yes": step3
+
+* Check which FE sets were actually selected by examining the coefficient matrix
+local state_selected "No"
+local year_selected "No"
+local race_selected "No"
+local cohort_selected "No"
+local ind_selected "No"
+matrix b = e(b)
+local varnames : colnames b
+foreach var of local varnames {
+    if regexm("`var'", "^state_dum") {
+        local state_selected "Yes"
+    }
+    if regexm("`var'", "^year_dum") {
+        local year_selected "Yes"
+    }
+    if regexm("`var'", "^race_dum") {
+        local race_selected "Yes"
+    }
+    if regexm("`var'", "^cohort_dum") {
+        local cohort_selected "Yes"
+    }
+    if regexm("`var'", "^twoind_dum") {
+        local ind_selected "Yes"
+    }
+}
+if "`state_selected'" == "Yes" {
+    estadd local state_selected "\checkmark": step3
+}
+else {
+    estadd local state_selected "": step3
+}
+if "`year_selected'" == "Yes" {
+    estadd local year_selected "\checkmark": step3
+}
+else {
+    estadd local year_selected "": step3
+}
+if "`race_selected'" == "Yes" {
+    estadd local race_selected "\checkmark": step3
+}
+else {
+    estadd local race_selected "": step3
+}
+if "`cohort_selected'" == "Yes" {
+    estadd local cohort_selected "\checkmark": step3
+}
+else {
+    estadd local cohort_selected "": step3
+}
+estadd local occ_selected "": step3
+if "`ind_selected'" == "Yes" {
+    estadd local ind_selected "\checkmark": step3
+}
+else {
+    estadd local ind_selected "": step3
+}
 
 * controls - no ind - capture output
 tempfile stepwise_log4
@@ -305,6 +416,63 @@ estadd local cohort_fe "Yes": step4
 estadd local occ_fe   "Yes": step4
 estadd local ind_fe   "No": step4
 
+* Check which FE sets were actually selected by examining the coefficient matrix
+local state_selected "No"
+local year_selected "No"
+local race_selected "No"
+local cohort_selected "No"
+local occ_selected "No"
+matrix b = e(b)
+local varnames : colnames b
+foreach var of local varnames {
+    if regexm("`var'", "^state_dum") {
+        local state_selected "Yes"
+    }
+    if regexm("`var'", "^year_dum") {
+        local year_selected "Yes"
+    }
+    if regexm("`var'", "^race_dum") {
+        local race_selected "Yes"
+    }
+    if regexm("`var'", "^cohort_dum") {
+        local cohort_selected "Yes"
+    }
+    if regexm("`var'", "^occ_dum") {
+        local occ_selected "Yes"
+    }
+}
+if "`state_selected'" == "Yes" {
+    estadd local state_selected "\checkmark": step4
+}
+else {
+    estadd local state_selected "": step4
+}
+if "`year_selected'" == "Yes" {
+    estadd local year_selected "\checkmark": step4
+}
+else {
+    estadd local year_selected "": step4
+}
+if "`race_selected'" == "Yes" {
+    estadd local race_selected "\checkmark": step4
+}
+else {
+    estadd local race_selected "": step4
+}
+if "`cohort_selected'" == "Yes" {
+    estadd local cohort_selected "\checkmark": step4
+}
+else {
+    estadd local cohort_selected "": step4
+}
+if "`occ_selected'" == "Yes" {
+    estadd local occ_selected "\checkmark": step4
+}
+else {
+    estadd local occ_selected "": step4
+}
+estadd local ind_selected "": step4
+
 * All controls - capture output
 tempfile stepwise_log5
 log using `stepwise_log5', text replace
@@ -329,15 +497,81 @@ estadd local cohort_fe "Yes": step5
 estadd local occ_fe   "Yes": step5
 estadd local ind_fe   "Yes": step5
 
+* Check which FE sets were actually selected by examining the coefficient matrix
+local state_selected "No"
+local year_selected "No"
+local race_selected "No"
+local cohort_selected "No"
+local occ_selected "No"
+local ind_selected "No"
+matrix b = e(b)
+local varnames : colnames b
+foreach var of local varnames {
+    if regexm("`var'", "^state_dum") {
+        local state_selected "Yes"
+    }
+    if regexm("`var'", "^year_dum") {
+        local year_selected "Yes"
+    }
+    if regexm("`var'", "^race_dum") {
+        local race_selected "Yes"
+    }
+    if regexm("`var'", "^cohort_dum") {
+        local cohort_selected "Yes"
+    }
+    if regexm("`var'", "^occ_dum") {
+        local occ_selected "Yes"
+    }
+    if regexm("`var'", "^twoind_dum") {
+        local ind_selected "Yes"
+    }
+}
+if "`state_selected'" == "Yes" {
+    estadd local state_selected "\checkmark": step5
+}
+else {
+    estadd local state_selected "": step5
+}
+if "`year_selected'" == "Yes" {
+    estadd local year_selected "\checkmark": step5
+}
+else {
+    estadd local year_selected "": step5
+}
+if "`race_selected'" == "Yes" {
+    estadd local race_selected "\checkmark": step5
+}
+else {
+    estadd local race_selected "": step5
+}
+if "`cohort_selected'" == "Yes" {
+    estadd local cohort_selected "\checkmark": step5
+}
+else {
+    estadd local cohort_selected "": step5
+}
+if "`occ_selected'" == "Yes" {
+    estadd local occ_selected "\checkmark": step5
+}
+else {
+    estadd local occ_selected "": step5
+}
+if "`ind_selected'" == "Yes" {
+    estadd local ind_selected "\checkmark": step5
+}
+else {
+    estadd local ind_selected "": step5
+}
+
 * Export stepwise results to LaTeX
 * Note: Only include variables that are retained in at least some models
 * EDU3 may be dropped during stepwise regression in some/all models
 esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex", ///
     replace se r2 label ///
     drop(*_dum*) ///
-    stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
-          labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
-          fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
+    stats(state_selected year_selected race_selected cohort_selected occ_selected ind_selected state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
+          labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "\midrule State FE Available" "Year FE Available" "Race FE Available" "Cohort FE Available" "Occupation FE Available" "Industry FE Available" "R-squared" "N") ///
+          fmt(%9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9.3f %9.0g))
 
 
 
@@ -656,6 +890,12 @@ estadd local race_fe  "No": step1
 estadd local cohort_fe "No": step1
 estadd local occ_fe   "No": step1
 estadd local ind_fe   "No": step1
+estadd local state_selected " ": step1
+estadd local year_selected  " ": step1
+estadd local race_selected  " ": step1
+estadd local cohort_selected " ": step1
+estadd local occ_selected   " ": step1
+estadd local ind_selected   " ": step1
 
 * controls - no occ or ind - capture output
 tempfile stepwise_log2_alpha
@@ -681,6 +921,54 @@ estadd local cohort_fe "Yes": step2
 estadd local occ_fe   "No": step2
 estadd local ind_fe   "No": step2
 
+* Check which FE sets were actually selected by examining the coefficient matrix
+local state_selected "No"
+local year_selected "No"
+local race_selected "No"
+local cohort_selected "No"
+matrix b = e(b)
+local varnames : colnames b
+foreach var of local varnames {
+    if regexm("`var'", "^state_dum") {
+        local state_selected "Yes"
+    }
+    if regexm("`var'", "^year_dum") {
+        local year_selected "Yes"
+    }
+    if regexm("`var'", "^race_dum") {
+        local race_selected "Yes"
+    }
+    if regexm("`var'", "^cohort_dum") {
+        local cohort_selected "Yes"
+    }
+}
+if "`state_selected'" == "Yes" {
+    estadd local state_selected "\checkmark": step2
+}
+else {
+    estadd local state_selected "": step2
+}
+if "`year_selected'" == "Yes" {
+    estadd local year_selected "\checkmark": step2
+}
+else {
+    estadd local year_selected "": step2
+}
+if "`race_selected'" == "Yes" {
+    estadd local race_selected "\checkmark": step2
+}
+else {
+    estadd local race_selected "": step2
+}
+if "`cohort_selected'" == "Yes" {
+    estadd local cohort_selected "\checkmark": step2
+}
+else {
+    estadd local cohort_selected "": step2
+}
+estadd local occ_selected "": step2
+estadd local ind_selected "": step2
+
 * controls - no occ - capture output
 tempfile stepwise_log3_alpha
 log using `stepwise_log3_alpha', text replace
@@ -704,6 +992,63 @@ estadd local race_fe  "Yes": step3
 estadd local cohort_fe "Yes": step3
 estadd local occ_fe   "No": step3
 estadd local ind_fe   "Yes": step3
+
+* Check which FE sets were actually selected by examining the coefficient matrix
+local state_selected "No"
+local year_selected "No"
+local race_selected "No"
+local cohort_selected "No"
+local ind_selected "No"
+matrix b = e(b)
+local varnames : colnames b
+foreach var of local varnames {
+    if regexm("`var'", "^state_dum") {
+        local state_selected "Yes"
+    }
+    if regexm("`var'", "^year_dum") {
+        local year_selected "Yes"
+    }
+    if regexm("`var'", "^race_dum") {
+        local race_selected "Yes"
+    }
+    if regexm("`var'", "^cohort_dum") {
+        local cohort_selected "Yes"
+    }
+    if regexm("`var'", "^twoind_dum") {
+        local ind_selected "Yes"
+    }
+}
+if "`state_selected'" == "Yes" {
+    estadd local state_selected "\checkmark": step3
+}
+else {
+    estadd local state_selected "": step3
+}
+if "`year_selected'" == "Yes" {
+    estadd local year_selected "\checkmark": step3
+}
+else {
+    estadd local year_selected "": step3
+}
+if "`race_selected'" == "Yes" {
+    estadd local race_selected "\checkmark": step3
+}
+else {
+    estadd local race_selected "": step3
+}
+if "`cohort_selected'" == "Yes" {
+    estadd local cohort_selected "\checkmark": step3
+}
+else {
+    estadd local cohort_selected "": step3
+}
+estadd local occ_selected "": step3
+if "`ind_selected'" == "Yes" {
+    estadd local ind_selected "\checkmark": step3
+}
+else {
+    estadd local ind_selected "": step3
+}
 
 * controls - no ind - capture output
 tempfile stepwise_log4_alpha
@@ -729,6 +1074,63 @@ estadd local cohort_fe "Yes": step4
 estadd local occ_fe   "Yes": step4
 estadd local ind_fe   "No": step4
 
+* Check which FE sets were actually selected by examining the coefficient matrix
+local state_selected "No"
+local year_selected "No"
+local race_selected "No"
+local cohort_selected "No"
+local occ_selected "No"
+matrix b = e(b)
+local varnames : colnames b
+foreach var of local varnames {
+    if regexm("`var'", "^state_dum") {
+        local state_selected "Yes"
+    }
+    if regexm("`var'", "^year_dum") {
+        local year_selected "Yes"
+    }
+    if regexm("`var'", "^race_dum") {
+        local race_selected "Yes"
+    }
+    if regexm("`var'", "^cohort_dum") {
+        local cohort_selected "Yes"
+    }
+    if regexm("`var'", "^occ_dum") {
+        local occ_selected "Yes"
+    }
+}
+if "`state_selected'" == "Yes" {
+    estadd local state_selected "\checkmark": step4
+}
+else {
+    estadd local state_selected "": step4
+}
+if "`year_selected'" == "Yes" {
+    estadd local year_selected "\checkmark": step4
+}
+else {
+    estadd local year_selected "": step4
+}
+if "`race_selected'" == "Yes" {
+    estadd local race_selected "\checkmark": step4
+}
+else {
+    estadd local race_selected "": step4
+}
+if "`cohort_selected'" == "Yes" {
+    estadd local cohort_selected "\checkmark": step4
+}
+else {
+    estadd local cohort_selected "": step4
+}
+if "`occ_selected'" == "Yes" {
+    estadd local occ_selected "\checkmark": step4
+}
+else {
+    estadd local occ_selected "": step4
+}
+estadd local ind_selected "": step4
+
 * All controls - capture output
 tempfile stepwise_log5_alpha
 log using `stepwise_log5_alpha', text replace
@@ -753,13 +1155,79 @@ estadd local cohort_fe "Yes": step5
 estadd local occ_fe   "Yes": step5
 estadd local ind_fe   "Yes": step5
 
+* Check which FE sets were actually selected by examining the coefficient matrix
+local state_selected "No"
+local year_selected "No"
+local race_selected "No"
+local cohort_selected "No"
+local occ_selected "No"
+local ind_selected "No"
+matrix b = e(b)
+local varnames : colnames b
+foreach var of local varnames {
+    if regexm("`var'", "^state_dum") {
+        local state_selected "Yes"
+    }
+    if regexm("`var'", "^year_dum") {
+        local year_selected "Yes"
+    }
+    if regexm("`var'", "^race_dum") {
+        local race_selected "Yes"
+    }
+    if regexm("`var'", "^cohort_dum") {
+        local cohort_selected "Yes"
+    }
+    if regexm("`var'", "^occ_dum") {
+        local occ_selected "Yes"
+    }
+    if regexm("`var'", "^twoind_dum") {
+        local ind_selected "Yes"
+    }
+}
+if "`state_selected'" == "Yes" {
+    estadd local state_selected "\checkmark": step5
+}
+else {
+    estadd local state_selected "": step5
+}
+if "`year_selected'" == "Yes" {
+    estadd local year_selected "\checkmark": step5
+}
+else {
+    estadd local year_selected "": step5
+}
+if "`race_selected'" == "Yes" {
+    estadd local race_selected "\checkmark": step5
+}
+else {
+    estadd local race_selected "": step5
+}
+if "`cohort_selected'" == "Yes" {
+    estadd local cohort_selected "\checkmark": step5
+}
+else {
+    estadd local cohort_selected "": step5
+}
+if "`occ_selected'" == "Yes" {
+    estadd local occ_selected "\checkmark": step5
+}
+else {
+    estadd local occ_selected "": step5
+}
+if "`ind_selected'" == "Yes" {
+    estadd local ind_selected "\checkmark": step5
+}
+else {
+    estadd local ind_selected "": step5
+}
+
 * Export stepwise results to LaTeX
 esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex", ///
     replace se r2 label ///
     drop(*_dum*) ///
-    stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
-          labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
-          fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
+    stats(state_selected year_selected race_selected cohort_selected occ_selected ind_selected state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
+          labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "\midrule State FE Available" "Year FE Available" "Race FE Available" "Cohort FE Available" "Occupation FE Available" "Industry FE Available" "R-squared" "N") ///
+          fmt(%9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9.3f %9.0g))
 
 
 
