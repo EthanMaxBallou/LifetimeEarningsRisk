@@ -1595,3 +1595,159 @@ restore
 
 
 
+
+
+
+preserve
+clear
+
+* Define the main variables of interest (not FE dummies)
+local main_vars "EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep veteran OLF tenure currentage currentagesq currentagecube"
+
+* Create empty dataset with variables
+local nvars : word count `main_vars'
+set obs `nvars'
+gen varname = ""
+local i = 1
+foreach var of local main_vars {
+    replace varname = "`var'" in `i'
+    local ++i
+}
+
+* Initialize columns for each specification
+gen noctrl = .
+gen nooccind = .
+gen noocc = .
+gen noind = .
+gen allctrl = .
+
+* Load each LASSO knots file and extract selection order for main variables
+foreach spec in noctrl nooccind noocc noind all {
+    tempvar order_`spec'
+    gen `order_`spec'' = .
+    
+    tempfile current_data
+    save `current_data', replace
+    
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_`spec'.csv", clear
+    
+    * Keep only additions (A) as these show when variables entered
+    keep if action == "A"
+    
+    * Create a counter for order
+    gen order = _n
+    
+    * Split vars field when multiple variables are added in same step
+    * Expand the dataset to have one row per variable
+    split vars, gen(var_)
+    
+    * Count how many variables in each row
+    gen nvars = 0
+    foreach v of varlist var_* {
+        replace nvars = nvars + 1 if `v' != ""
+    }
+    
+    * Expand so each variable gets its own row with same order
+    expand nvars
+    bysort order: gen seq = _n
+    
+    * Create single variable name column
+    gen varname = ""
+    foreach i of numlist 1/20 {
+        capture confirm variable var_`i'
+        if _rc == 0 {
+            replace varname = var_`i' if seq == `i' & var_`i' != ""
+        }
+    }
+    
+    * Keep only main variables (exclude FE dummies)
+    gen is_main = 0
+    foreach var of local main_vars {
+        replace is_main = 1 if varname == "`var'"
+    }
+    keep if is_main == 1
+    
+    * Keep only the first occurrence of each variable (first time it was added)
+    bysort varname (order): keep if _n == 1
+    
+    keep varname order
+    
+    tempfile lasso_`spec'
+    save `lasso_`spec'', replace
+    
+    use `current_data', clear
+    merge 1:1 varname using `lasso_`spec'', nogenerate
+    replace `spec' = order if order != .
+    drop order
+}
+
+* Add variable labels
+label var varname "Variable"
+label var noctrl "No Controls"
+label var nooccind "No Occ/Ind"
+label var noocc "No Occ"
+label var noind "No Ind"
+label var allctrl "All Controls"
+
+* Add FE availability indicators as locals for the table footer
+local state_fe_noctrl "No"
+local year_fe_noctrl "No"
+local race_fe_noctrl "No"
+local cohort_fe_noctrl "No"
+local occ_fe_noctrl "No"
+local ind_fe_noctrl "No"
+
+local state_fe_nooccind "Yes"
+local year_fe_nooccind "Yes"
+local race_fe_nooccind "Yes"
+local cohort_fe_nooccind "Yes"
+local occ_fe_nooccind "No"
+local ind_fe_nooccind "No"
+
+local state_fe_noocc "Yes"
+local year_fe_noocc "Yes"
+local race_fe_noocc "Yes"
+local cohort_fe_noocc "Yes"
+local occ_fe_noocc "No"
+local ind_fe_noocc "Yes"
+
+local state_fe_noind "Yes"
+local year_fe_noind "Yes"
+local race_fe_noind "Yes"
+local cohort_fe_noind "Yes"
+local occ_fe_noind "Yes"
+local ind_fe_noind "No"
+
+local state_fe_allctrl "Yes"
+local year_fe_allctrl "Yes"
+local race_fe_allctrl "Yes"
+local cohort_fe_allctrl "Yes"
+local occ_fe_allctrl "Yes"
+local ind_fe_allctrl "Yes"
+
+* Export to LaTeX
+listtex varname noctrl nooccind noocc noind allctrl using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_selection.tex", ///
+    replace ///
+    head("\begin{tabular}{lccccc}" ///
+         "\hline\hline" ///
+         "  & No Controls & No Occ/Ind & No Occ & No Ind & All Controls \\" ///
+         "\hline") ///
+    foot("\hline" ///
+         "\multicolumn{6}{l}{} \\" ///
+         "State FE & `state_fe_noctrl' & `state_fe_nooccind' & `state_fe_noocc' & `state_fe_noind' & `state_fe_allctrl' \\" ///
+         "Year FE & `year_fe_noctrl' & `year_fe_nooccind' & `year_fe_noocc' & `year_fe_noind' & `year_fe_allctrl' \\" ///
+         "Race FE & `race_fe_noctrl' & `race_fe_nooccind' & `race_fe_noocc' & `race_fe_noind' & `race_fe_allctrl' \\" ///
+         "Cohort FE & `cohort_fe_noctrl' & `cohort_fe_nooccind' & `cohort_fe_noocc' & `cohort_fe_noind' & `cohort_fe_allctrl' \\" ///
+         "Occupation FE & `occ_fe_noctrl' & `occ_fe_nooccind' & `occ_fe_noocc' & `occ_fe_noind' & `occ_fe_allctrl' \\" ///
+         "Industry FE & `ind_fe_noctrl' & `ind_fe_nooccind' & `ind_fe_noocc' & `ind_fe_noind' & `ind_fe_allctrl' \\" ///
+         "\hline\hline" ///
+         "\end{tabular}") ///
+    rstyle(tabular)
+
+restore
+
+
+
+
+
+
