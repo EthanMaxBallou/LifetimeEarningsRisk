@@ -29,7 +29,7 @@ from sklearn.linear_model import LassoCV
 
 
 # Load the .dta file
-dta_file_path = "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta"
+dta_file_path = "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta"
 data, meta = pyreadstat.read_dta(dta_file_path)
 
 # Display the first few rows of the dataframe
@@ -45,7 +45,7 @@ columns_to_keep = [
     'currentage', 'veteran', 'rGDPgrow', 
     'PrRecess', 'OLF', 'tenure', 'currentagesq', 
     'currentagecube', 'cohort', 'ma5aep', 
-    'fhwage0_P0', 'gammaP_WEIGHTED', 'edmaxyrs'
+    'fhwage', 'gammaP_WEIGHTED', 'edmaxyrs'
 ]
 
 
@@ -53,6 +53,30 @@ columns_to_keep = [
 data = data[columns_to_keep]
 
 
+
+for col in data.columns:
+    s = data[col]
+
+    # Basic info
+    print(f"\nColumn: {col}")
+    print(f"  dtype: {s.dtype}")
+
+    # NaNs (works for all dtypes)
+    n_nan = s.isna().sum()
+    print(f"  NaNs: {n_nan}")
+
+    # For numeric columns, also check inf / -inf
+    if pd.api.types.is_numeric_dtype(s):
+        n_pos_inf = np.isinf(s).sum()
+        n_neg_inf = np.isneginf(s).sum()
+        print(f"  +inf: {n_pos_inf}")
+        print(f"  -inf: {n_neg_inf}")
+    else:
+        print("  (non-numeric column, skipping inf checks)")
+
+
+# Drop all rows with a NaN value in the 'gammaP_WEIGHTED' column
+data = data.dropna(subset=['gammaP_WEIGHTED'])
 
 
 # Create a vector with the names of the columns to convert

@@ -29,7 +29,7 @@ from sklearn.linear_model import LassoCV
 
 
 # Load the .dta file
-dta_file_path = "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta"
+dta_file_path = "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta"
 data, meta = pyreadstat.read_dta(dta_file_path)
 
 # Display the first few rows of the dataframe
@@ -45,7 +45,7 @@ columns_to_keep = [
     'currentage', 'veteran', 'rGDPgrow', 
     'PrRecess', 'OLF', 'tenure', 'currentagesq', 
     'currentagecube', 'cohort', 'ma5aep', 
-    'fhwage0_P0', 'alphaP_WEIGHTED', 'edmaxyrs'
+    'fhwage', 'alphaP_WEIGHTED', 'edmaxyrs'
 ]
 
 

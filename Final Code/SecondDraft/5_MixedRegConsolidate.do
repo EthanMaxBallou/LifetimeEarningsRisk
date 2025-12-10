@@ -226,6 +226,11 @@ keep if _merge == 3
 drop _merge
 
 
+
+replace veteran = 0 if missing(veteran)
+
+
+
 save "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", replace
 
 

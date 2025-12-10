@@ -62,7 +62,7 @@ replace state = . if state < 0
 
 
 * Old method
-
+* ADD RACE???
 
 tabulate race, generate(race_dum)
 tabulate censdiv, generate(censdiv_dum)
@@ -93,6 +93,7 @@ gen edmaxyrs_cubed = edmaxyrs^3
 
 gen PRsquare = PrRecess^2
 gen rGDPsquare = rGDPgrow^2
+
 
 
 
@@ -777,6 +778,11 @@ restore
 
 
 
+
+
+
+
+
 * Create LASSO selection order table
 * Combine all LASSO knots files and create a table showing selection order
 
@@ -819,18 +825,40 @@ foreach spec in noctrl nooccind noocc noind all {
     * Create a counter for order
     gen order = _n
     
+    * Split vars field when multiple variables are added in same step
+    * Expand the dataset to have one row per variable
+    split vars, gen(var_)
+    
+    * Count how many variables in each row
+    gen nvars = 0
+    foreach v of varlist var_* {
+        replace nvars = nvars + 1 if `v' != ""
+    }
+    
+    * Expand so each variable gets its own row with same order
+    expand nvars
+    bysort order: gen seq = _n
+    
+    * Create single variable name column
+    gen varname = ""
+    foreach i of numlist 1/20 {
+        capture confirm variable var_`i'
+        if _rc == 0 {
+            replace varname = var_`i' if seq == `i' & var_`i' != ""
+        }
+    }
+    
     * Keep only main variables (exclude FE dummies)
     gen is_main = 0
     foreach var of local main_vars {
-        replace is_main = 1 if vars == "`var'"
+        replace is_main = 1 if varname == "`var'"
     }
     keep if is_main == 1
     
     * Keep only the first occurrence of each variable (first time it was added)
-    bysort vars (order): keep if _n == 1
+    bysort varname (order): keep if _n == 1
     
-    keep vars order
-    rename vars varname
+    keep varname order
     
     tempfile lasso_`spec'
     save `lasso_`spec'', replace

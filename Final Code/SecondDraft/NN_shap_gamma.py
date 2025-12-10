@@ -112,7 +112,7 @@ top_cont = [
     'currentage', 'rGDPgrow', 
     'PrRecess', 'tenure', 'currentagesq', 
     'currentagecube', 'ma5aep', 
-    'fhwage0_P0'
+    'fhwage'
 ]
 
 
@@ -129,7 +129,7 @@ X_test_top_cont = X_test[:, top_cont_indices]
 # Visualize the SHAP summary plot for the test set with top_cont variables
 shap.summary_plot(shap_values_top_cont, X_test_top_cont, feature_names=top_cont, max_display=len(top_cont))
 
-#plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/shap_summary_plot.png')
+plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png')
 
 
 # Print all variable names in the dataset
@@ -162,7 +162,7 @@ shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_name
 
 # Generate SHAP dependence plot for interaction between two specific variables
 feature_x = 'rGDPgrow'  # First variable
-feature_y = 'fhwage0_P0'      # Second variable
+feature_y = 'fhwage'      # Second variable
 
 # Get indices of the features
 feature_x_index = data.columns.get_loc(feature_x)
