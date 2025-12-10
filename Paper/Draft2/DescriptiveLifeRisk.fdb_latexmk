@@ -1,10 +1,11 @@
 # Fdb version 4
-["pdflatex"] 1765304355.24674 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1765304356.49281 0
+["pdflatex"] 1765305183.58344 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1765305184.82405 0
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex" 1764800950.76308 4924 2fb4eff889c10ac6c9032836387d6152 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex" 1765304354.44851 4918 50abe07b27b1467ac3287192ec8939d6 ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_selection.tex" 1765305136.95891 689 241f0c471ee0b305bed8eac959833670 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex" 1765304150.43383 4927 522aac947bff622e884082e6733273d9 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex" 1765304289.77853 3822 6de3bb88a175f0b6900795c532ee6173 ""
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" 1765304291.37314 4088 ab29ddf8d553a9638788695d3268c691 ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" 1765305181.28357 4373 aa44d0e2b20ff67af3311dd10d8718a5 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png" 1764800948.39318 54375 4778c6d38e199591e43c6009722cf8bf ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png" 1765304148.34606 55753 2238e20ee7e3698fb8fa5f4cf8b97438 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png" 1764800947.82434 141459 1cfe975de3975664b0dc065bcf3ab27b ""
@@ -37,6 +38,7 @@
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmsy10.tfm" 1740345459.37286 1124 6c73e740cf17375f03eec0ee63599741 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmsy6.tfm" 1740345459.3732 1116 933a60c408fc0a863a92debe84b2d294 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmsy8.tfm" 1740345459.37349 1120 8b7d695260f3cff42e636090a8002094 ""
+  "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmti12.tfm" 1740345459.37463 1484 ed72f8f5cf654cda15ecc8e32bfcbee5 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb" 1740345455.8046 34811 78b52f49e893bcba91bd7581cdc144c0 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1740345455.80589 32080 340ef9bf63678554ee606688e7b5339d ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1740345455.82803 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
@@ -46,6 +48,7 @@
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1740345455.87534 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1740345455.87953 32716 08e384dc442464e7285e891af9f45947 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1740345455.88135 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
+  "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti12.pfb" 1740345455.89043 36118 fad905eba93cff5bce1e185fe980a177 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msam10.pfb" 1740345455.95938 31764 459c573c03a4949a528c2cc7f557e217 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii" 1740345486.09152 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/generic/atbegshi/atbegshi.sty" 1740345456.69541 24708 5584a51a7101caf7e6bbf1fc27d8f7b1 ""
@@ -106,9 +109,9 @@
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/setspace/setspace.sty" 1740369222.49227 22490 8cac309b79a4c53a4ffce4b1b07aead0 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/multicol.sty" 1740345468.67927 32879 f4cfa2226c995da5b04a89ee47abf182 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url/url.sty" 1740345494.98424 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "DescriptiveLifeRisk.aux" 1765304356.34632 2373 f17164bdb825d34e6f0989947df42dbf "pdflatex"
-  "DescriptiveLifeRisk.out" 1765304356.34717 529 2212d4c78ea95c2b2ff2b364ac6d5888 "pdflatex"
-  "DescriptiveLifeRisk.tex" 1765304291.37314 4088 ab29ddf8d553a9638788695d3268c691 ""
+  "DescriptiveLifeRisk.aux" 1765305184.67294 2630 554cea93deaf930a0b679ffedf56c165 "pdflatex"
+  "DescriptiveLifeRisk.out" 1765305184.67407 529 2212d4c78ea95c2b2ff2b364ac6d5888 "pdflatex"
+  "DescriptiveLifeRisk.tex" 1765305181.28357 4373 aa44d0e2b20ff67af3311dd10d8718a5 ""
   (generated)
   "DescriptiveLifeRisk.aux"
   "DescriptiveLifeRisk.log"
