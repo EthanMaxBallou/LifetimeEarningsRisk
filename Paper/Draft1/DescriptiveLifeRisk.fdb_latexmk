@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1750638661.15036 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft1/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1750638662.10638 0
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft1/DescriptiveLifeRisk.tex" 1750638656.66524 51523 0ca6f9a421633cb4797e2ddcb0c05533 ""
+["pdflatex"] 1765819438.29037 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft1/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1765819439.40201 0
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft1/DescriptiveLifeRisk.tex" 1765819436.76018 51548 f58f55ebc69afa3f4ff539d0f7615245 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/Graph1.png" 1750137800.29483 116807 ac0c13d821e289a5d664a097850a9205 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/Graph2.png" 1750137830.72751 42775 cdfbdc05e49a6c3afba8048ddefe6d4f ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/SHAPsummaryPLOT_Edit.png" 1750136150.63957 73708 5054f71dc10aff9a67ad885e722e4e0e ""
@@ -110,9 +110,9 @@
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/setspace/setspace.sty" 1740369222.49227 22490 8cac309b79a4c53a4ffce4b1b07aead0 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/multicol.sty" 1740345468.67927 32879 f4cfa2226c995da5b04a89ee47abf182 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url/url.sty" 1740345494.98424 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "DescriptiveLifeRisk.aux" 1750638661.95884 2870 743bc834d3849e044e9058fbd9c41bcf "pdflatex"
-  "DescriptiveLifeRisk.out" 1750638661.95966 529 2212d4c78ea95c2b2ff2b364ac6d5888 "pdflatex"
-  "DescriptiveLifeRisk.tex" 1750638656.66524 51523 0ca6f9a421633cb4797e2ddcb0c05533 ""
+  "DescriptiveLifeRisk.aux" 1765819439.23237 2870 743bc834d3849e044e9058fbd9c41bcf "pdflatex"
+  "DescriptiveLifeRisk.out" 1765819439.23321 529 2212d4c78ea95c2b2ff2b364ac6d5888 "pdflatex"
+  "DescriptiveLifeRisk.tex" 1765819436.76018 51548 f58f55ebc69afa3f4ff539d0f7615245 ""
   (generated)
   "DescriptiveLifeRisk.aux"
   "DescriptiveLifeRisk.log"

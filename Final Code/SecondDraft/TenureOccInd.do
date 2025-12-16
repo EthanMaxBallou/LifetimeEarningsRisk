@@ -377,6 +377,8 @@ replace personid = substr(personid, 3, .)
 destring personid, replace force
 
 
+
+
 replace twoind = . if year > 2015
 replace oneind = . if year > 2015
 replace occ = . if year > 2015
@@ -387,8 +389,10 @@ merge 1:1 personid year using `twoind_1970s', keep(1 3) nogenerate
 merge 1:1 personid year using `occ_1970s', keep(1 3) nogenerate
 
 
-save "/Users/ethanballou/Documents/Data/LER_Draft2/Occ_Ind_codes.dta", replace
+drop if missing(twoind) & missing(occ) & missing(oneind)
 
+
+save "/Users/ethanballou/Documents/Data/LER_Draft2/Occ_Ind_codes.dta", replace
 
 
 
@@ -924,6 +928,8 @@ gen lowtenure=0
 	label variable lowtenure "=1 if new on job (tenure<=1)"
 
 drop tenurew tenurex tenurey tenurez
+
+
 
 
 

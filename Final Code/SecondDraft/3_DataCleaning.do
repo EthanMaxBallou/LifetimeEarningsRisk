@@ -609,7 +609,7 @@ save "/Users/ethanballou/Documents/Data/LER_Draft2/CNEF_Combined.dta", replace
 
 
 
-
+sort personid year
 
 
 
