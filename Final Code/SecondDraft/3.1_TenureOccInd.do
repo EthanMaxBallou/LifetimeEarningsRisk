@@ -368,9 +368,9 @@ forval i = 1971/2021 {
 
 
 
-replace occ = . if occ < 1
-replace oneind = . if oneind < 1
-replace twoind = . if twoind < 1
+replace occ = 999 if occ < 0
+replace oneind = 999 if oneind < 0
+replace twoind = 999 if twoind < 0
 
 
 replace personid = substr(personid, 3, .)
@@ -379,9 +379,13 @@ destring personid, replace force
 
 
 
+
 replace twoind = . if year > 2015
 replace oneind = . if year > 2015
 replace occ = . if year > 2015
+
+
+
 
 
 merge 1:1 personid year using `twoind_1970s', keep(1 3) nogenerate
@@ -393,7 +397,6 @@ drop if missing(twoind) & missing(occ) & missing(oneind)
 
 
 save "/Users/ethanballou/Documents/Data/LER_Draft2/Occ_Ind_codes.dta", replace
-
 
 
 
@@ -934,5 +937,5 @@ drop tenurew tenurex tenurey tenurez
 
 
 
-save "/Users/ethanballou/Documents/Data/LER_Draft2/FullData_Combined.dta", replace
+save "/Users/ethanballou/Documents/Data/LER_Draft2/FullData_CombinedwithTEN.dta", replace
 

@@ -5,26 +5,35 @@
                     &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}\\
                     &\multicolumn{1}{c}{Gamma}&\multicolumn{1}{c}{Gamma}&\multicolumn{1}{c}{Gamma}&\multicolumn{1}{c}{Gamma}&\multicolumn{1}{c}{Gamma}\\
 \hline
-Less than High School&    -0.00768\sym{*}  &    -0.00769\sym{*}  &                     &                     &                     \\
-                    &   (0.00363)         &   (0.00364)         &                     &                     &                     \\
+Less than High School&     -0.0110\sym{***}&     -0.0110\sym{***}&     -0.0101\sym{***}&     -0.0108\sym{***}&     -0.0110\sym{***}\\
+                    &   (0.00211)         &   (0.00211)         &   (0.00205)         &   (0.00234)         &   (0.00236)         \\
 [1em]
-High School Graduate&    -0.00489\sym{*}  &    -0.00494\sym{*}  &                     &                     &                     \\
-                    &   (0.00212)         &   (0.00212)         &                     &                     &                     \\
+High School Graduate&    -0.00904\sym{***}&    -0.00905\sym{***}&    -0.00840\sym{***}&    -0.00829\sym{***}&    -0.00834\sym{***}\\
+                    &   (0.00143)         &   (0.00143)         &   (0.00143)         &   (0.00166)         &   (0.00168)         \\
 [1em]
-Age Cubed           & 0.000000364\sym{*}  & 0.000000367\sym{*}  & 0.000000449\sym{**} & 0.000000558\sym{***}& 0.000000476\sym{**} \\
-                    &(0.000000145)         &(0.000000145)         &(0.000000157)         &(0.000000162)         &(0.000000158)         \\
+Some College        &    -0.00740\sym{***}&    -0.00740\sym{***}&    -0.00731\sym{***}&    -0.00723\sym{***}&    -0.00725\sym{***}\\
+                    &   (0.00169)         &   (0.00169)         &   (0.00172)         &   (0.00182)         &   (0.00183)         \\
 [1em]
-Age Squared         &  -0.0000222\sym{*}  &  -0.0000225\sym{*}  &  -0.0000287\sym{**} &  -0.0000352\sym{**} &  -0.0000304\sym{**} \\
-                    &(0.00000985)         &(0.00000985)         & (0.0000108)         & (0.0000111)         & (0.0000109)         \\
+Age                 &     0.00571\sym{*}  &     0.00568\sym{*}  &                     &     0.00594\sym{*}  &     0.00566\sym{*}  \\
+                    &   (0.00268)         &   (0.00268)         &                     &   (0.00270)         &   (0.00270)         \\
 [1em]
-Constant            &      0.0304\sym{***}&      0.0306\sym{***}&      0.0292\sym{***}&      0.0349\sym{***}&      0.0302\sym{***}\\
-                    &   (0.00619)         &   (0.00619)         &   (0.00726)         &   (0.00710)         &   (0.00732)         \\
+Age Cubed           &  0.00000150\sym{**} &  0.00000149\sym{**} & 0.000000439\sym{***}&  0.00000150\sym{**} &  0.00000143\sym{**} \\
+                    &(0.000000508)         &(0.000000508)         &  (8.71e-08)         &(0.000000511)         &(0.000000511)         \\
+[1em]
+5-year moving average of AEP&   0.0000579\sym{*}  &   0.0000577\sym{*}  &                     &   0.0000788\sym{*}  &   0.0000732\sym{*}  \\
+                    & (0.0000286)         & (0.0000286)         &                     & (0.0000316)         & (0.0000324)         \\
+[1em]
+Age Squared         &   -0.000165\sym{*}  &   -0.000165\sym{*}  &  -0.0000282\sym{***}&   -0.000168\sym{*}  &   -0.000161\sym{*}  \\
+                    & (0.0000650)         & (0.0000650)         &(0.00000578)         & (0.0000654)         & (0.0000654)         \\
+[1em]
+Constant            &     -0.0391         &     -0.0387         &      0.0395\sym{***}&     -0.0414         &     -0.0380         \\
+                    &    (0.0358)         &    (0.0358)         &   (0.00358)         &    (0.0360)         &    (0.0360)         \\
 \hline
 State FE            &                     &                     &                     &                     &                     \\
 Year FE             &                     &                     &                     &                     &                     \\
 Race FE             &                     &                     &                     &                     &                     \\
 Cohort FE           &                     &                     &                     &                     &                     \\
-Occupation FE       &                     &                     &                     &                     &                     \\
+Occupation FE       &                     &                     &                     &  \checkmark         &  \checkmark         \\
 Industry FE         &                     &                     &  \checkmark         &                     &  \checkmark         \\
 \midrule State FE Available&          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Year FE Available   &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
@@ -32,8 +41,8 @@ Race FE Available   &          No         &         Yes         &         Yes   
 Cohort FE Available &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Occupation FE Available&          No         &          No         &          No         &         Yes         &         Yes         \\
 Industry FE Available&          No         &          No         &         Yes         &          No         &         Yes         \\
-R-squared           &       0.001         &       0.001         &       0.004         &       0.001         &       0.004         \\
-N                   &       25920         &       25913         &       20954         &       20823         &       20746         \\
+R-squared           &       0.001         &       0.001         &       0.002         &       0.003         &       0.004         \\
+N                   &       82357         &       82333         &       81556         &       81556         &       81556         \\
 \hline\hline
 \multicolumn{6}{l}{\footnotesize Standard errors in parentheses}\\
 \multicolumn{6}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\

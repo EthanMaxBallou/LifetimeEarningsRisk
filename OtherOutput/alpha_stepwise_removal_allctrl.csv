@@ -1,10 +1,6 @@
 variable,pvalue,order
-cohort_dum1,.91140002,1
-rGDPgrow,.88810003,2
-veteran,.77710003,3
-race_dum1,.72170001,4
-currentage,.41260001,5
-tenure,.35440001,6
-EDU3,.067000002,7
-EDU1,.060699999,8
-PrRecess,.0557,9
+EDU3,.676,1
+tenure,.60049999,2
+rGDPgrow,.4091,3
+cohort_dum1,.38209999,4
+PrRecess,.062600002,5

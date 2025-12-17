@@ -33,7 +33,7 @@ local DVLIST "fearn fhwage"
 *** Simpler Specification
 
 
-use "/Users/ethanballou/Documents/Data/LER_Draft2/FullData_Combined.dta", clear
+use "/Users/ethanballou/Documents/Data/LER_Draft2/FullData_CombinedwithTEN.dta", clear
 
 
 

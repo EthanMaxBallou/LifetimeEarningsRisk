@@ -212,7 +212,7 @@ save "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma.dta", repla
 
 
 
-use "/Users/ethanballou/Documents/Data/LER_Draft2/FullData_Combined.dta", clear
+use "/Users/ethanballou/Documents/Data/LER_Draft2/FullData_CombinedwithTEN.dta", clear
 
 
 
@@ -227,7 +227,7 @@ drop _merge
 
 
 
-replace veteran = 0 if missing(veteran)
+*replace veteran = 0 if missing(veteran)
 
 
 

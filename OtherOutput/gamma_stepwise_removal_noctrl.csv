@@ -1,9 +1,5 @@
 variable,pvalue,order
-tenure,.68470001,1
-ma5aep,.68339998,2
-PrRecess,.65100002,3
-rGDPgrow,.53799999,4
-veteran,.46000001,5
-EDU3,.38139999,6
-currentage,.3118,7
-OLF,.26089999,8
+tenure,.62199998,1
+OLF,.44139999,2
+PrRecess,.34299999,3
+rGDPgrow,.2192,4

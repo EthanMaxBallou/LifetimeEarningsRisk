@@ -1,10 +1,13 @@
 step,action,vars,v1,v2,v3
-1,A,2.occ                3.occ                4.occ,     1 , .0010356        200    0.0310 , A 2.occ                3.occ                4.occ                                        
-2,A,ma5aep,     2 , .0009436        201    0.0317 , A ma5aep                                                                                 
-3,A,OLF,     8 ,   .00054        202    0.0341 , A OLF                                                                                    
-4,A,EDU2,    14 ,  .000309        203    0.0352 , A EDU2                                                                                   
-5,A,currentagecube,    15 , .0002816        204    0.0354 , A currentagecube                                                                         
-6,A,EDU1                 tenure,    25 ,  .000111        206    0.0365 , A EDU1                 tenure                                                            
-7,A,EDU3,    28 ,  .000084        207    0.0367 , A EDU3                                                                                   
-8,A,veteran,    32 , .0000579        208    0.0368 , A veteran                                                                                
-9,A,currentage,    40 , .0000275        209    0.0370 , A currentage                                                                             
+1,A,1.occ                2.occ                3.occ,     1 , .0006629        204    0.0197 , A 1.occ                2.occ                3.occ                                        
+2,A,ma5aep,     2 ,  .000604        205    0.0201 , A ma5aep                                                                                 
+3,A,OLF,     9 , .0003149        206    0.0214 , A OLF                                                                                    
+4,A,EDU1,    13 , .0002171        207    0.0218 , A EDU1                                                                                   
+5,A,currentagecube,    15 , .0001802        208    0.0220 , A currentagecube                                                                         
+6,A,EDU3,    18 , .0001363        209    0.0223 , A EDU3                                                                                   
+7,A,EDU2,    23 , .0000856        210    0.0225 , A EDU2                                                                                   
+8,A,tenure,    46 , .0000101        211    0.0228 , A tenure                                                                                 
+9,A,currentage,    50 , 6.94e-06        212    0.0228 , A currentage                                                                             
+10,A,currentagesq,    63 , 2.07e-06        213    0.0228 , A currentagesq                                                                           
+11,R,currentage,    64 , 1.89e-06        212    0.0228 , R currentage                                                                             
+12,A,currentage,    71 , 9.84e-07        213    0.0228 , A currentage                                                                             

@@ -1,15 +1,13 @@
 step,action,vars,v1,v2,v3
-1,A,1973.year            1974.year            1975.year,   * 1 ,  .000172         92    0.0035 , A 1973.year            1974.year            1975.year                                    
-2,A,EDU2,     2 , .0001567         93    0.0035 , A EDU2                                                                                   
-3,A,veteran,     5 , .0001186         94    0.0036 , A veteran                                                                                
-4,A,EDU1,     6 ,  .000108         95    0.0036 , A EDU1                                                                                   
-5,A,OLF,     8 , .0000897         96    0.0037 , A OLF                                                                                    
-6,A,tenure               currentage,    16 , .0000426         98    0.0038 , A tenure               currentage                                                        
-7,A,EDU3,    17 , .0000388         99    0.0038 , A EDU3                                                                                   
-8,A,currentagecube,    20 , .0000294        100    0.0039 , A currentagecube                                                                         
-9,A,currentagesq,    53 , 1.36e-06        101    0.0042 , A currentagesq                                                                           
-10,R,currentage,    56 , 1.03e-06        100    0.0042 , R currentage                                                                             
-11,A,ma5aep,    59 , 7.80e-07        101    0.0042 , A ma5aep                                                                                 
-12,A,currentage,    63 , 5.38e-07        102    0.0042 , A currentage                                                                             
-13,R,ma5aep,    81 , 1.01e-07        101    0.0043 , R ma5aep                                                                                 
-14,A,ma5aep,    88 , 5.25e-08        102    0.0043 , A ma5aep                                                                                 
+1,A,1973.year            1974.year            1975.year,   * 1 ,  .000179         92    0.0013 , A 1973.year            1974.year            1975.year                                    
+2,A,EDU2,     2 , .0001631         93    0.0014 , A EDU2                                                                                   
+3,A,EDU1,     5 , .0001234         94    0.0014 , A EDU1                                                                                   
+4,A,EDU3,     8 , .0000933         95    0.0015 , A EDU3                                                                                   
+5,A,ma5aep,     9 ,  .000085         96    0.0016 , A ma5aep                                                                                 
+6,A,tenure,    10 , .0000775         97    0.0016 , A tenure                                                                                 
+7,A,currentage,    14 , .0000534         98    0.0018 , A currentage                                                                             
+8,A,currentagecube,    20 , .0000306         99    0.0019 , A currentagecube                                                                         
+9,A,OLF,    24 , .0000211        100    0.0021 , A OLF                                                                                    
+10,A,currentagesq,    52 , 1.56e-06        101    0.0022 , A currentagesq                                                                           
+11,R,currentage,    54 , 1.29e-06        100    0.0023 , R currentage                                                                             
+12,A,currentage,    61 , 6.74e-07        101    0.0023 , A currentage                                                                             
