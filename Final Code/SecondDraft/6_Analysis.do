@@ -67,11 +67,6 @@ replace state = . if state < 0
 
 
 
-drop if missing(state)
-drop if missing(year)
-drop if missing(cohort)
-drop if missing(race)
-
 
 
 tabulate race, generate(race_dum)
