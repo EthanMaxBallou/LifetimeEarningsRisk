@@ -948,6 +948,136 @@ restore
 
 
 
+
+* Create LASSO occupation selection order table (Gamma)
+tempfile occ_order
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_occ.csv", clear
+    keep if action == "A"
+    gen order = _n
+
+    split vars, gen(var_)
+    gen nvars = 0
+    foreach v of varlist var_* {
+        replace nvars = nvars + 1 if `v' != ""
+    }
+    expand nvars
+    bysort order: gen seq = _n
+
+    gen varname = ""
+    foreach i of numlist 1/50 {
+        capture confirm variable var_`i'
+        if _rc == 0 {
+            replace varname = var_`i' if seq == `i' & var_`i' != ""
+        }
+    }
+    replace varname = strtrim(varname)
+    gen occ_code = real(regexs(1)) if regexm(varname, "^([0-9]+)\.occ$")
+
+    keep if occ_code < .
+    bysort occ_code (order): keep if _n == 1
+    keep occ_code order
+    rename order occ_order
+    save `occ_order', replace
+restore
+
+preserve
+    local occ_vl : value label occ
+    keep occ
+    duplicates drop occ, force
+    rename occ occ_code
+    if "`occ_vl'" != "" {
+        label values occ_code `occ_vl'
+        decode occ_code, gen(occ_label)
+    }
+    else {
+        tostring occ_code, gen(occ_label) format(%9.0g)
+    }
+
+    merge 1:1 occ_code using `occ_order', nogenerate
+    label var occ_label "Occupation"
+    label var occ_order "Selection Order"
+    gsort occ_order occ_label
+
+    listtex occ_label occ_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex", ///
+        replace ///
+        head("\begin{tabular}{lc}" ///
+             "\hline\hline" ///
+             "Occupation & Selection Order \\" ///
+             "\hline") ///
+        foot("\hline\hline" ///
+             "\end{tabular}") ///
+        rstyle(tabular)
+restore
+
+
+* Create LASSO industry selection order table (Gamma)
+tempfile ind_order
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_ind.csv", clear
+    keep if action == "A"
+    gen order = _n
+
+    split vars, gen(var_)
+    gen nvars = 0
+    foreach v of varlist var_* {
+        replace nvars = nvars + 1 if `v' != ""
+    }
+    expand nvars
+    bysort order: gen seq = _n
+
+    gen varname = ""
+    foreach i of numlist 1/50 {
+        capture confirm variable var_`i'
+        if _rc == 0 {
+            replace varname = var_`i' if seq == `i' & var_`i' != ""
+        }
+    }
+    replace varname = strtrim(varname)
+    gen ind_code = real(regexs(1)) if regexm(varname, "^([0-9]+)\.twoind$")
+
+    keep if ind_code < .
+    bysort ind_code (order): keep if _n == 1
+    keep ind_code order
+    rename order ind_order
+    save `ind_order', replace
+restore
+
+preserve
+    local ind_vl : value label twoind
+    keep twoind
+    duplicates drop twoind, force
+    rename twoind ind_code
+    if "`ind_vl'" != "" {
+        label values ind_code `ind_vl'
+        decode ind_code, gen(ind_label)
+    }
+    else {
+        tostring ind_code, gen(ind_label) format(%9.0g)
+    }
+
+    merge 1:1 ind_code using `ind_order', nogenerate
+    label var ind_label "Industry"
+    label var ind_order "Selection Order"
+    gsort ind_order ind_label
+
+    listtex ind_label ind_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex", ///
+        replace ///
+        head("\begin{tabular}{lc}" ///
+             "\hline\hline" ///
+             "Industry & Selection Order \\" ///
+             "\hline") ///
+        foot("\hline\hline" ///
+             "\end{tabular}") ///
+        rstyle(tabular)
+restore
+
+
+
+
+
+
+
 * Alpha Analysis
 
 
@@ -1755,6 +1885,127 @@ restore
 
 
 
+* Create LASSO occupation selection order table (Alpha)
+tempfile alpha_occ_order
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_occ.csv", clear
+    keep if action == "A"
+    gen order = _n
 
+    split vars, gen(var_)
+    gen nvars = 0
+    foreach v of varlist var_* {
+        replace nvars = nvars + 1 if `v' != ""
+    }
+    expand nvars
+    bysort order: gen seq = _n
+
+    gen varname = ""
+    foreach i of numlist 1/50 {
+        capture confirm variable var_`i'
+        if _rc == 0 {
+            replace varname = var_`i' if seq == `i' & var_`i' != ""
+        }
+    }
+    replace varname = strtrim(varname)
+    gen occ_code = real(regexs(1)) if regexm(varname, "^([0-9]+)\.occ$")
+
+    keep if occ_code < .
+    bysort occ_code (order): keep if _n == 1
+    keep occ_code order
+    rename order occ_order
+    save `alpha_occ_order', replace
+restore
+
+preserve
+    local occ_vl : value label occ
+    keep occ
+    duplicates drop occ, force
+    rename occ occ_code
+    if "`occ_vl'" != "" {
+        label values occ_code `occ_vl'
+        decode occ_code, gen(occ_label)
+    }
+    else {
+        tostring occ_code, gen(occ_label) format(%9.0g)
+    }
+
+    merge 1:1 occ_code using `alpha_occ_order', nogenerate
+    label var occ_label "Occupation"
+    label var occ_order "Selection Order"
+    gsort occ_order occ_label
+
+    listtex occ_label occ_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex", ///
+        replace ///
+        head("\begin{tabular}{lc}" ///
+             "\hline\hline" ///
+             "Occupation & Selection Order \\" ///
+             "\hline") ///
+        foot("\hline\hline" ///
+             "\end{tabular}") ///
+        rstyle(tabular)
+restore
+
+
+* Create LASSO industry selection order table (Alpha)
+tempfile alpha_ind_order
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_ind.csv", clear
+    keep if action == "A"
+    gen order = _n
+
+    split vars, gen(var_)
+    gen nvars = 0
+    foreach v of varlist var_* {
+        replace nvars = nvars + 1 if `v' != ""
+    }
+    expand nvars
+    bysort order: gen seq = _n
+
+    gen varname = ""
+    foreach i of numlist 1/50 {
+        capture confirm variable var_`i'
+        if _rc == 0 {
+            replace varname = var_`i' if seq == `i' & var_`i' != ""
+        }
+    }
+    replace varname = strtrim(varname)
+    gen ind_code = real(regexs(1)) if regexm(varname, "^([0-9]+)\.twoind$")
+
+    keep if ind_code < .
+    bysort ind_code (order): keep if _n == 1
+    keep ind_code order
+    rename order ind_order
+    save `alpha_ind_order', replace
+restore
+
+preserve
+    local ind_vl : value label twoind
+    keep twoind
+    duplicates drop twoind, force
+    rename twoind ind_code
+    if "`ind_vl'" != "" {
+        label values ind_code `ind_vl'
+        decode ind_code, gen(ind_label)
+    }
+    else {
+        tostring ind_code, gen(ind_label) format(%9.0g)
+    }
+
+    merge 1:1 ind_code using `alpha_ind_order', nogenerate
+    label var ind_label "Industry"
+    label var ind_order "Selection Order"
+    gsort ind_order ind_label
+
+    listtex ind_label ind_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex", ///
+        replace ///
+        head("\begin{tabular}{lc}" ///
+             "\hline\hline" ///
+             "Industry & Selection Order \\" ///
+             "\hline") ///
+        foot("\hline\hline" ///
+             "\end{tabular}") ///
+        rstyle(tabular)
+restore
 
 

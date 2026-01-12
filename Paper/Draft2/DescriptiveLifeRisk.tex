@@ -62,10 +62,7 @@
 \setcounter{page}{1}
 
 \begin{enumerate}
-    \item NEED TO ADD INFO ABOUT WHICH DUMMIES WERE INCLUDED IN STEPWISE REGRESSIONS SINCE THEY ARE SUPPRESSED ON THE TABLE
-    \item NEED TO ADD IN AND OCD Lasso, and of all of lasso for that matter
-    \item NEED TO ADD IN SHAP VALUE FIGURES
-    \item ONLY HAVE 25k observations and Scott had 62900
+    \item NEED TO ADD IN SHAP RANK TABLES
 \end{enumerate}
 
 
@@ -129,6 +126,27 @@
 
 
 
+\begin{table}[htbp]
+    \centering
+    \caption{Gamma Regressions: Lasso Industry Selection Results}
+    \label{tab:gamma_lasso_ind}
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex}
+\end{table}
+
+
+\begin{table}[htbp]
+    \centering
+    \caption{Gamma Regressions: Lasso Occupation Selection Results}
+    \label{tab:gamma_lasso_occ}
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex}
+\end{table}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png}
+    \caption{SHAP Summary Plot for Gamma}
+\end{figure}
 
 
 
@@ -166,6 +184,41 @@
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex}
     }
 \end{table}
+
+
+\begin{table}[htbp]
+    \centering
+    \caption{Alpha Regressions: Lasso Selection Results}
+    \label{tab:alpha_lasso}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_selection.tex}
+    }
+\end{table}
+
+
+
+\begin{table}[htbp]
+    \centering
+    \caption{Alpha Regressions: Lasso Industry Selection Results}
+    \label{tab:alpha_lasso_ind}
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex}
+\end{table}
+
+
+\begin{table}[htbp]
+    \centering
+    \caption{Alpha Regressions: Lasso Occupation Selection Results}
+    \label{tab:alpha_lasso_occ}
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex}
+\end{table}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png}
+    \caption{SHAP Summary Plot for Alpha}
+\end{figure}
+
 
 
 \end{document}

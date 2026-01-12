@@ -126,10 +126,13 @@ top_cont_indices = [data.columns.get_loc(feature) for feature in top_cont]
 shap_values_top_cont = shap_values_reshaped[:, top_cont_indices]
 X_test_top_cont = X_test[:, top_cont_indices]
 
-# Visualize the SHAP summary plot for the test set with top_cont variables
-shap.summary_plot(shap_values_top_cont, X_test_top_cont, feature_names=top_cont, max_display=len(top_cont))
 
-plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png')
+
+plt.figure(figsize=(12, 8))
+shap.summary_plot(shap_values_top_cont, X_test_top_cont, feature_names=top_cont, max_display=len(top_cont), show=False)
+plt.tight_layout()
+plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png', bbox_inches='tight', dpi=300)
+plt.close()
 
 
 # Print all variable names in the dataset
@@ -173,62 +176,6 @@ shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_name
 
 
 
-
-
-
-# Generate SHAP dependence plots for 'rGDPgrow' against every industry dummy
-industry_dummies = [
-    'twoind_1', 'twoind_3', 'twoind_4', 'twoind_5', 'twoind_6', 'twoind_7', 
-    'twoind_8', 'twoind_9', 'twoind_10', 'twoind_11', 'twoind_12', 'twoind_13', 
-    'twoind_14', 'twoind_15', 'twoind_16', 'twoind_18', 'twoind_19', 'twoind_20', 
-    'twoind_21', 'twoind_22', 'twoind_23', 'twoind_24', 'twoind_25', 'twoind_27', 
-    'twoind_28', 'twoind_29', 'twoind_30', 'twoind_31', 'twoind_33', 'twoind_999'
-]
-
-feature_x = 'rGDPgrow'  # First variable
-feature_x_index = data.columns.get_loc(feature_x)
-
-for industry in industry_dummies:
-    feature_y_index = data.columns.get_loc(industry)
-    shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_names=data.columns, interaction_index=feature_y_index)
-
-
-
-
-# Generate SHAP dependence plots for 'currentage' against every industry dummy
-feature_x = 'currentage'  # First variable
-feature_x_index = data.columns.get_loc(feature_x)
-
-for industry in industry_dummies:
-    feature_y_index = data.columns.get_loc(industry)
-    shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_names=data.columns, interaction_index=feature_y_index)
-
-
-
-
-
-# Generate SHAP dependence plots for 'currentage' against every race dummy
-race_dummies = ['race_1', 'race_2', 'race_3', 'race_4', 'race_5', 'race_7']
-
-
-# Generate SHAP dependence plots for 'currentage' against every industry dummy
-feature_x = 'currentage'  # First variable
-feature_x_index = data.columns.get_loc(feature_x)
-
-for industry in race_dummies:
-    feature_y_index = data.columns.get_loc(industry)
-    shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_names=data.columns, interaction_index=feature_y_index)
-
-
-
-
-# Generate SHAP dependence plots for 'currentage' against every industry dummy
-feature_x = 'rGDPgrow'  # First variable
-feature_x_index = data.columns.get_loc(feature_x)
-
-for industry in race_dummies:
-    feature_y_index = data.columns.get_loc(industry)
-    shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_names=data.columns, interaction_index=feature_y_index)
 
 
 
