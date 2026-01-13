@@ -66,12 +66,126 @@
 \end{enumerate}
 
 
+\begin{onehalfspace}
 
 \section{Introduction}
 
+Understanding the nature of earnings risk is central to both individual decision making and policy. People are often thought to be risk averse not risk neutral and therefore earnings risk has an effect on how individuals make intertemporal decisions such as saving. Especially on the analysis side, structural life cycle models have to make assumptions about the nature of earnings dispersion and risk. Misspecifying the earnings process can lead to inaccurate or incorrect conclusions in many cases and this is why understanding the nature of earnings risk and the earnings process is so important.
+
+To better pin down the quantitative importance of shocks versus profile heterogeneity, this paper builds on the work of (Drewianka and Oberg 2025, 2019) \cite{drewianka2025,drewianka_oberg2019} which uses a moment condition approach to test for heterogeneity in expected income processes. The paper uses a Restricted Income Profile (RIP) model to estimate lifetime earnings risk and then tests for heterogeneity in expected income processes using a moment condition approach. 
+
+Restricted Income Profile (RIP) models posit that all individuals with the same observed characteristics follow the same earnings trajectory. Deviations then being attributed to shocks to the individuals income process. In RIP, dispersion is then attributed to the variance of these shocks. (Abowd and Card, 1989; Meghir and Pistaferri, 2004) \cite{abowd_card1989,meghir_pistaferri2004} To appreciate the implications of these differing assumptions, it is helpful to compare RIP directly with HIP models. Heterogeneous Income Profile (HIP) models allow for different expected income processes for individuals with the same observed characteristics. This means that the variance of shocks is not the only source of dispersion in earnings. While some of the variance is due to shocks the rest of the variance is due to the different expected income processes. (Guvenen 2007; Baker 1997) \cite{guvenen2009,baker1997}Choosing between RIP and HIP can dramatically change the estimation of the variance of earnings shocks and hence change the estimation of earnings risk. 
+
+This paper looks beyond that and tests for determinants of lifetime earnings risk as parameterized by the model in Drewianka and Oberg (2025) \cite{drewianka2025}. This paper finds that education and age are important in explaining lifetime earnings risk. The paper also finds that macroeconomic variables such as probability of recession and real GDP growth are important and play at least a small role and that the inclusion of state controls may further the hypothesis of government policy playing a role. Finally, the paper finds that occupation controls are important while industry controls do not appear to play a large role.
+
+
+
+This paper contributes to multiple strands of literature. The first is the literature around (RIP) models and their use in life cycle models. (MaCurdy 1982; Abowd and Card 1989; Hryshko 2012). \cite{macurdy1982, abowd_card1989, hryshko2012} In addition to that it also contributes to a second strand of literature focusing on lifetime earnings risk. (Drewianka and Oberg 2025; Guvenen 2007; Meghir and Pistaferri 2004). \cite{drewianka2025,guvenen2007,meghir_pistaferri2004} Finally the paper contributes to the literature on machine learning and its use in economics by utilizing neural networks and SHAP values to interpret the results (Lundberg and Lee, 2017). \cite{lundberq} 
+
+The rest of the paper is structured as follows. Section 2 discusses the model and data, Section 3 discusses the empirical strategy, Section 4 discusses the results, and Section 5 concludes the paper. 
+
 \section{Data and Model}
 
+As mentioned before, the model used is the same model from Drewianka and Oberg (2025) \cite{drewianka2025}. The model is a standard RIP model where people's income are modeled as a function of characteristics, but where there are no individual level effects. Then each individual has a deviation from the expected income process which is modeled as a shock. For example all 22 year old men from the US will have the same expected income process based off of those characteristics. However their actual income will deviate from this expected income process due to shocks. 
+\vspace{-0.75cm} % Adjust the value as needed to reduce spacing
+\begin{align}
+u_{it} 
+&= \pi_{it} + \nu_{it} \\[1ex]
+\pi_{it} 
+&= \rho\,\pi_{i(t-1)} + \eta_{it},
+\end{align}
+
+\vspace{-0.25cm}
+
+$u_{it}$ is the shock or deviation from the expected income process for a given person i in time t. This process of shocks can be decomposed into two types of shocks: persistent and temporary shocks as outlined in equation 1. $\pi_{it}$ is the cumulative effect from the persistent shocks which are further modeled in equation 2 while $\nu_{it}$ are the temporary shocks. The temporary shocks along with $\eta_{it}$ are assumed to be mean zero and independent across individuals and time. The persistent shocks are further modeled as an autoregressive process with $\rho$ being the persistence of the shocks and $\eta_{it}$ being the actual shock.
+
+To get a measure of earnings risk the variance of $\eta_{it}$ across time is calculated. This is capturing the correlation of permanent income shocks across time for each individual. To calculate this the following equation is used:
+
+\vspace{-0.75cm}
+
+\begin{align}
+\Omega_i(t,t+k)
+&\equiv u_{i(t+k)} - u_{it}\\[1ex]
+\Omega_i(t,t+k)
+&= \nu_{i(t+k)} - \nu_{it}
+  + \sum_{j=1}^k \eta_{i(t+j)}.
+\end{align}
+
+\vspace{-0.25cm}
+
+This omega equation differences $u_{it}$ across a window t to t+k. This is then multiplied by another omega function across the window t-j to t+k+q. This will result in the persistent shocks in the interval (t, t+k) showing up twice while the other persistent shocks don't necessarily show up twice. This results in the variance of the shocks across time k as follows:
+
+\vspace{-0.5cm}
+
+\begin{gather}
+E\Bigl[\tfrac{1}{k}\,\Omega_i(t,t+k)\,\Omega_i(t-j,t+k+q)\Bigr]
+= \sigma^2_{\eta_i},\\
+\gamma_{itjq}
+\equiv \tfrac12\,\Omega_i\bigl(t,\,t+2\bigr)\,\Omega_i\bigl(t - j,\,t + 2 + q\bigr).
+\end{gather}
+
+This is then further used to get the following moment condition for the variance of $\eta_{it}$ that is a function of (j+k+q) and j and can be estimated in a regression framework to get a measure of lifetime earnings risk $\gamma_{itjq}$. For more on the derivation see Drewianka and Oberg (2025) \cite{drewianka2025}:
+
+\vspace{-0.75cm}
+
+\begin{align}
+E[\gamma_{itjq}]
+&\approx
+\bigl[\delta^2\,E\pi^2_{i(t-j)}\,(j+k+q)\bigr]
+- \bigl[\delta\,s_i(t-j+1,t)\,j\bigr]
++ \bigl[\sigma^2_{\eta_i(t+1)}
+  - \delta\,\sigma^2_{\eta_i(t+1)}\,(k+q)\bigr] \\[1ex]
+E[\gamma_{itjq}]
+&=
+\sigma^2_{\eta_i(t+1)}
++ \bigl[\delta^2\,E\pi^2_{i(t-j)} - \delta\,\sigma^2_{\eta_i(t+1)}\bigr]\,(j+k+q)
++ \delta\,\bigl[\sigma^2_{\eta_i(t+1)} - s_i(t-j+1,t)\bigr]\,j
+\end{align}
+
+The data used is the 1970-2015 waves of the Panel Study of Income Dynamics (PSID 2017). \cite{psid2017} The sample is of men between the ages of 22 and 69 with students being excluded. Many of the men in the sample come from the Survey of Economic Opportunity which has been shown to be representative of the main PSID sample (SEO; Hill 1992; Drewianka 2010). \cite{hill1992, drewianka2010} Income is calculated in 2015 dollars using the Consumer Price Index (CPI 2017). \cite{cpi2017} The analysis uses several key variables, including education (categorized as less than high school, high school or some college, and bachelor's degree but less than a master's degree), age (with higher-order polynomial terms Age$^2$ and Age$^3$ to capture non-linear effects), and macroeconomic indicators such as the probability of a recession (P(Recession)) and real GDP growth. Individual-specific variables include fixed effects for wages, a moving average of income over the last five years (MA(Last 5 years income)), employment status (Employed), veteran status (Veteran), and job tenure (years in the current job). The primary outcome variable, gamma ($\gamma$), measures lifetime earnings risk derived from the variance of persistent income shocks. Additionally, the analysis incorporates fixed effects for occupation, industry, state of residence, and other controls such as year, race, and cohort. With the theoretical framework and data laid out, the following section turns to the empirical implementation of the model.
+
+% define variables used?
+
 \section{Empirical Strategy}
+
+The empirical strategy of this paper is broken into two parts. The first part is estimating gamma and then constructing a weighted gamma for each individual in each year since gamma alone is across i, t, j, and q. (i - individual, t - time, j and q - period or "window" used in calculation of gamma). The second part of the empirical strategy is estimating the then weighted gamma variable using various models and variables to look for trends in the characteristics of individuals in regards to lifetime earnings risk.
+
+For the estimation of gamma and consolidation across j and q is done by using a mixed regression for the gamma and then a fixed effects regression to get the composite or weighted gamma for each person year.
+
+The following mixed regression is used to estimate gamma based on the above equation. This is done to get an estimate of gamma for each individual in each year across j and q. A mixed regression used instead of standard OLS because $\sigma^2_{\eta_i}$ is correlated with both the constant and the coefficient on (j+k+q) as seen in equation 8 and therefore a mixed regression is used to account for this by allowing the residuals to be separately correlated with (j+k+q) for each individual i in year t. (For more on this see Drewianka and Oberg (2025) \cite{drewianka2025}) The mixed regression is as follows:
+
+
+\vspace{-0.75cm}
+
+
+
+\begin{align}
+\gamma_{itjq}
+&= \beta_{0}
+  + \beta_{1}\,(j + k + q)
+  + \beta_{2}\,j
+  + \epsilon_{itjq}, \\[1ex]
+\epsilon_{itjq}
+&= \beta_{0it}
+  + \beta_{1it}\,(j + k + q)
+  + e_{itjq}.
+\end{align}
+
+The random effects component (j+k+q) models how each person-year combination may have a unique relationship with the (j+k+q) variable while the cov(unstructured) option in Stata allows for unrestricted correlation between the random intercept and slope. The standard errors are clustered at the person level to account for within-person correlation across time.
+
+From here a regression is run across fixed effects for each combination of j and q with year effects absorbed. Weights are then calculated for each combination of j and q based on their accuracy in predicting gamma using inverse MSE. Specifically, after estimating the fixed effects model, the mean squared residual (MSE) is calculated for each (j,q) combination, then use the square root of the inverse of these values ($\sqrt{(1/MSE)}$) as weights. Then the weighted gamma is calculated consolidating across j and q so that there are only individual-year gamma values. Having obtained individual-year estimates of earnings risk, we now examine the determinants of this risk using several regression techniques.
+
+The second part of the empirical strategy uses various models to estimate lifetime earnings risk (gamma). We begin with the simplest specification to establish a baseline before introducing more sophisticated selection and machine-learning methods. The first model is a standard OLS regression of the lifetime earnings risk variable, gamma, on various controls and variables. The second model is a stepwise regression which selects variables based on a p-value threshold. The third model is a lasso regression which penalizes the size of the coefficients to select variables. Finally, the fourth model uses a multi-layer perceptron and SHAP values to interpret the results.
+
+The OLS regressions are fairly standard however the stepwise and lasso models do have components that are worth mentioning. For the stepwise regression model a cutoff p-value of 0.05 is used to select variables. The model removes the least significant variable (or group of variables in the case of a set of controls) in rounds until it reaches the cutoff. 0.05 was selected so that the model would still select some variables but the rankings of the many of the variables would be clear. A higher cutoff and most of the variables would be selected and cardinal rankings would not be visible. Too low of a cutoff value and many of the variables would not be selected at all. 
+
+As for the lasso model, the model is set up to select variables based on the Bayesian Information Criterion (BIC) which is a common method for selecting variables in penalized regression. While the model selects lambda based on cross-validation, the selected model isn't very relevant to the analysis as the rankings are so the selected model isn't discussed. It is worth mentioning however that the lasso model is a penalized regression and therefore some weight is assigned to the size of the coefficients when selecting variables. This is different from the stepwise regression which is indiscriminate regarding the size of the coefficient and only considered the significance of a variable.
+
+Finally the multi-layer perceptron model is a neural network that is used to estimate lifetime earnings risk. The model is trained on the same variables and data used by the OLS, stepwise, and lasso models. The model is 4 dense layers (excluding the input layer) with 1000 nodes each and a linear output layer at the end. The model used a sigmoid activation function in the hidden layers to allow for continuous support. This was done instead of a ReLU activation function to allow for more definition in the parameters instead of some parts of the perceptron being "dead" and not contributing and complicating the SHAP value interpretation. This model size and structure was selected as it achieved the best performance in terms of mean squared error (MSE). The model trained with MSE as its loss function and used early stopping to prevent overfitting and trained on 70 percent of the data with the rest being used for test and validation.
+
+The SHAP values are then used to interpret the results of the multi-layer perceptron model. SHAP values are constructed by calculating marginal contribution of a variable as a deviation from the output variable's mean if the variable was changed. This is done across a sample of observations and gives each variable a distribution of SHAP values. The summary plot shows the distribution of SHAP values for the continuous variables. 
+
+
 
 \section{Results}
 
@@ -218,6 +332,38 @@
     \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png}
     \caption{SHAP Summary Plot for Alpha}
 \end{figure}
+
+
+\end{onehalfspace}
+
+
+
+
+
+
+
+
+\begin{thebibliography}{99}
+\bibitem{abowd_card1989} Abowd, J.~M. and Card, D. (1989). On the Covariance Structure of Earnings and Hours Changes. \textit{Econometrica}, 57(2), 411--445.
+\bibitem{baker1997} Baker, M. (1997). Growth-Rate Heterogeneity and the Covariance Structure of Life-Cycle Earnings. \textit{Journal of Labor Economics}, 15(2), 338--375.
+\bibitem{cpi2017} Consumer Price Index for All Urban Consumers (2017). Data set, series CUUR0000SA0. Washington, D.C.: U.S. Bureau of Labor Statistics.
+\bibitem{drewianka2010} Drewianka, S. (2010). Cross-Sectional Variation in Individuals’ Earnings Instability. \textit{Review of Income and Wealth}, 56(2), 291--326.
+\bibitem{drewianka2025}Drewianka, Scott and Oberg, Phillip. (2025). Earnings Risk and Heterogeneous Expected Earnings Profiles. Quantitative Economics. Forthcoming.
+\bibitem{drewianka_oberg2019} Drewianka, S. and Oberg, P. (2019). Estimating Heterogeneity in Lifetime Earnings Risk. Unpublished manuscript, University of Wisconsin--Milwaukee and Illinois Wesleyan University. Available at \url{http://dx.doi.org/10.2139/ssrn.3630477}.
+\bibitem{guvenen2009} Guvenen, F. (2009). An Empirical Investigation of Labor Income Processes. \textit{Review of Economic Dynamics}, 12, 58--79.
+\bibitem{guvenen2007} Guvenen, F. (2007). Learning Your Earning: Are Labor Income Shocks Really Very Persistent? \textit{American Economic Review}, 97(3), 687--712.
+\bibitem{hill1992} Hill, M.~S. (1992). \textit{The Panel Study of Income Dynamics: A User’s Guide}, Volume~2. Newbury Park, CA: Sage Publications.
+\bibitem{hryshko2012} Hryshko, D. (2012). Labor Income Profiles Are Not Heterogeneous: Evidence from Income Growth Rates. \textit{Quantitative Economics}, 3, 177--209.
+\bibitem{lundberq} Lundberg, S. M., and Lee, S. I. (2017). A unified approach to interpreting model predictions. Advances in neural information processing systems, 30.
+\bibitem{macurdy1982} MaCurdy, T.~E. (1982). The Use of Time Series Processes to Model the Error Structure of Earnings in a Longitudinal Data Analysis. \textit{Journal of Econometrics}, 18(1), 83--114.
+\bibitem{meghir_pistaferri2004} Meghir, C. and Pistaferri, L. (2004). Income Variance Dynamics and Heterogeneity. \textit{Econometrica}, 72(1), 1--32.
+\bibitem{psid2017} Panel Study of Income Dynamics (2017). Public use dataset. Ann Arbor, MI: Institute for Social Research, Survey Research Center, University of Michigan.
+
+
+
+\end{thebibliography}
+
+
 
 
 
