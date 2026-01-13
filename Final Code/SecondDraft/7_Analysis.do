@@ -981,6 +981,21 @@ preserve
     save `occ_order', replace
 restore
 
+* Load SHAP values and create ranking
+tempfile occ_shap
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/occupation_shap_gamma.csv", clear
+    rename occupationcode occ_code
+    rename averageshapvalue avg_shap
+    
+    * Sort by SHAP value (descending) and create rank
+    gsort -avg_shap
+    gen shap_order = _n
+    
+    keep occ_code shap_order
+    save `occ_shap', replace
+restore
+
 preserve
     local occ_vl : value label occ
     keep occ
@@ -994,16 +1009,22 @@ preserve
         tostring occ_code, gen(occ_label) format(%9.0g)
     }
 
+    * Merge both LASSO and SHAP rankings
     merge 1:1 occ_code using `occ_order', nogenerate
+    merge 1:1 occ_code using `occ_shap', nogenerate
+    
     label var occ_label "Occupation"
-    label var occ_order "Selection Order"
-    gsort occ_order occ_label
+    label var occ_order "LASSO Order"
+    label var shap_order "SHAP Order"
+    
+    * Sort by LASSO order first, then SHAP order
+    gsort occ_order shap_order occ_label
 
-    listtex occ_label occ_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex", ///
+    listtex occ_label occ_order shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex", ///
         replace ///
-        head("\begin{tabular}{lc}" ///
+        head("\begin{tabular}{lcc}" ///
              "\hline\hline" ///
-             "Occupation & Selection Order \\" ///
+             "Occupation & LASSO Order & SHAP Order \\" ///
              "\hline") ///
         foot("\hline\hline" ///
              "\end{tabular}") ///
@@ -1043,6 +1064,21 @@ preserve
     save `ind_order', replace
 restore
 
+* Load SHAP values and create ranking
+tempfile ind_shap
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/industry_shap_gamma.csv", clear
+    rename industrycode ind_code
+    rename averageshapvalue avg_shap
+    
+    * Sort by SHAP value (descending) and create rank
+    gsort -avg_shap
+    gen shap_order = _n
+    
+    keep ind_code shap_order
+    save `ind_shap', replace
+restore
+
 preserve
     local ind_vl : value label twoind
     keep twoind
@@ -1056,16 +1092,22 @@ preserve
         tostring ind_code, gen(ind_label) format(%9.0g)
     }
 
+    * Merge both LASSO and SHAP rankings
     merge 1:1 ind_code using `ind_order', nogenerate
+    merge 1:1 ind_code using `ind_shap', nogenerate
+    
     label var ind_label "Industry"
-    label var ind_order "Selection Order"
-    gsort ind_order ind_label
+    label var ind_order "LASSO Order"
+    label var shap_order "SHAP Order"
+    
+    * Sort by LASSO order first, then SHAP order
+    gsort ind_order shap_order ind_label
 
-    listtex ind_label ind_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex", ///
+    listtex ind_label ind_order shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex", ///
         replace ///
-        head("\begin{tabular}{lc}" ///
+        head("\begin{tabular}{lcc}" ///
              "\hline\hline" ///
-             "Industry & Selection Order \\" ///
+             "Industry & LASSO Order & SHAP Order \\" ///
              "\hline") ///
         foot("\hline\hline" ///
              "\end{tabular}") ///
@@ -1917,6 +1959,21 @@ preserve
     save `alpha_occ_order', replace
 restore
 
+* Load SHAP values and create ranking
+tempfile alpha_occ_shap
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/occupation_shap_alpha.csv", clear
+    rename occupationcode occ_code
+    rename averageshapvalue avg_shap
+    
+    * Sort by SHAP value (descending) and create rank
+    gsort -avg_shap
+    gen shap_order = _n
+    
+    keep occ_code shap_order
+    save `alpha_occ_shap', replace
+restore
+
 preserve
     local occ_vl : value label occ
     keep occ
@@ -1930,16 +1987,22 @@ preserve
         tostring occ_code, gen(occ_label) format(%9.0g)
     }
 
+    * Merge both LASSO and SHAP rankings
     merge 1:1 occ_code using `alpha_occ_order', nogenerate
+    merge 1:1 occ_code using `alpha_occ_shap', nogenerate
+    
     label var occ_label "Occupation"
-    label var occ_order "Selection Order"
-    gsort occ_order occ_label
+    label var occ_order "LASSO Order"
+    label var shap_order "SHAP Order"
+    
+    * Sort by LASSO order first, then SHAP order
+    gsort occ_order shap_order occ_label
 
-    listtex occ_label occ_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex", ///
+    listtex occ_label occ_order shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex", ///
         replace ///
-        head("\begin{tabular}{lc}" ///
+        head("\begin{tabular}{lcc}" ///
              "\hline\hline" ///
-             "Occupation & Selection Order \\" ///
+             "Occupation & LASSO Order & SHAP Order \\" ///
              "\hline") ///
         foot("\hline\hline" ///
              "\end{tabular}") ///
@@ -1979,6 +2042,21 @@ preserve
     save `alpha_ind_order', replace
 restore
 
+* Load SHAP values and create ranking
+tempfile alpha_ind_shap
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/industry_shap_alpha.csv", clear
+    rename industrycode ind_code
+    rename averageshapvalue avg_shap
+    
+    * Sort by SHAP value (descending) and create rank
+    gsort -avg_shap
+    gen shap_order = _n
+    
+    keep ind_code shap_order
+    save `alpha_ind_shap', replace
+restore
+
 preserve
     local ind_vl : value label twoind
     keep twoind
@@ -1992,16 +2070,22 @@ preserve
         tostring ind_code, gen(ind_label) format(%9.0g)
     }
 
+    * Merge both LASSO and SHAP rankings
     merge 1:1 ind_code using `alpha_ind_order', nogenerate
+    merge 1:1 ind_code using `alpha_ind_shap', nogenerate
+    
     label var ind_label "Industry"
-    label var ind_order "Selection Order"
-    gsort ind_order ind_label
+    label var ind_order "LASSO Order"
+    label var shap_order "SHAP Order"
+    
+    * Sort by LASSO order first, then SHAP order
+    gsort ind_order shap_order ind_label
 
-    listtex ind_label ind_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex", ///
+    listtex ind_label ind_order shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex", ///
         replace ///
-        head("\begin{tabular}{lc}" ///
+        head("\begin{tabular}{lcc}" ///
              "\hline\hline" ///
-             "Industry & Selection Order \\" ///
+             "Industry & LASSO Order & SHAP Order \\" ///
              "\hline") ///
         foot("\hline\hline" ///
              "\end{tabular}") ///
