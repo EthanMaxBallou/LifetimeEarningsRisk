@@ -56,14 +56,26 @@
 \indent \textbf{JEL Codes}: D8, J0, D3\\
 
 
+To Do
+
+\begin{enumerate}
+    \item Rewrite Introduction
+    \item Edit Theoretical Framework
+    \item Rewrite Data
+    \item Rewrite Empirical Strategy
+    \item Rewrite Results
+    \item Rewrite Conclusion
+    \item Consistent formatting of bibliography
+\end{enumerate}
+
+- Use old sections as well as suggested edits as an outline for rewritten sections
+
+
 
 
 \clearpage
 \setcounter{page}{1}
 
-\begin{enumerate}
-    \item NEED TO ADD IN SHAP RANK TABLES
-\end{enumerate}
 
 
 \begin{onehalfspace}
@@ -84,7 +96,16 @@ This paper contributes to multiple strands of literature. The first is the liter
 
 The rest of the paper is structured as follows. Section 2 discusses the model and data, Section 3 discusses the empirical strategy, Section 4 discusses the results, and Section 5 concludes the paper. 
 
-\section{Data and Model}
+
+\begin{enumerate}
+    \item preview the results at the end 
+    \item perhaps lighten the explanation of the RIP and HIP frameworks
+    \item spend a little more time explaining the contribution of this paper specifically, in both using some fancier methods for lack of a better term to identify cove variance with this risk, but also the importance of being able to characterize people who are at an elevated risk in both permanent and transitory horizons
+\end{enumerate}
+
+
+
+\section{Theoretical Framework}
 
 As mentioned before, the model used is the same model from Drewianka and Oberg (2025) \cite{drewianka2025}. The model is a standard RIP model where people's income are modeled as a function of characteristics, but where there are no individual level effects. Then each individual has a deviation from the expected income process which is modeled as a shock. For example all 22 year old men from the US will have the same expected income process based off of those characteristics. However their actual income will deviate from this expected income process due to shocks. 
 \vspace{-0.75cm} % Adjust the value as needed to reduce spacing
@@ -142,15 +163,31 @@ E[\gamma_{itjq}]
 + \delta\,\bigl[\sigma^2_{\eta_i(t+1)} - s_i(t-j+1,t)\bigr]\,j
 \end{align}
 
-The data used is the 1970-2015 waves of the Panel Study of Income Dynamics (PSID 2017). \cite{psid2017} The sample is of men between the ages of 22 and 69 with students being excluded. Many of the men in the sample come from the Survey of Economic Opportunity which has been shown to be representative of the main PSID sample (SEO; Hill 1992; Drewianka 2010). \cite{hill1992, drewianka2010} Income is calculated in 2015 dollars using the Consumer Price Index (CPI 2017). \cite{cpi2017} The analysis uses several key variables, including education (categorized as less than high school, high school or some college, and bachelor's degree but less than a master's degree), age (with higher-order polynomial terms Age$^2$ and Age$^3$ to capture non-linear effects), and macroeconomic indicators such as the probability of a recession (P(Recession)) and real GDP growth. Individual-specific variables include fixed effects for wages, a moving average of income over the last five years (MA(Last 5 years income)), employment status (Employed), veteran status (Veteran), and job tenure (years in the current job). The primary outcome variable, gamma ($\gamma$), measures lifetime earnings risk derived from the variance of persistent income shocks. Additionally, the analysis incorporates fixed effects for occupation, industry, state of residence, and other controls such as year, race, and cohort. With the theoretical framework and data laid out, the following section turns to the empirical implementation of the model.
 
-% define variables used?
+
+\section{Data}
+
+
+
+The data used is the 1970-2023 waves of the Panel Study of Income Dynamics (PSID 2023). \cite{psid2023} The sample is of men between the ages of 22 and 69 with students being excluded. Many of the men in the sample come from the Survey of Economic Opportunity which has been shown to be representative of the main PSID sample (SEO; Hill 1992; Drewianka 2010). \cite{hill1992, drewianka2010} Income is calculated in 2015 dollars using the Consumer Price Index (CPI 2017). \cite{cpi2017} The analysis uses several key variables, including education (categorized as less than high school, high school or some college, and bachelor's degree but less than a master's degree), age (with higher-order polynomial terms Age$^2$ and Age$^3$ to capture non-linear effects), and macroeconomic indicators such as the probability of a recession (P(Recession)) and real GDP growth. Individual-specific variables include fixed effects for wages, a moving average of income over the last five years (MA(Last 5 years income)), employment status (Employed), and job tenure (years in the current job). The primary outcome variables, gamma ($\gamma$) and alpha ($\alpha$), measure lifetime earnings risk. The gamma statistic measures the variance in permanent income shocks while the alpha statistic measures the variance in temporary income shocks. Both these statistics are calculated using the moment condition approach outlined in Drewianka and Oberg (2025). \cite{drewianka2025}. The income variable used is the log of the individual's hourly wage. The hourly wage is calculated by dividing annual labor income by the product of weeks worked and usual hours worked per week.
+
+Additionally, the analysis incorporates fixed effects for occupation, industry, state of residence, and other controls such as year, race, and cohort. With the theoretical framework and data laid out, the following section turns to the empirical implementation of the model.
+
+
+\begin{enumerate}
+    \item Mention CNEF and how it was combined with the PSID
+    \item Mention that macro economic variables are from another source and cite it
+    \item Discuss inconsistencies with some of the variables across years, general PSID BS, tenure, occ, ind, race even
+    \item Add a table with summary stats maybe? Describing people with certain combinations of characteristics, possibly a concern for overfitting with ML methods
+\end{enumerate}
+
+
 
 \section{Empirical Strategy}
 
-The empirical strategy of this paper is broken into two parts. The first part is estimating gamma and then constructing a weighted gamma for each individual in each year since gamma alone is across i, t, j, and q. (i - individual, t - time, j and q - period or "window" used in calculation of gamma). The second part of the empirical strategy is estimating the then weighted gamma variable using various models and variables to look for trends in the characteristics of individuals in regards to lifetime earnings risk.
+The empirical strategy of this paper is broken into two parts. The first part is estimating gamma and alpha, then contruct a weighted gamma and alpha for each individual in each year since both statistics are across i, t, j, and q. (i - individual, t - time, j and q - period or "window" used in calculation). The second part of the empirical strategy is estimating the then weighted values of each statistic using various models and variables to look for trends in the characteristics of individuals in regards to lifetime earnings risk.
 
-For the estimation of gamma and consolidation across j and q is done by using a mixed regression for the gamma and then a fixed effects regression to get the composite or weighted gamma for each person year.
+For the estimation of both gamma and alpha, consolidation across j and q is done by using a mixed regression for the gamma and then a fixed effects regression to get the composite or weighted value for each person year.
 
 The following mixed regression is used to estimate gamma based on the above equation. This is done to get an estimate of gamma for each individual in each year across j and q. A mixed regression used instead of standard OLS because $\sigma^2_{\eta_i}$ is correlated with both the constant and the coefficient on (j+k+q) as seen in equation 8 and therefore a mixed regression is used to account for this by allowing the residuals to be separately correlated with (j+k+q) for each individual i in year t. (For more on this see Drewianka and Oberg (2025) \cite{drewianka2025}) The mixed regression is as follows:
 
@@ -184,6 +221,16 @@ As for the lasso model, the model is set up to select variables based on the Bay
 Finally the multi-layer perceptron model is a neural network that is used to estimate lifetime earnings risk. The model is trained on the same variables and data used by the OLS, stepwise, and lasso models. The model is 4 dense layers (excluding the input layer) with 1000 nodes each and a linear output layer at the end. The model used a sigmoid activation function in the hidden layers to allow for continuous support. This was done instead of a ReLU activation function to allow for more definition in the parameters instead of some parts of the perceptron being "dead" and not contributing and complicating the SHAP value interpretation. This model size and structure was selected as it achieved the best performance in terms of mean squared error (MSE). The model trained with MSE as its loss function and used early stopping to prevent overfitting and trained on 70 percent of the data with the rest being used for test and validation.
 
 The SHAP values are then used to interpret the results of the multi-layer perceptron model. SHAP values are constructed by calculating marginal contribution of a variable as a deviation from the output variable's mean if the variable was changed. This is done across a sample of observations and gives each variable a distribution of SHAP values. The summary plot shows the distribution of SHAP values for the continuous variables. 
+
+
+
+\begin{enumerate}
+    \item be sure to mention Alpha and how alpha is estimated because it is estimated differently
+    \item explain some of the strengths and weaknesses of some of the models, particularly lasso
+    \item explain the neural network part much more in depth
+    \item explain the reasoning being behind using OLS, as in kitchen sink approach to just see some covariates, but also that it is subject to overfitting
+    \item explain the advantages and disadvantages of the step wise regression, particularly mention it's advantages and disadvantages in contrast to just standard OLS, along with similarities to OLS
+\end{enumerate}
 
 
 
@@ -357,7 +404,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 \bibitem{lundberq} Lundberg, S. M., and Lee, S. I. (2017). A unified approach to interpreting model predictions. Advances in neural information processing systems, 30.
 \bibitem{macurdy1982} MaCurdy, T.~E. (1982). The Use of Time Series Processes to Model the Error Structure of Earnings in a Longitudinal Data Analysis. \textit{Journal of Econometrics}, 18(1), 83--114.
 \bibitem{meghir_pistaferri2004} Meghir, C. and Pistaferri, L. (2004). Income Variance Dynamics and Heterogeneity. \textit{Econometrica}, 72(1), 1--32.
-\bibitem{psid2017} Panel Study of Income Dynamics (2017). Public use dataset. Ann Arbor, MI: Institute for Social Research, Survey Research Center, University of Michigan.
+\bibitem{psid2023} Panel Study of Income Dynamics (2023). Public use dataset. Ann Arbor, MI: Institute for Social Research, Survey Research Center, University of Michigan.
 
 
 

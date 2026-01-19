@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1768342632.62241 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1768342634.50571 0
+["pdflatex"] 1768861474.11905 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1768861475.90649 0
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png" 1768259434.87916 240666 7fea5b05f892f49c6cea5e7c6e46f318 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png" 1768259567.44176 252492 40f9e4c3b2ab0c6838bea2c726bb9f99 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex" 1768341840.32114 802 945f5fb05e9ee9346a7f741557a1a3d4 ""
@@ -12,7 +12,7 @@
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_selection.tex" 1768256648.79369 634 2f6cae427e72106d6b30c6efe94e3161 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex" 1766000984.95228 4657 3eca562b59d60ff684e40517ea16c67c ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex" 1766001011.12671 4645 21551430f5bdc21d8aa928555de228db ""
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" 1768342631.7596 22968 5d38a20389f9cc8b0b25e00ac1a5cc4e ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" 1768861471.42371 25291 a561f7b3fd6cd73b0f65d8102f7d9be0 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png" 1766001154.61055 54375 4778c6d38e199591e43c6009722cf8bf ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png" 1766000982.08794 55753 2238e20ee7e3698fb8fa5f4cf8b97438 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png" 1766001154.00353 141459 1cfe975de3975664b0dc065bcf3ab27b ""
@@ -123,9 +123,9 @@
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/setspace/setspace.sty" 1740369222.49227 22490 8cac309b79a4c53a4ffce4b1b07aead0 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/multicol.sty" 1740345468.67927 32879 f4cfa2226c995da5b04a89ee47abf182 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url/url.sty" 1740345494.98424 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "DescriptiveLifeRisk.aux" 1768342634.34022 5216 18c52ad9d3987b9a4eed942379120974 "pdflatex"
-  "DescriptiveLifeRisk.out" 1768342634.34128 529 2212d4c78ea95c2b2ff2b364ac6d5888 "pdflatex"
-  "DescriptiveLifeRisk.tex" 1768342631.7596 22968 5d38a20389f9cc8b0b25e00ac1a5cc4e ""
+  "DescriptiveLifeRisk.aux" 1768861475.72536 5352 d67e974a32948e410379e996823c3d74 "pdflatex"
+  "DescriptiveLifeRisk.out" 1768861475.7263 624 ffeefd1edf78e201f35c002ebb22269c "pdflatex"
+  "DescriptiveLifeRisk.tex" 1768861471.42371 25291 a561f7b3fd6cd73b0f65d8102f7d9be0 ""
   (generated)
   "DescriptiveLifeRisk.aux"
   "DescriptiveLifeRisk.log"
