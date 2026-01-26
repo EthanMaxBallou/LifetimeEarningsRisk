@@ -86,11 +86,17 @@ Understanding the nature of earnings risk is central to both individual decision
 
 To better pin down the quantitative importance of shocks versus profile heterogeneity, this paper builds on the work of (Drewianka and Oberg 2025, 2019) \cite{drewianka2025,drewianka_oberg2019} which uses a moment condition approach to test for heterogeneity in expected income processes. The paper uses a Restricted Income Profile (RIP) model to estimate lifetime earnings risk and then tests for heterogeneity in expected income processes using a moment condition approach. 
 
-Restricted Income Profile (RIP) models posit that all individuals with the same observed characteristics follow the same earnings trajectory. Deviations then being attributed to shocks to the individuals income process. In RIP, dispersion is then attributed to the variance of these shocks. (Abowd and Card, 1989; Meghir and Pistaferri, 2004) \cite{abowd_card1989,meghir_pistaferri2004} To appreciate the implications of these differing assumptions, it is helpful to compare RIP directly with HIP models. Heterogeneous Income Profile (HIP) models allow for different expected income processes for individuals with the same observed characteristics. This means that the variance of shocks is not the only source of dispersion in earnings. While some of the variance is due to shocks the rest of the variance is due to the different expected income processes. (Guvenen 2007; Baker 1997) \cite{guvenen2009,baker1997}Choosing between RIP and HIP can dramatically change the estimation of the variance of earnings shocks and hence change the estimation of earnings risk. 
+Restricted Income Profile (RIP) models posit that all individuals with the same observed characteristics follow the same earnings trajectory. Deviations then being attributed to shocks to the individuals income process. In RIP, dispersion is then attributed to the variance of these shocks. (Abowd and Card, 1989; Meghir and Pistaferri, 2004) \cite{abowd_card1989,meghir_pistaferri2004} This means that the variance of shocks and variance in observed characteristics are sources of dispersion in earnings. Some of the variance is due to shocks the rest of the variance is due to the different expected income processes. (Guvenen 2007; Baker 1997) \cite{guvenen2009,baker1997}
 
-This paper looks beyond that and tests for determinants of lifetime earnings risk as parameterized by the model in Drewianka and Oberg (2025) \cite{drewianka2025}. This paper finds that education and age are important in explaining lifetime earnings risk. The paper also finds that macroeconomic variables such as probability of recession and real GDP growth are important and play at least a small role and that the inclusion of state controls may further the hypothesis of government policy playing a role. Finally, the paper finds that occupation controls are important while industry controls do not appear to play a large role.
+This paper tests for predictors of lifetime earnings risk as parameterized by the model in Drewianka and Oberg (2025) \cite{drewianka2025}. The paper hopes to find which characteristics are important in explaining the variance of shocks in the RIP framework.
+
+% Add more preview of the methods used here
 
 
+This paper finds that education and age are important in explaining lifetime earnings risk. The paper also finds that macroeconomic variables such as probability of recession and real GDP growth are important and play at least a small role and that the inclusion of state controls may further the hypothesis of government policy playing a role. Finally, the paper finds that occupation controls are important while industry controls do not appear to play a large role.
+
+
+% add more preview of results
 
 This paper contributes to multiple strands of literature. The first is the literature around (RIP) models and their use in life cycle models. (MaCurdy 1982; Abowd and Card 1989; Hryshko 2012). \cite{macurdy1982, abowd_card1989, hryshko2012} In addition to that it also contributes to a second strand of literature focusing on lifetime earnings risk. (Drewianka and Oberg 2025; Guvenen 2007; Meghir and Pistaferri 2004). \cite{drewianka2025,guvenen2007,meghir_pistaferri2004} Finally the paper contributes to the literature on machine learning and its use in economics by utilizing neural networks and SHAP values to interpret the results (Lundberg and Lee, 2017). \cite{lundberq} 
 
@@ -99,7 +105,7 @@ The rest of the paper is structured as follows. Section 2 discusses the model an
 
 \begin{enumerate}
     \item preview the results at the end 
-    \item perhaps lighten the explanation of the RIP and HIP frameworks
+    \item Also preview the methods used a little more
     \item spend a little more time explaining the contribution of this paper specifically, in both using some fancier methods for lack of a better term to identify cove variance with this risk, but also the importance of being able to characterize people who are at an elevated risk in both permanent and transitory horizons
 \end{enumerate}
 
@@ -236,9 +242,10 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \section{Results}
 
-\section{Conclusion}
 
 
+
+The gamma for permanent shocks is a centered heavily around 0 with a standard deviation of 0.1686 as seen in Figure 1. Being centered at 0 is due to its derivation and as seen in Figure 2 there is not a clear correlation with age aside from possibly a slight tightening past the age of 60 as the variance of gamma appears to decrease at least somewhat. To formally quantify these patterns, we next present regression estimates of gamma across several specifications.
 
 
 \begin{figure}[H]
@@ -256,7 +263,11 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 
 
-\begin{table}[htbp]
+
+
+
+
+\begin{table}[H]
     \centering
     \caption{Gamma Regressions: OLS Results}
     \label{tab:gamma_regressions}
@@ -266,7 +277,27 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 \end{table}
 
 
-\begin{table}[htbp]
+
+
+
+The beginning of the analysis is just simple OLS regressions of gamma. The further analysis will focus on which variables are most significant or importance and less on the actual size of the effect. However size of coefficients is something OLS can easily address. While gamma is centered around zero, variables do still have effects despite being small. Table 1 shows the OLS estimates for gamma across different specifications. The different specifications include different sets of controls, such as occupation and industry controls along with other controls such as state, year, cohort, and race.
+
+
+The coefficients are quite small however some are larger than others. Firstly the edcuation variables are all significant in every model. In addition they also are the largest coefficients outside of the fixed effects in just about every model. The less than high school variable is a clear winner for being the largest averaging around -0.01.
+
+The highschool and some college variables are smaller than less than highschoool which would imply that the common intution is still true and that a high school diploma and college education does provide stabler long term employment and earnings overall. 
+
+
+
+
+The other variables that are significant are the age variables. The age, age squared, and age cubed variables are all significant in all models. The interesting result is that the age squared and cubed variables are slightly more significant than the regular age variable. On some level it is expected that towards the end of a person's career they would become more risk averse and it is possible the squared and cubed terms capture this variation occurring right before retirement. Regardless they do imply a nonlinear relation between age and permanent income shocks. Overall the OLS results show that education and age are important in explaining lifetime earnings risk. This pattern continues in the stepwise and lasso results.
+
+
+
+
+
+
+\begin{table}[H]
     \centering
     \caption{Gamma Regressions: Stepwise Selection Results}
     \label{tab:gamma_stepwise}
@@ -276,7 +307,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 \end{table}
 
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Gamma Regressions: Lasso Selection Results}
     \label{tab:gamma_lasso}
@@ -287,7 +318,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Gamma Regressions: Lasso Industry Selection Results}
     \label{tab:gamma_lasso_ind}
@@ -295,7 +326,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 \end{table}
 
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Gamma Regressions: Lasso Occupation Selection Results}
     \label{tab:gamma_lasso_occ}
@@ -303,7 +334,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 \end{table}
 
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png}
     \caption{SHAP Summary Plot for Gamma}
@@ -328,7 +359,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Alpha Regressions: OLS Results}
     \label{tab:alpha_regressions}
@@ -337,7 +368,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
     }
 \end{table}
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Alpha Regressions: Stepwise Selection Results}
     \label{tab:alpha_stepwise}
@@ -358,7 +389,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Alpha Regressions: Lasso Industry Selection Results}
     \label{tab:alpha_lasso_ind}
@@ -366,7 +397,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 \end{table}
 
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Alpha Regressions: Lasso Occupation Selection Results}
     \label{tab:alpha_lasso_occ}
@@ -374,11 +405,19 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 \end{table}
 
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png}
     \caption{SHAP Summary Plot for Alpha}
 \end{figure}
+
+
+
+
+
+\section{Conclusion}
+
+
 
 
 \end{onehalfspace}

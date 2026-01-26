@@ -207,7 +207,8 @@ esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarning
     keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube) ///
     stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
           labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
-          fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
+          fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
+    star(* 0.10 ** 0.05 *** 0.01)
 
 
 
@@ -1196,7 +1197,8 @@ esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarning
         keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube) ///
         stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
                   labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
-                  fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g))
+                  fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
+        star(* 0.10 ** 0.05 *** 0.01)
 
 
 
