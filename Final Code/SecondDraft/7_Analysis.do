@@ -151,46 +151,333 @@ tabulate occ_year, generate(occ_year_dum)
 
 
 
-* F TESTING
+* F TESTING - GAMMA
+* Test significance of fixed effects across different model specifications
+* (Excludes no-controls model since we're testing control significance)
 
-regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+* Initialize matrices to store F-statistics and p-values for Gamma
+* Rows: state, year, race, cohort, occ, twoind (6 control sets)
+* Columns: m2 (no occ/ind), m3 (no occ), m4 (no ind), m5 (all controls)
+matrix gamma_fstat = J(6, 4, .)
+matrix gamma_pval = J(6, 4, .)
+matrix rownames gamma_fstat = "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
+matrix colnames gamma_fstat = "No Occ/Ind" "No Occ" "No Ind" "All Controls"
+matrix rownames gamma_pval = "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
+matrix colnames gamma_pval = "No Occ/Ind" "No Occ" "No Ind" "All Controls"
 
+* Model 2: controls - no occ or ind
+quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
 testparm i.state
+matrix gamma_fstat[1,1] = r(F)
+matrix gamma_pval[1,1] = r(p)
 testparm i.year
+matrix gamma_fstat[2,1] = r(F)
+matrix gamma_pval[2,1] = r(p)
 testparm i.race
+matrix gamma_fstat[3,1] = r(F)
+matrix gamma_pval[3,1] = r(p)
 testparm i.cohort
-testparm i.occ
-testparm i.twoind
+matrix gamma_fstat[4,1] = r(F)
+matrix gamma_pval[4,1] = r(p)
+* occ and ind not in this model
+matrix gamma_fstat[5,1] = .
+matrix gamma_pval[5,1] = .
+matrix gamma_fstat[6,1] = .
+matrix gamma_pval[6,1] = .
 
-testparm i.year i.occ
-
-
-regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state race cohort twoind occ_year)
-
+* Model 3: controls - no occ
+quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
 testparm i.state
-testparm i.race
-testparm i.cohort
-testparm i.twoind
-testparm i.occ_year
-
-
-regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
-
-testparm i.state
+matrix gamma_fstat[1,2] = r(F)
+matrix gamma_pval[1,2] = r(p)
 testparm i.year
+matrix gamma_fstat[2,2] = r(F)
+matrix gamma_pval[2,2] = r(p)
 testparm i.race
+matrix gamma_fstat[3,2] = r(F)
+matrix gamma_pval[3,2] = r(p)
 testparm i.cohort
-testparm i.occ
+matrix gamma_fstat[4,2] = r(F)
+matrix gamma_pval[4,2] = r(p)
+* occ not in this model
+matrix gamma_fstat[5,2] = .
+matrix gamma_pval[5,2] = .
 testparm i.twoind
+matrix gamma_fstat[6,2] = r(F)
+matrix gamma_pval[6,2] = r(p)
 
-
-regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state race cohort twoind occ_year)
-
+* Model 4: controls - no ind
+quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
 testparm i.state
+matrix gamma_fstat[1,3] = r(F)
+matrix gamma_pval[1,3] = r(p)
+testparm i.year
+matrix gamma_fstat[2,3] = r(F)
+matrix gamma_pval[2,3] = r(p)
 testparm i.race
+matrix gamma_fstat[3,3] = r(F)
+matrix gamma_pval[3,3] = r(p)
 testparm i.cohort
+matrix gamma_fstat[4,3] = r(F)
+matrix gamma_pval[4,3] = r(p)
+testparm i.occ
+matrix gamma_fstat[5,3] = r(F)
+matrix gamma_pval[5,3] = r(p)
+* ind not in this model
+matrix gamma_fstat[6,3] = .
+matrix gamma_pval[6,3] = .
+
+* Model 5: All controls
+quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+testparm i.state
+matrix gamma_fstat[1,4] = r(F)
+matrix gamma_pval[1,4] = r(p)
+testparm i.year
+matrix gamma_fstat[2,4] = r(F)
+matrix gamma_pval[2,4] = r(p)
+testparm i.race
+matrix gamma_fstat[3,4] = r(F)
+matrix gamma_pval[3,4] = r(p)
+testparm i.cohort
+matrix gamma_fstat[4,4] = r(F)
+matrix gamma_pval[4,4] = r(p)
+testparm i.occ
+matrix gamma_fstat[5,4] = r(F)
+matrix gamma_pval[5,4] = r(p)
 testparm i.twoind
-testparm i.occ_year
+matrix gamma_fstat[6,4] = r(F)
+matrix gamma_pval[6,4] = r(p)
+
+* Display Gamma F-test results
+display "Gamma F-Statistics:"
+matrix list gamma_fstat, format(%9.3f)
+display "Gamma P-Values:"
+matrix list gamma_pval, format(%9.4f)
+
+* Export Gamma F-test table to LaTeX
+preserve
+clear
+set obs 6
+gen fe_name = ""
+replace fe_name = "State FE" in 1
+replace fe_name = "Year FE" in 2
+replace fe_name = "Race FE" in 3
+replace fe_name = "Cohort FE" in 4
+replace fe_name = "Occupation FE" in 5
+replace fe_name = "Industry FE" in 6
+
+* Generate F-stat and p-value columns for each model
+forvalues j = 1/4 {
+    gen f_m`j' = .
+    gen p_m`j' = .
+    forvalues i = 1/6 {
+        replace f_m`j' = gamma_fstat[`i',`j'] in `i'
+        replace p_m`j' = gamma_pval[`i',`j'] in `i'
+    }
+    * Create formatted string combining F-stat and p-value with stars
+    gen str40 col`j' = ""
+    forvalues i = 1/6 {
+        local fval = f_m`j'[`i']
+        local pval = p_m`j'[`i']
+        if `fval' == . {
+            replace col`j' = "--" in `i'
+        }
+        else {
+            local stars = ""
+            if `pval' < 0.01 {
+                local stars = "***"
+            }
+            else if `pval' < 0.05 {
+                local stars = "**"
+            }
+            else if `pval' < 0.10 {
+                local stars = "*"
+            }
+            local fval_fmt : display %9.2f `fval'
+            local pval_fmt : display %9.4f `pval'
+            replace col`j' = strtrim("`fval_fmt'`stars'") + " (" + strtrim("`pval_fmt'") + ")" in `i'
+        }
+    }
+}
+
+listtex fe_name col1 col2 col3 col4 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ftest.tex", ///
+    replace ///
+    head("\begin{tabular}{lcccc}" ///
+         "\hline\hline" ///
+         " & No Occ/Ind & No Occ & No Ind & All Controls \\" ///
+         " & (1) & (2) & (3) & (4) \\" ///
+         "\hline") ///
+    foot("\hline" ///
+         "\multicolumn{5}{l}{\footnotesize Note: F-statistics reported with p-values in parentheses.} \\" ///
+         "\multicolumn{5}{l}{\footnotesize * p$<$0.10, ** p$<$0.05, *** p$<$0.01} \\" ///
+         "\hline\hline" ///
+         "\end{tabular}") ///
+    rstyle(tabular)
+restore
+
+
+* F TESTING - ALPHA
+* Test significance of fixed effects across different model specifications
+* (Excludes no-controls model since we're testing control significance)
+
+* Initialize matrices to store F-statistics and p-values for Alpha
+matrix alpha_fstat = J(6, 4, .)
+matrix alpha_pval = J(6, 4, .)
+matrix rownames alpha_fstat = "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
+matrix colnames alpha_fstat = "No Occ/Ind" "No Occ" "No Ind" "All Controls"
+matrix rownames alpha_pval = "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
+matrix colnames alpha_pval = "No Occ/Ind" "No Occ" "No Ind" "All Controls"
+
+* Model 2: controls - no occ or ind
+quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
+testparm i.state
+matrix alpha_fstat[1,1] = r(F)
+matrix alpha_pval[1,1] = r(p)
+testparm i.year
+matrix alpha_fstat[2,1] = r(F)
+matrix alpha_pval[2,1] = r(p)
+testparm i.race
+matrix alpha_fstat[3,1] = r(F)
+matrix alpha_pval[3,1] = r(p)
+testparm i.cohort
+matrix alpha_fstat[4,1] = r(F)
+matrix alpha_pval[4,1] = r(p)
+* occ and ind not in this model
+matrix alpha_fstat[5,1] = .
+matrix alpha_pval[5,1] = .
+matrix alpha_fstat[6,1] = .
+matrix alpha_pval[6,1] = .
+
+* Model 3: controls - no occ
+quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
+testparm i.state
+matrix alpha_fstat[1,2] = r(F)
+matrix alpha_pval[1,2] = r(p)
+testparm i.year
+matrix alpha_fstat[2,2] = r(F)
+matrix alpha_pval[2,2] = r(p)
+testparm i.race
+matrix alpha_fstat[3,2] = r(F)
+matrix alpha_pval[3,2] = r(p)
+testparm i.cohort
+matrix alpha_fstat[4,2] = r(F)
+matrix alpha_pval[4,2] = r(p)
+* occ not in this model
+matrix alpha_fstat[5,2] = .
+matrix alpha_pval[5,2] = .
+testparm i.twoind
+matrix alpha_fstat[6,2] = r(F)
+matrix alpha_pval[6,2] = r(p)
+
+* Model 4: controls - no ind
+quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
+testparm i.state
+matrix alpha_fstat[1,3] = r(F)
+matrix alpha_pval[1,3] = r(p)
+testparm i.year
+matrix alpha_fstat[2,3] = r(F)
+matrix alpha_pval[2,3] = r(p)
+testparm i.race
+matrix alpha_fstat[3,3] = r(F)
+matrix alpha_pval[3,3] = r(p)
+testparm i.cohort
+matrix alpha_fstat[4,3] = r(F)
+matrix alpha_pval[4,3] = r(p)
+testparm i.occ
+matrix alpha_fstat[5,3] = r(F)
+matrix alpha_pval[5,3] = r(p)
+* ind not in this model
+matrix alpha_fstat[6,3] = .
+matrix alpha_pval[6,3] = .
+
+* Model 5: All controls
+quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+testparm i.state
+matrix alpha_fstat[1,4] = r(F)
+matrix alpha_pval[1,4] = r(p)
+testparm i.year
+matrix alpha_fstat[2,4] = r(F)
+matrix alpha_pval[2,4] = r(p)
+testparm i.race
+matrix alpha_fstat[3,4] = r(F)
+matrix alpha_pval[3,4] = r(p)
+testparm i.cohort
+matrix alpha_fstat[4,4] = r(F)
+matrix alpha_pval[4,4] = r(p)
+testparm i.occ
+matrix alpha_fstat[5,4] = r(F)
+matrix alpha_pval[5,4] = r(p)
+testparm i.twoind
+matrix alpha_fstat[6,4] = r(F)
+matrix alpha_pval[6,4] = r(p)
+
+* Display Alpha F-test results
+display "Alpha F-Statistics:"
+matrix list alpha_fstat, format(%9.3f)
+display "Alpha P-Values:"
+matrix list alpha_pval, format(%9.4f)
+
+* Export Alpha F-test table to LaTeX
+preserve
+clear
+set obs 6
+gen fe_name = ""
+replace fe_name = "State FE" in 1
+replace fe_name = "Year FE" in 2
+replace fe_name = "Race FE" in 3
+replace fe_name = "Cohort FE" in 4
+replace fe_name = "Occupation FE" in 5
+replace fe_name = "Industry FE" in 6
+
+* Generate F-stat and p-value columns for each model
+forvalues j = 1/4 {
+    gen f_m`j' = .
+    gen p_m`j' = .
+    forvalues i = 1/6 {
+        replace f_m`j' = alpha_fstat[`i',`j'] in `i'
+        replace p_m`j' = alpha_pval[`i',`j'] in `i'
+    }
+    * Create formatted string combining F-stat and p-value with stars
+    gen str40 col`j' = ""
+    forvalues i = 1/6 {
+        local fval = f_m`j'[`i']
+        local pval = p_m`j'[`i']
+        if `fval' == . {
+            replace col`j' = "--" in `i'
+        }
+        else {
+            local stars = ""
+            if `pval' < 0.01 {
+                local stars = "***"
+            }
+            else if `pval' < 0.05 {
+                local stars = "**"
+            }
+            else if `pval' < 0.10 {
+                local stars = "*"
+            }
+            local fval_fmt : display %9.2f `fval'
+            local pval_fmt : display %9.4f `pval'
+            replace col`j' = strtrim("`fval_fmt'`stars'") + " (" + strtrim("`pval_fmt'") + ")" in `i'
+        }
+    }
+}
+
+listtex fe_name col1 col2 col3 col4 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ftest.tex", ///
+    replace ///
+    head("\begin{tabular}{lcccc}" ///
+         "\hline\hline" ///
+         " & No Occ/Ind & No Occ & No Ind & All Controls \\" ///
+         " & (1) & (2) & (3) & (4) \\" ///
+         "\hline") ///
+    foot("\hline" ///
+         "\multicolumn{5}{l}{\footnotesize Note: F-statistics reported with p-values in parentheses.} \\" ///
+         "\multicolumn{5}{l}{\footnotesize * p$<$0.10, ** p$<$0.05, *** p$<$0.01} \\" ///
+         "\hline\hline" ///
+         "\end{tabular}") ///
+    rstyle(tabular)
+restore
+
 
 
 
