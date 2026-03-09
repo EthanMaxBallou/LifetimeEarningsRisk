@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1769715921.89269 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1769715923.54431 0
+["pdflatex"] 1771268721.96092 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" "DescriptiveLifeRisk.pdf" "DescriptiveLifeRisk" 1771268723.67469 0
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png" 1768259434.87916 240666 7fea5b05f892f49c6cea5e7c6e46f318 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png" 1768259567.44176 252492 40f9e4c3b2ab0c6838bea2c726bb9f99 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex" 1768341840.32114 802 945f5fb05e9ee9346a7f741557a1a3d4 ""
@@ -12,7 +12,7 @@
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_selection.tex" 1768256648.79369 634 2f6cae427e72106d6b30c6efe94e3161 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex" 1769444513.38888 4656 508daef0949dd78396fb775cee23736f ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex" 1766001011.12671 4645 21551430f5bdc21d8aa928555de228db ""
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" 1769715919.0385 30404 2be9a5c2ea78713c00743c2f336e94bf ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2/DescriptiveLifeRisk.tex" 1771268719.21323 31289 2ceb65a0de31fcd14226411bb21b4717 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png" 1766001154.61055 54375 4778c6d38e199591e43c6009722cf8bf ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png" 1766000982.08794 55753 2238e20ee7e3698fb8fa5f4cf8b97438 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png" 1766001154.00353 141459 1cfe975de3975664b0dc065bcf3ab27b ""
@@ -97,6 +97,7 @@
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/booktabs/booktabs.sty" 1743996935.06576 6253 71987c78d3b294f5a70855024b9b06cc ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/caption.sty" 1749439352.62383 56128 c2ccf1a29d78c33bc553880402e4fb9a ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/caption3.sty" 1749439352.62493 72619 ee90b6612147680fd73c3b1406a74245 ""
+  "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/ltcaption.sty" 1749439352.62411 7418 021d7c4eb11bde94592761855a3d046e ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/comment/comment.sty" 1750043330.85656 10197 204f75d5d8d88aa345a8c402e879e63b ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1740345462.12807 13886 d1306dcf79a944f6988e688c1785f9ce ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/etoolbox/etoolbox.sty" 1740345462.21678 46850 d87daedc2abdc653769a6f1067849fe0 ""
@@ -121,11 +122,12 @@
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/refcount/refcount.sty" 1740346702.81862 9878 9e94e8fa600d95f9c7731bb21dfb67a4 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1740346725.6338 9714 ba3194bd52c8499b3f1e3eb91d409670 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/setspace/setspace.sty" 1740369222.49227 22490 8cac309b79a4c53a4ffce4b1b07aead0 ""
+  "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/longtable.sty" 1740345468.68945 15900 3cb191e576c7a313634d2813c55d4bf1 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/multicol.sty" 1740345468.67927 32879 f4cfa2226c995da5b04a89ee47abf182 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url/url.sty" 1740345494.98424 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "DescriptiveLifeRisk.aux" 1769715923.3872 5603 539aa6beca06190e409a9d0368d0ba39 "pdflatex"
-  "DescriptiveLifeRisk.out" 1769715923.38813 909 ecc4ce003ad9f8f53e2eb20c55f4cb63 "pdflatex"
-  "DescriptiveLifeRisk.tex" 1769715919.0385 30404 2be9a5c2ea78713c00743c2f336e94bf ""
+  "DescriptiveLifeRisk.aux" 1771268723.50554 5659 c3d2fc85004acfb1c9afb162732bcaf9 "pdflatex"
+  "DescriptiveLifeRisk.out" 1771268723.50662 993 702c1c23ef5e18b58a5def42400a36ff "pdflatex"
+  "DescriptiveLifeRisk.tex" 1771268719.21323 31289 2ceb65a0de31fcd14226411bb21b4717 ""
   (generated)
   "DescriptiveLifeRisk.aux"
   "DescriptiveLifeRisk.log"

@@ -93,6 +93,24 @@ gen EDU2 = (edmaxyrs >= 12) & (edmaxyrs < 14)
 gen EDU3 = (edmaxyrs >= 14) & (edmaxyrs < 16)
 
 
+
+
+
+replace EDU1 = EDU1 * 100
+replace EDU2 = EDU2 * 100
+replace EDU3 = EDU3 * 100
+replace currentage = currentage * 100
+replace currentagesq = currentagesq * 100
+replace currentagecube = currentagecube * 100
+replace tenure = tenure * 100
+replace OLF = OLF * 100
+replace PrRecess = PrRecess * 100
+replace rGDPgrow = rGDPgrow * 100
+replace ma5aep = ma5aep * 100
+
+
+
+
 * Generate squared terms for age, tenure, and edmaxyrs
 gen tenure_squared = tenure^2
 gen edmaxyrs_squared = edmaxyrs^2
@@ -121,6 +139,60 @@ label var veteran "Veteran"
 
 
 rename (gammaP_WEIGHTED alphaP_WEIGHTED) (Gamma Alpha)
+
+
+
+
+* Create occupation-year interaction dummies
+gen occ_year = occ * 10000 + year
+tabulate occ_year, generate(occ_year_dum)
+
+
+
+
+
+* F TESTING
+
+regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+
+testparm i.state
+testparm i.year
+testparm i.race
+testparm i.cohort
+testparm i.occ
+testparm i.twoind
+
+testparm i.year i.occ
+
+
+regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state race cohort twoind occ_year)
+
+testparm i.state
+testparm i.race
+testparm i.cohort
+testparm i.twoind
+testparm i.occ_year
+
+
+regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+
+testparm i.state
+testparm i.year
+testparm i.race
+testparm i.cohort
+testparm i.occ
+testparm i.twoind
+
+
+regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state race cohort twoind occ_year)
+
+testparm i.state
+testparm i.race
+testparm i.cohort
+testparm i.twoind
+testparm i.occ_year
+
+
 
 
 
@@ -200,6 +272,7 @@ estadd local race_fe  "Yes": m5
 estadd local cohort_fe "Yes": m5
 estadd local occ_fe   "Yes": m5
 estadd local ind_fe   "Yes": m5
+
 
 * Export to LaTeX
 esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex", ///
@@ -1190,6 +1263,7 @@ estadd local race_fe  "Yes": m5
 estadd local cohort_fe "Yes": m5
 estadd local occ_fe   "Yes": m5
 estadd local ind_fe   "Yes": m5
+
 
 * Export to LaTeX
 esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex", ///
