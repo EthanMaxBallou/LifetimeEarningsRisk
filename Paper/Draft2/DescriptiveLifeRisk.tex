@@ -42,7 +42,7 @@
 \begin{singlespace}
 
 
-\noindent This paper looks at the determinants of lifetime earnings risk under a Restricted Income Profile (RIP) model using traditional and machine learning methods such as lasso and SHAP values. The paper builds on the work of Drewianka and Oberg (2025) which uses a moment condition approach derive a parameter that captures permanent income risk. The paper finds that education and age are important in explaining lifetime earnings risk. The paper also finds that macroeconomic variables such as probability of recession and real GDP growth are important and along with state controls may further imply a role of government policy. Finally, the paper finds that occupation controls are important while industry controls do not appear to play a strong role. 
+\noindent This paper looks at the predictors of lifetime earnings risk under a Restricted Income Profile (RIP) model using traditional and machine learning methods such as lasso and SHAP values. The paper builds on the work of Drewianka and Oberg (2025) which uses a moment condition approach derive a parameter that captures permanent income risk. The paper finds that education and age are important in explaining lifetime earnings risk. The paper also finds that macroeconomic variables such as probability of recession and real GDP growth are important and along with state controls may further imply a role of government policy. Finally, the paper finds that occupation controls are important while industry controls do not appear to play a strong role. 
 
 \end{singlespace}
 \end{abstract}
@@ -206,14 +206,39 @@ The gamma for permanent shocks is a centered heavily around 0 with a standard de
 \end{figure}
 
 
+\begin{table}[H]
+    \centering
+    \caption{Gamma Regressions: F-Test Results}
+    \label{tab:gamma_ftest}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ftest.tex}
+    }
+\end{table}
 
 
+\begin{table}[H]
+    \centering
+    \caption{Gamma Regressions: Lasso Industry Selection Results}
+    \label{tab:gamma_lasso_ind}
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Gamma Regressions: Lasso Occupation Selection Results}
+    \label{tab:gamma_lasso_occ}
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{0.7}
+    \scriptsize
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex}
+\end{table}
 
 
 
 \begin{table}[H]
     \centering
-    \caption{Gamma Regressions: OLS Results}
+    \caption{Gamma Regressions: OLS Results (Coefficients x 100)}
     \label{tab:gamma_regressions}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex}
@@ -243,7 +268,7 @@ The other variables that are significant are the age variables. The age, age squ
 
 \begin{table}[H]
     \centering
-    \caption{Gamma Regressions: Stepwise Selection Results}
+    \caption{Gamma Regressions: Stepwise Selection Results (Coefficients x 100)}
     \label{tab:gamma_stepwise}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex}
@@ -289,7 +314,7 @@ However one pattern that does break here is the age variables. The age variables
 \begin{figure}[H]
     \centering
     \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png}
-    \caption{SHAP Summary Plot for Gamma}
+    \caption{SHAP Summary Plot for Gamma (Coefficients x 100)}
 \end{figure}
 
 
@@ -335,7 +360,36 @@ Moving onto the transitory earnings shocks or alpha, it also is centered around 
 
 \begin{table}[H]
     \centering
-    \caption{Alpha Regressions: OLS Results}
+    \caption{Alpha Regressions: F-Test Results}
+    \label{tab:alpha_ftest}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ftest.tex}
+    }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: Lasso Industry Selection Results}
+    \label{tab:alpha_lasso_ind}
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: Lasso Occupation Selection Results}
+    \label{tab:alpha_lasso_occ}
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{0.7}
+    \scriptsize
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex}
+\end{table}
+
+
+
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: OLS Results (Coefficients x 100)}
     \label{tab:alpha_regressions}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex}
@@ -356,7 +410,7 @@ Moving on from education, age again seems to play an important role as all the a
 
 \begin{table}[H]
     \centering
-    \caption{Alpha Regressions: Stepwise Selection Results}
+    \caption{Alpha Regressions: Stepwise Selection Results (Coefficients x 100)}
     \label{tab:alpha_stepwise}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex}
@@ -392,7 +446,7 @@ An intriguing piece of this puzzle is that, from the first model to the second m
 \begin{figure}[H]
     \centering
     \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png}
-    \caption{SHAP Summary Plot for Alpha}
+    \caption{SHAP Summary Plot for Alpha (Coefficients x 100)}
 \end{figure}
 
 

@@ -96,17 +96,17 @@ gen EDU3 = (edmaxyrs >= 14) & (edmaxyrs < 16)
 
 
 
-replace EDU1 = EDU1 * 100
-replace EDU2 = EDU2 * 100
-replace EDU3 = EDU3 * 100
-replace currentage = currentage * 100
-replace currentagesq = currentagesq * 100
-replace currentagecube = currentagecube * 100
-replace tenure = tenure * 100
-replace OLF = OLF * 100
-replace PrRecess = PrRecess * 100
-replace rGDPgrow = rGDPgrow * 100
-replace ma5aep = ma5aep * 100
+replace EDU1 = EDU1 / 100
+replace EDU2 = EDU2 / 100
+replace EDU3 = EDU3 / 100
+replace currentage = currentage / 100
+replace currentagesq = currentagesq / 100
+replace currentagecube = currentagecube / 100
+replace tenure = tenure / 100
+replace OLF = OLF / 100
+replace PrRecess = PrRecess / 100
+replace rGDPgrow = rGDPgrow / 100
+replace ma5aep = ma5aep / 100
 
 
 
