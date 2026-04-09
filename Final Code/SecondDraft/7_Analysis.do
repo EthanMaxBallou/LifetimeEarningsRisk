@@ -23,33 +23,87 @@ use "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta", clear
 
 clear all
 
+
+* Load first dataset and compute stratified means by year
+use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", clear
+
+rename (gammaP_WEIGHTED alphaP_WEIGHTED) (Gamma Alpha)
+
+collapse (mean) Gamma currentage edmaxyrs OLF ma5aep tenure (count) N_new=Gamma, by(year)
+rename Gamma Gamma_new
+rename currentage Age_new
+rename edmaxyrs Edu_new
+rename OLF OLF_new
+rename ma5aep ma5aep_new
+rename tenure tenure_new
+
+tempfile new_means
+save `new_means', replace
+
+* Load second dataset and compute stratified means by year
+use "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta", clear
+
+collapse (mean) gammaP_WEIGHTED currentage edmaxyrs OLF ma5aep tenure (count) N_old=gammaP_WEIGHTED, by(year)
+rename gammaP_WEIGHTED Gamma_old
+rename currentage Age_old
+rename edmaxyrs Edu_old
+rename OLF OLF_old
+rename ma5aep ma5aep_old
+rename tenure tenure_old
+
+* Merge both datasets
+merge 1:1 year using `new_means', nogenerate
+
+* Compute percentage change for each variable: 100 * (new - old) / old
+* All pct_change vars are generated together here so columns are grouped at the end
+gen pct_Gamma   = 100 * (Gamma_new   - Gamma_old)   / Gamma_old
+gen pct_Age     = 100 * (Age_new     - Age_old)     / Age_old
+gen pct_Edu     = 100 * (Edu_new     - Edu_old)     / Edu_old
+gen pct_OLF     = 100 * (OLF_new     - OLF_old)     / OLF_old
+gen pct_ma5aep  = 100 * (ma5aep_new  - ma5aep_old)  / ma5aep_old
+gen pct_tenure  = 100 * (tenure_new  - tenure_old)  / tenure_old
+gen pct_N       = 100 * (N_new       - N_old)       / N_old
+
+* Order columns: year | old/new pairs | pct changes
+order year Gamma_old Gamma_new Age_old Age_new Edu_old Edu_new OLF_old OLF_new ma5aep_old ma5aep_new tenure_old tenure_new N_old N_new pct_Gamma pct_Age pct_Edu pct_OLF pct_ma5aep pct_tenure pct_N
+
+* Display comparison
+list year Gamma_old Gamma_new Age_old Age_new Edu_old Edu_new OLF_old OLF_new ma5aep_old ma5aep_new tenure_old tenure_new N_old N_new pct_Gamma pct_Age pct_Edu pct_OLF pct_ma5aep pct_tenure pct_N
+
+* Export comparison table to LaTeX
+listtex year Gamma_old Gamma_new pct_Gamma Age_old Age_new pct_Age Edu_old Edu_new pct_Edu OLF_old OLF_new pct_OLF ma5aep_old ma5aep_new pct_ma5aep tenure_old tenure_new pct_tenure N_old N_new pct_N ///
+    using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/dataset_comparison.tex", ///
+    replace ///
+    head("\begin{tabular}{lcccccccccccccccccccccc}" ///
+         "\hline\hline" ///
+         "Year & \multicolumn{3}{c}{Gamma} & \multicolumn{3}{c}{Age} & \multicolumn{3}{c}{Education} & \multicolumn{3}{c}{OLF} & \multicolumn{3}{c}{ma5aep} & \multicolumn{3}{c}{Tenure} & \multicolumn{3}{c}{N} \\" ///
+         " & Old & New & \% Chg & Old & New & \% Chg & Old & New & \% Chg & Old & New & \% Chg & Old & New & \% Chg & Old & New & \% Chg & Old & New & \% Chg \\" ///
+         "\hline") ///
+    foot("\hline\hline" ///
+         "\end{tabular}") ///
+    rstyle(tabular)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+clear all
+
 use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", replace
 
 
 ssc install estout
 ssc install listtex
 
-/*
-
-tabulate twoind, generate(twoind_)
-
-* get the value label name
-local vl : value label twoind
-
-* get the actual codes in order
-levelsof twoind, local(levels)
-
-* start a counter
-local i = 1
-foreach l of local levels {
-    local lbl : label `vl' `l'
-    label var twoind_`i' "`lbl'"
-    local ++i
-}
-
-
-
-*/
 
 
 
@@ -59,14 +113,8 @@ replace state = . if state < 0
 
 
 
-
-
 * Old method
 * ADD RACE???
-
-
-
-
 
 
 tabulate race, generate(race_dum)
@@ -78,6 +126,36 @@ tabulate cohort, generate(cohort_dum)
 tabulate twoind, generate(twoind_dum)
 
 
+
+
+
+
+rename (gammaP_WEIGHTED alphaP_WEIGHTED) (Gamma Alpha)
+
+
+
+
+
+
+* Descriptive plots
+
+twoway (scatter Gamma currentage), title("Distribution of Age and Gamma") xlabel(, grid) ylabel(, grid)
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png", replace
+
+
+histogram Gamma, title("Distribution of Gamma") xlabel(, grid) ylabel(, grid)
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png", replace
+
+
+
+
+
+twoway (scatter Alpha currentage), title("Distribution of Age and Alpha") xlabel(, grid) ylabel(, grid)
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png", replace
+
+
+histogram Alpha, title("Distribution of Alpha") xlabel(, grid) ylabel(, grid)
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png", replace
 
 
 
@@ -138,7 +216,9 @@ label var veteran "Veteran"
 
 
 
-rename (gammaP_WEIGHTED alphaP_WEIGHTED) (Gamma Alpha)
+
+
+
 
 
 
@@ -480,19 +560,6 @@ restore
 
 
 
-
-
-
-
-
-* Descriptive plots
-
-twoway (scatter Gamma currentage), title("Distribution of Age and Gamma") xlabel(, grid) ylabel(, grid)
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png", replace
-
-
-histogram Gamma, title("Distribution of Gamma") xlabel(, grid) ylabel(, grid)
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png", replace
 
 
 
@@ -1485,16 +1552,6 @@ restore
 
 
 
-
-
-* Descriptive plots
-
-twoway (scatter Alpha currentage), title("Distribution of Age and Alpha") xlabel(, grid) ylabel(, grid)
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png", replace
-
-
-histogram Alpha, title("Distribution of Alpha") xlabel(, grid) ylabel(, grid)
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png", replace
 
 
 
