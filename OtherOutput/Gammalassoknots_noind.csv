@@ -1,14 +1,12 @@
 step,action,vars,v1,v2,v3
-1,A,1.occ                    2.occ                    3.occ,   * 1 , .0000597        170    0.0039 , A 1.occ                    2.occ                    3.occ                                               
-2,A,EDU1                     EDU2,     2 , .0000544        172    0.0039 , A EDU1                     EDU2                                                                         
-3,A,ma5aep,     3 , .0000496        173    0.0040 , A ma5aep                                                                                                
-4,A,EDU3,     4 , .0000452        174    0.0040 , A EDU3                                                                                                  
-5,A,currentage,     9 , .0000284        175    0.0042 , A currentage                                                                                            
-6,A,currentagecube,    15 , .0000162        176    0.0044 , A currentagecube                                                                                        
-7,A,OLF,    17 , .0000135        177    0.0044 , A OLF                                                                                                   
-8,A,tenure,    37 , 2.10e-06        178    0.0046 , A tenure                                                                                                
-9,A,currentagesq,    46 , 9.08e-07        179    0.0046 , A currentagesq                                                                                          
-10,R,currentage,    48 , 7.54e-07        178    0.0047 , R currentage                                                                                            
-11,R,tenure,    50 , 6.26e-07        177    0.0047 , R tenure                                                                                                
-12,A,currentage,    55 , 3.93e-07        178    0.0047 , A currentage                                                                                            
-13,A,tenure,    60 , 2.47e-07        179    0.0047 , A tenure                                                                                                
+1,A,1.occ                    2.occ                    3.occ,   * 1 , 1.77e-06        169    0.0025 , A 1.occ                    2.occ                    3.occ                                               
+2,A,EDU3                     currentagecube,     2 , 1.61e-06        171    0.0026 , A EDU3                     currentagecube                                                               
+3,A,ma5aep,     3 , 1.47e-06        172    0.0026 , A ma5aep                                                                                                
+4,A,OLF,     8 , 9.22e-07        173    0.0027 , A OLF                                                                                                   
+5,A,EDU2,    14 , 5.28e-07        174    0.0027 , A EDU2                                                                                                  
+6,A,tenure,    23 , 2.28e-07        175    0.0028 , A tenure                                                                                                
+7,A,currentage,    27 , 1.57e-07        176    0.0028 , A currentage                                                                                            
+8,A,EDU1,    31 , 1.09e-07        177    0.0028 , A EDU1                                                                                                  
+9,A,currentagesq,    49 , 2.03e-08        178    0.0028 , A currentagesq                                                                                          
+10,R,currentagecube,    52 , 1.54e-08        177    0.0028 , R currentagecube                                                                                        
+11,A,currentagecube,    59 , 8.02e-09        178    0.0028 , A currentagecube                                                                                        

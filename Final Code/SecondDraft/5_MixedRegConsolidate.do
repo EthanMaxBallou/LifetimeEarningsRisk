@@ -221,7 +221,16 @@ drop _merge
 
 
 
+replace twoind = 0 if twoind == 999
+replace oneind = 0 if oneind == 999
+replace occ = 0 if occ == 999
+
+
+
 *replace veteran = 0 if missing(veteran)
+
+
+
 
 
 

@@ -1,12 +1,10 @@
 
-
-import shap
 import os
+import shap
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import pyreadstat
-import tensorflow as tf
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
@@ -24,8 +22,7 @@ from sklearn.linear_model import LassoCV
 
 
 
-nn1 = tf.keras.models.load_model("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN_Gamma.keras")
-
+# ALPHA
 
 
 # Load the CSV file
@@ -71,17 +68,38 @@ y_test = scaler_y.transform(y_test)
 
 
 
+rf1 = RandomForestRegressor(
+    n_estimators=500,        # number of trees
+    max_features='sqrt',     # features considered at each split (standard for regression)
+    max_depth=None,          # let trees grow fully (can tune this)
+    min_samples_leaf=5,      # minimum samples per leaf (helps prevent overfitting)
+    random_state=42,
+    n_jobs=-1                # use all cores
+)
+
+rf1.fit(X_train, y_train)
+
+
+# Evaluate Random Forest on test set
+rf1_predictions = rf1.predict(X_test)
+rf1_mse = mean_squared_error(y_test, rf1_predictions)
+print(f"Random Forest Test MSE: {rf1_mse}")
+
+
+
+
+
 
 X_background = X_train[:50]
-explainer = shap.DeepExplainer(nn1, X_background)
+
+explainer = shap.TreeExplainer(rf1)
+shap_values = explainer.shap_values(X_train)
 
 shap_values = explainer.shap_values(X_test)
 
 
 # Reshape to remove the singleton dimension (100, 8086, 1) -> (100, 8086)
 shap_values_reshaped = shap_values.squeeze(axis=-1)
-
-
 
 
 sample_indices = np.random.choice(X_test.shape[0], 5, replace=False)
@@ -99,55 +117,7 @@ shap_summary_df = pd.DataFrame({
     'Average SHAP Value': ABSaverage_shap_values
 })
 
-# Sort by the absolute average SHAP value to find the most important features
-shap_summary_df = shap_summary_df.sort_values(by='Average SHAP Value', ascending=False)
-
-# Display the sorted SHAP summary
-print(shap_summary_df.head(10))
-
-shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/shap_summary_gamma.csv', index=False)
-
-
-top_cont = [
-    'currentage', 'rGDPgrow', 
-    'PrRecess', 'tenure', 'currentagesq', 
-    'currentagecube', 'ma5aep', 
-    'fhwage'
-]
-
-
-# Verify the shapes of shap_values and X_test
-print(f"SHAP values shape: {shap_values[:,:,0].shape}")
-print(f"X_test shape: {X_test.shape}")
-
-
-# Filter SHAP values and feature names to only include top_cont variables
-top_cont_indices = [data.columns.get_loc(feature) for feature in top_cont]
-shap_values_top_cont = shap_values_reshaped[:, top_cont_indices]
-X_test_top_cont = X_test[:, top_cont_indices]
-
-
-
-
-plt.figure(figsize=(12, 8))
-shap.summary_plot(shap_values_top_cont, X_test_top_cont, feature_names=top_cont, max_display=len(top_cont), show=False)
-plt.tight_layout()
-plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png', bbox_inches='tight', dpi=300)
-plt.close()
-
-
-
-
-# Print all variable names in the dataset
-print("Variable names in the dataset:")
-print(data.columns.tolist())
-
-
-
-
-
-
-
+shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_shap_summary_gamma.csv', index=False)
 
 
 
@@ -157,10 +127,10 @@ print(data.columns.tolist())
 
 
 # Define the input and output file paths
-input_file = '/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/shap_summary_gamma.csv'
+input_file = '/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_shap_summary_gamma.csv'
 output_dir = '/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk'
-occupation_output = os.path.join(output_dir, 'occupation_shap_gamma.csv')
-industry_output = os.path.join(output_dir, 'industry_shap_gamma.csv')
+occupation_output = os.path.join(output_dir, 'RF_occupation_shap_gamma.csv')
+industry_output = os.path.join(output_dir, 'RF_industry_shap_gamma.csv')
 
 # Read the SHAP summary CSV
 df = pd.read_csv(input_file)
@@ -183,8 +153,6 @@ industry_df.to_csv(industry_output, index=False)
 
 print(f"Occupation SHAP values saved to: {occupation_output}")
 print(f"Industry SHAP values saved to: {industry_output}")
-
-
 
 
 

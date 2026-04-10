@@ -1,31 +1,26 @@
-/*
 
 
-Old method for generating dummies - new method adds label to the name of the dummy
-
-tabulate race, generate(race_dum)
-tabulate censdiv, generate(censdiv_dum)
-tabulate occ, generate(occ_dum)
-tabulate year, generate(year_dum)
-tabulate state, generate(state_dum)
-tabulate cohort, generate(cohort_dum)
-tabulate twoind, generate(twoind_dum)
-
-use "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta", clear
-
-
-*/
-
-
-* new method adds the labels to the dummies? Can't straight up rename the variable since they have to be specified in the regression i.( ex )
 
 
 
 clear all
 
 
+
+
+
 * Load first dataset and compute stratified means by year
 use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", clear
+
+capture confirm variable edyrs
+if !_rc replace edyrs = 0 if edyrs < 0
+
+capture confirm variable edmaxyrs
+if !_rc replace edmaxyrs = 0 if edmaxyrs < 0
+
+
+
+
 
 rename (gammaP_WEIGHTED alphaP_WEIGHTED) (Gamma Alpha)
 
@@ -103,13 +98,17 @@ use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemograp
 
 ssc install estout
 ssc install listtex
-
+ssc install coefplot
 
 
 
 * some clean up set numeric values of state to missing
 
 replace state = . if state < 0
+
+replace edyrs = . if edyrs < 0
+replace edmaxyrs = . if edmaxyrs < 0
+
 
 
 
@@ -166,9 +165,9 @@ graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/his
 * Gamma Analysis
 
 
-gen EDU1 = (edmaxyrs < 12)
-gen EDU2 = (edmaxyrs >= 12) & (edmaxyrs < 14)
-gen EDU3 = (edmaxyrs >= 14) & (edmaxyrs < 16)
+gen EDU1 = (edyrs < 12)
+gen EDU2 = (edyrs >= 12) & (edyrs < 14)
+gen EDU3 = (edyrs >= 14) & (edyrs < 16)
 
 
 
@@ -189,10 +188,10 @@ replace ma5aep = ma5aep / 100
 
 
 
-* Generate squared terms for age, tenure, and edmaxyrs
+* Generate squared terms for age, tenure, and edyrs
 gen tenure_squared = tenure^2
-gen edmaxyrs_squared = edmaxyrs^2
-gen edmaxyrs_cubed = edmaxyrs^3
+gen edyrs_squared = edyrs^2
+gen edyrs_cubed = edyrs^3
 
 gen PRsquare = PrRecess^2
 gen rGDPsquare = rGDPgrow^2
@@ -637,6 +636,12 @@ esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarning
           fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
     star(* 0.10 ** 0.05 *** 0.01)
 
+
+* Year fixed effects plot across models
+coefplot m2 m3 m4 m5, keep(*.year) vertical recast(connected) ///
+    title("Year Fixed Effects - Gamma") xtitle("Year") ytitle("Coefficient") ///
+    legend(order(2 "m2: Base FEs" 4 "m3: + Industry" 6 "m4: + Occupation" 8 "m5: All"))
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_year_fe.pdf", replace
 
 
 
@@ -1166,7 +1171,7 @@ restore
 * LASSO across occ and ind
 
 * occ
-quietly lasso linear Gamma i.(occ), selection(bic) rseed(12345)
+quietly lasso linear Gamma ib0.(occ), selection(bic) rseed(12345)
 lassoknots
 
 tempfile lk
@@ -1190,7 +1195,7 @@ restore
 
 
 * ind
-quietly lasso linear Gamma i.(twoind), selection(bic) rseed(12345)
+quietly lasso linear Gamma ib0.(twoind), selection(bic) rseed(12345)
 lassoknots
 
 tempfile lk
@@ -1617,6 +1622,13 @@ esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarning
                   labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
                   fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
         star(* 0.10 ** 0.05 *** 0.01)
+
+
+* Year fixed effects plot across models
+coefplot m2 m3 m4 m5, keep(*.year) vertical recast(connected) ///
+    title("Year Fixed Effects - Alpha") xtitle("Year") ytitle("Coefficient") ///
+    legend(order(2 "m2: Base FEs" 4 "m3: + Industry" 6 "m4: + Occupation" 8 "m5: All"))
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_year_fe.pdf", replace
 
 
 
@@ -2146,7 +2158,7 @@ restore
 * LASSO across occ and ind
 
 * occ
-quietly lasso linear Alpha i.(occ), selection(bic) rseed(12345)
+quietly lasso linear Alpha ib0.(occ), selection(bic) rseed(12345)
 lassoknots
 
 tempfile lk
@@ -2170,7 +2182,7 @@ restore
 
 
 * ind
-quietly lasso linear Alpha i.(twoind), selection(bic) rseed(12345)
+quietly lasso linear Alpha ib0.(twoind), selection(bic) rseed(12345)
 lassoknots
 
 tempfile lk

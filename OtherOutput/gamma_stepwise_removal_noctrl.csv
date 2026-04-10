@@ -1,5 +1,8 @@
 variable,pvalue,order
-tenure,.62199998,1
-OLF,.44139999,2
-PrRecess,.34299999,3
-rGDPgrow,.2192,4
+PrRecess,.93839997,1
+tenure,.89279997,2
+EDU1,.67519999,3
+rGDPgrow,.59549999,4
+EDU2,.42559999,5
+OLF,.3486,6
+currentagecube,.092299998,7

@@ -5,43 +5,37 @@
                     &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}\\
                     &\multicolumn{1}{c}{Gamma}&\multicolumn{1}{c}{Gamma}&\multicolumn{1}{c}{Gamma}&\multicolumn{1}{c}{Gamma}&\multicolumn{1}{c}{Gamma}\\
 \hline
-Less than High School&      -1.101\sym{***}&      -1.102\sym{***}&      -1.008\sym{***}&      -1.083\sym{***}&      -1.096\sym{***}\\
-                    &     (0.211)         &     (0.211)         &     (0.205)         &     (0.234)         &     (0.236)         \\
+Age                 &    -0.00370\sym{**} &     -0.0186\sym{*}  &     -0.0190\sym{*}  &     -0.0192\sym{*}  &     -0.0192\sym{*}  \\
+                    &   (0.00135)         &   (0.00778)         &   (0.00784)         &   (0.00786)         &   (0.00786)         \\
 [1em]
-High School Graduate&      -0.904\sym{***}&      -0.905\sym{***}&      -0.840\sym{***}&      -0.829\sym{***}&      -0.834\sym{***}\\
-                    &     (0.143)         &     (0.143)         &     (0.143)         &     (0.166)         &     (0.168)         \\
+5-year moving average of AEP&   -0.000201\sym{**} &   -0.000210\sym{**} &   -0.000204\sym{**} &   -0.000239\sym{**} &   -0.000239\sym{**} \\
+                    & (0.0000757)         & (0.0000768)         & (0.0000776)         & (0.0000893)         & (0.0000893)         \\
 [1em]
-Some College        &      -0.740\sym{***}&      -0.740\sym{***}&      -0.731\sym{***}&      -0.723\sym{***}&      -0.725\sym{***}\\
-                    &     (0.169)         &     (0.169)         &     (0.172)         &     (0.182)         &     (0.183)         \\
+Some College        &    -0.00913\sym{*}  &    -0.00999\sym{*}  &    -0.00964\sym{*}  &                     &                     \\
+                    &   (0.00462)         &   (0.00464)         &   (0.00468)         &                     &                     \\
 [1em]
-Age                 &       0.571\sym{*}  &       0.568\sym{*}  &                     &       0.594\sym{*}  &       0.566\sym{*}  \\
-                    &     (0.268)         &     (0.268)         &                     &     (0.270)         &     (0.270)         \\
+Age Squared         &   0.0000429\sym{**} &    0.000415\sym{*}  &    0.000424\sym{*}  &    0.000427\sym{*}  &    0.000427\sym{*}  \\
+                    & (0.0000160)         &  (0.000188)         &  (0.000190)         &  (0.000191)         &  (0.000191)         \\
 [1em]
-Age Cubed           &    0.000150\sym{**} &    0.000149\sym{**} &   0.0000439\sym{***}&    0.000150\sym{**} &    0.000143\sym{**} \\
-                    & (0.0000508)         & (0.0000508)         &(0.00000871)         & (0.0000511)         & (0.0000511)         \\
+Age Cubed           &                     & -0.00000291\sym{*}  & -0.00000299\sym{*}  & -0.00000299\sym{*}  & -0.00000299\sym{*}  \\
+                    &                     &(0.00000147)         &(0.00000149)         &(0.00000149)         &(0.00000149)         \\
 [1em]
-5-year moving average of AEP&     0.00579\sym{*}  &     0.00577\sym{*}  &                     &     0.00788\sym{*}  &     0.00732\sym{*}  \\
-                    &   (0.00286)         &   (0.00286)         &                     &   (0.00316)         &   (0.00324)         \\
-[1em]
-Age Squared         &     -0.0165\sym{*}  &     -0.0165\sym{*}  &    -0.00282\sym{***}&     -0.0168\sym{*}  &     -0.0161\sym{*}  \\
-                    &   (0.00650)         &   (0.00650)         &  (0.000578)         &   (0.00654)         &   (0.00654)         \\
-[1em]
-Constant            &     -0.0391         &     -0.0387         &      0.0395\sym{***}&     -0.0414         &     -0.0380         \\
-                    &    (0.0358)         &    (0.0358)         &   (0.00358)         &    (0.0360)         &    (0.0360)         \\
+Constant            &      0.0173\sym{***}&      0.0192\sym{***}&      0.0192\sym{***}&      0.0195\sym{***}&      0.0195\sym{***}\\
+                    &  (0.000280)         &   (0.00104)         &   (0.00104)         &   (0.00106)         &   (0.00106)         \\
 \hline
 State FE            &                     &                     &                     &                     &                     \\
 Year FE             &                     &                     &                     &                     &                     \\
 Race FE             &                     &                     &                     &                     &                     \\
-Cohort FE           &                     &                     &                     &                     &                     \\
+Cohort FE           &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
 Occupation FE       &                     &                     &                     &  \checkmark         &  \checkmark         \\
-Industry FE         &                     &                     &  \checkmark         &                     &  \checkmark         \\
+Industry FE         &                     &                     &                     &                     &                     \\
 \midrule State FE Available&          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Year FE Available   &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Race FE Available   &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Cohort FE Available &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Occupation FE Available&          No         &          No         &          No         &         Yes         &         Yes         \\
 Industry FE Available&          No         &          No         &         Yes         &          No         &         Yes         \\
-R-squared           &       0.001         &       0.001         &       0.002         &       0.003         &       0.004         \\
+R-squared           &       0.000         &       0.000         &       0.000         &       0.002         &       0.002         \\
 N                   &       82357         &       82333         &       81556         &       81556         &       81556         \\
 \hline\hline
 \multicolumn{6}{l}{\footnotesize Standard errors in parentheses}\\

@@ -148,35 +148,6 @@ print(data.columns.tolist())
 
 
 
-# Generate SHAP dependence plot for interaction between two specific variables
-feature_x = 'rGDPgrow'  # First variable
-feature_y = 'currentage'      # Second variable
-
-# Get indices of the features
-feature_x_index = data.columns.get_loc(feature_x)
-feature_y_index = data.columns.get_loc(feature_y)
-
-# Create the dependence plot
-shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_names=data.columns, interaction_index=feature_y_index)
-
-
-
-
-
-# Generate SHAP dependence plot for interaction between two specific variables
-feature_x = 'rGDPgrow'  # First variable
-feature_y = 'fhwage'      # Second variable
-
-# Get indices of the features
-feature_x_index = data.columns.get_loc(feature_x)
-feature_y_index = data.columns.get_loc(feature_y)
-
-# Create the dependence plot
-shap.dependence_plot(feature_x_index, shap_values_reshaped, X_test, feature_names=data.columns, interaction_index=feature_y_index)
-
-
-
-
 
 
 

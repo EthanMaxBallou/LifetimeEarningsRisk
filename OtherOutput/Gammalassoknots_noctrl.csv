@@ -1,14 +1,12 @@
 step,action,vars,v1,v2,v3
-1,A,EDU2,     2 , .0019276          1    0.0000 , A EDU2                                                                                                  
-2,A,EDU1,     5 , .0014581          2    0.0001 , A EDU1                                                                                                  
-3,A,EDU3,     8 ,  .001103          3    0.0002 , A EDU3                                                                                                  
-4,A,currentagecube,    11 , .0008344          4    0.0004 , A currentagecube                                                                                        
-5,A,ma5aep,    12 , .0007603          5    0.0004 , A ma5aep                                                                                                
-6,A,rGDPgrow,    16 ,  .000524          6    0.0006 , A rGDPgrow                                                                                              
-7,A,tenure,    18 , .0004351          7    0.0006 , A tenure                                                                                                
-8,A,currentage,    22 , .0002999          8    0.0007 , A currentage                                                                                            
-9,A,OLF,    26 , .0002067          9    0.0008 , A OLF                                                                                                   
-10,A,PrRecess,    28 , .0001716         10    0.0009 , A PrRecess                                                                                              
-11,A,currentagesq,    55 , .0000139         11    0.0010 , A currentagesq                                                                                          
-12,R,currentage,    57 , .0000116         10    0.0010 , R currentage                                                                                            
-13,A,currentage,    64 , 6.03e-06         11    0.0010 , A currentage                                                                                            
+1,A,EDU3                     ma5aep,     2 , .0000293          2    0.0000 , A EDU3                     ma5aep                                                                       
+2,A,OLF,    11 , .0000127          3    0.0001 , A OLF                                                                                                   
+3,A,rGDPgrow,    15 , 8.73e-06          4    0.0001 , A rGDPgrow                                                                                              
+4,A,EDU2                     currentage,    16 , 7.95e-06          6    0.0001 , A EDU2                     currentage                                                                   
+5,A,currentagecube,    22 , 4.55e-06          7    0.0001 , A currentagecube                                                                                        
+6,A,EDU1,    26 , 3.14e-06          8    0.0002 , A EDU1                                                                                                  
+7,A,tenure,    31 , 1.97e-06          9    0.0002 , A tenure                                                                                                
+8,A,PrRecess,    39 , 9.36e-07         10    0.0002 , A PrRecess                                                                                              
+9,A,currentagesq,    52 , 2.79e-07         11    0.0002 , A currentagesq                                                                                          
+10,R,currentagecube,    55 , 2.11e-07         10    0.0002 , R currentagecube                                                                                        
+11,A,currentagecube,    61 , 1.21e-07         11    0.0002 , A currentagecube                                                                                        
