@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  9 APR 2026 18:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  9 APR 2026 22:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -538,31 +538,37 @@ Overfull \vbox (42.82335pt too high) has occurred while \output is active []
 
 
 [9] (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex)
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_age_margins.pdf, id=158, 542.025pt x 325.215pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_age_margins.pdf Graphic file (type pdf)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_age_margins.pdf>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_age_margins.pdf  used on input line 250.
+(pdftex.def)             Requested size: 352.31625pt x 211.39717pt.
+
 
 [10] (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex)
 
-[11]
+[11 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_age_margins.pdf>]
 
 [12] (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_selection.tex)
 
 [13]
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png, id=181, 549.7338pt x 332.6829pt>
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png, id=189, 549.7338pt x 332.6829pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png  used on input line 316.
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png  used on input line 323.
 (pdftex.def)             Requested size: 328.82707pt x 198.99704pt.
 
 
 [14 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png>]
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png, id=189, 815.045pt x 488.82625pt>
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png, id=197, 815.045pt x 488.82625pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png  used on input line 345.
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png  used on input line 352.
 (pdftex.def)             Requested size: 328.82707pt x 197.21274pt.
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png, id=190, 815.045pt x 488.82625pt>
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png, id=198, 815.045pt x 488.82625pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png  used on input line 355.
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png  used on input line 362.
 (pdftex.def)             Requested size: 328.82707pt x 197.21274pt.
 
 
@@ -579,24 +585,30 @@ Overfull \vbox (42.82335pt too high) has occurred while \output is active []
 
 
 [18] (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex)
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_age_margins.pdf, id=221, 542.025pt x 325.215pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_age_margins.pdf Graphic file (type pdf)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_age_margins.pdf>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_age_margins.pdf  used on input line 408.
+(pdftex.def)             Requested size: 352.31625pt x 211.39717pt.
+
 
 [19] (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex)
 
-[20]
+[20 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_age_margins.pdf>]
 Overfull \vbox (44.97156pt too high) has occurred while \output is active []
 
 
 
 [21] (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_selection.tex)
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png, id=227, 549.7338pt x 332.6829pt>
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png, id=243, 549.7338pt x 332.6829pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png  used on input line 448.
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png  used on input line 462.
 (pdftex.def)             Requested size: 328.82707pt x 198.99704pt.
 
 
 [22]
-Underfull \hbox (badness 2221) in paragraph at lines 476--477
+Underfull \hbox (badness 2221) in paragraph at lines 490--491
 \OT1/cmr/m/n/12 Risk. Unpublished manuscript, University of Wisconsin--Milwaukee and Illinois
  []
 
@@ -625,17 +637,17 @@ Package rerunfilecheck Info: File `DescriptiveLifeRisk.out' has not changed.
 (rerunfilecheck)             Checksum: 702C1C23EF5E18B58A5DEF42400A36FF;993.
  ) 
 Here is how much of TeX's memory you used:
- 12267 strings out of 475466
- 207666 string characters out of 5763911
- 608479 words of memory out of 5000000
- 34958 multiletter control sequences out of 15000+600000
+ 12285 strings out of 475466
+ 209150 string characters out of 5763911
+ 608614 words of memory out of 5000000
+ 34974 multiletter control sequences out of 15000+600000
  570043 words of font info for 79 fonts, out of 8000000 for 9000
  0 hyphenation exceptions out of 8191
  75i,12n,79p,1773b,575s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0700.pk> </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi6.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi8.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr8.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy8.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on DescriptiveLifeRisk.pdf (29 pages, 1033645 bytes).
+Output written on DescriptiveLifeRisk.pdf (29 pages, 1075232 bytes).
 PDF statistics:
- 369 PDF objects out of 1000 (max. 8388607)
- 98 named destinations out of 1000 (max. 500000)
- 103 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 385 PDF objects out of 1000 (max. 8388607)
+ 100 named destinations out of 1000 (max. 500000)
+ 113 words of extra memory for PDF output out of 10000 (max. 10000000)
 

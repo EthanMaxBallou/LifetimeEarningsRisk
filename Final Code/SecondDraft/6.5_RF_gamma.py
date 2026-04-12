@@ -90,20 +90,16 @@ print(f"Random Forest Test MSE: {rf1_mse}")
 
 
 
-X_background = X_train[:50]
 
 explainer = shap.TreeExplainer(rf1)
-shap_values = explainer.shap_values(X_train)
 
-shap_values = explainer.shap_values(X_test)
+shap_sample = shap.sample(X_test, 500)
+shap_values = explainer.shap_values(shap_sample)
+
 
 
 # Reshape to remove the singleton dimension (100, 8086, 1) -> (100, 8086)
 shap_values_reshaped = shap_values.squeeze(axis=-1)
-
-
-sample_indices = np.random.choice(X_test.shape[0], 5, replace=False)
-X_test_sample = X_test[sample_indices]
 
 
 

@@ -89,6 +89,13 @@ listtex year Gamma_old Gamma_new pct_Gamma Age_old Age_new pct_Age Edu_old Edu_n
 
 
 
+ssc install estout
+ssc install listtex
+ssc install coefplot
+
+
+
+
 
 
 clear all
@@ -96,9 +103,6 @@ clear all
 use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", replace
 
 
-ssc install estout
-ssc install listtex
-ssc install coefplot
 
 
 
@@ -582,58 +586,63 @@ display "The standard deviation of gammaP_WEIGHTED is: " r(sd)
 eststo clear
 
 * No controls
-eststo m1: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube
+eststo m1: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage
 estadd local state_fe "No": m1
 estadd local year_fe  "No": m1
 estadd local race_fe  "No": m1
 estadd local cohort_fe "No": m1
 estadd local occ_fe   "No": m1
 estadd local ind_fe   "No": m1
+estadd local age_cubic "Yes": m1
 
 * controls - no occ or ind
-eststo m2: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
+eststo m2: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year race cohort)
 estadd local state_fe "Yes": m2
 estadd local year_fe  "Yes": m2
 estadd local race_fe  "Yes": m2
 estadd local cohort_fe "Yes": m2
 estadd local occ_fe   "No": m2
 estadd local ind_fe   "No": m2
+estadd local age_cubic "Yes": m2
 
 * controls - no occ
-eststo m3: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
+eststo m3: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year race cohort twoind)
 estadd local state_fe "Yes": m3
 estadd local year_fe  "Yes": m3
 estadd local race_fe  "Yes": m3
 estadd local cohort_fe "Yes": m3
 estadd local occ_fe   "No": m3
 estadd local ind_fe   "Yes": m3
+estadd local age_cubic "Yes": m3
 
 * controls - no ind
-eststo m4: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
+eststo m4: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year occ race cohort)
 estadd local state_fe "Yes": m4
 estadd local year_fe  "Yes": m4
 estadd local race_fe  "Yes": m4
 estadd local cohort_fe "Yes": m4
 estadd local occ_fe   "Yes": m4
 estadd local ind_fe   "No": m4
+estadd local age_cubic "Yes": m4
 
 * All controls
-eststo m5: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+eststo m5: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year occ race cohort twoind)
 estadd local state_fe "Yes": m5
 estadd local year_fe  "Yes": m5
 estadd local race_fe  "Yes": m5
 estadd local cohort_fe "Yes": m5
 estadd local occ_fe   "Yes": m5
 estadd local ind_fe   "Yes": m5
+estadd local age_cubic "Yes": m5
 
 
 * Export to LaTeX
 esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex", ///
     replace se r2 label ///
-    keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube) ///
-    stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
-          labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
-          fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
+    keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure) ///
+    stats(age_cubic state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
+          labels("Age (cubic)" "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
+          fmt(%9s %9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
     star(* 0.10 ** 0.05 *** 0.01)
 
 
@@ -642,6 +651,13 @@ coefplot m2 m3 m4 m5, keep(*.year) vertical recast(connected) ///
     title("Year Fixed Effects - Gamma") xtitle("Year") ytitle("Coefficient") ///
     legend(order(2 "m2: Base FEs" 4 "m3: + Industry" 6 "m4: + Occupation" 8 "m5: All"))
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_year_fe.pdf", replace
+
+
+* Age margins plot - no controls model only
+estimates restore m1
+margins, at(currentage=(25(5)65))
+marginsplot, title("Predicted Gamma by Age (No Controls)") xtitle("Age") ytitle("Predicted Gamma")
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_age_margins.pdf", replace
 
 
 
@@ -1569,58 +1585,63 @@ display "The standard deviation of alphaP_WEIGHTED is: " r(sd)
 eststo clear
 
 * No controls
-eststo m1: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube
+eststo m1: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage
 estadd local state_fe "No": m1
 estadd local year_fe  "No": m1
 estadd local race_fe  "No": m1
 estadd local cohort_fe "No": m1
 estadd local occ_fe   "No": m1
 estadd local ind_fe   "No": m1
+estadd local age_cubic "Yes": m1
 
 * controls - no occ or ind
-eststo m2: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
+eststo m2: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year race cohort)
 estadd local state_fe "Yes": m2
 estadd local year_fe  "Yes": m2
 estadd local race_fe  "Yes": m2
 estadd local cohort_fe "Yes": m2
 estadd local occ_fe   "No": m2
 estadd local ind_fe   "No": m2
+estadd local age_cubic "Yes": m2
 
 * controls - no occ
-eststo m3: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
+eststo m3: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year race cohort twoind)
 estadd local state_fe "Yes": m3
 estadd local year_fe  "Yes": m3
 estadd local race_fe  "Yes": m3
 estadd local cohort_fe "Yes": m3
 estadd local occ_fe   "No": m3
 estadd local ind_fe   "Yes": m3
+estadd local age_cubic "Yes": m3
 
 * controls - no ind
-eststo m4: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
+eststo m4: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year occ race cohort)
 estadd local state_fe "Yes": m4
 estadd local year_fe  "Yes": m4
 estadd local race_fe  "Yes": m4
 estadd local cohort_fe "Yes": m4
 estadd local occ_fe   "Yes": m4
 estadd local ind_fe   "No": m4
+estadd local age_cubic "Yes": m4
 
 * All controls
-eststo m5: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
+eststo m5: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year occ race cohort twoind)
 estadd local state_fe "Yes": m5
 estadd local year_fe  "Yes": m5
 estadd local race_fe  "Yes": m5
 estadd local cohort_fe "Yes": m5
 estadd local occ_fe   "Yes": m5
 estadd local ind_fe   "Yes": m5
+estadd local age_cubic "Yes": m5
 
 
 * Export to LaTeX
 esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex", ///
         replace se r2 label ///
-        keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube) ///
-        stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
-                  labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
-                  fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
+        keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure) ///
+        stats(age_cubic state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
+                  labels("Age (cubic)" "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
+                  fmt(%9s %9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
         star(* 0.10 ** 0.05 *** 0.01)
 
 
@@ -1629,6 +1650,13 @@ coefplot m2 m3 m4 m5, keep(*.year) vertical recast(connected) ///
     title("Year Fixed Effects - Alpha") xtitle("Year") ytitle("Coefficient") ///
     legend(order(2 "m2: Base FEs" 4 "m3: + Industry" 6 "m4: + Occupation" 8 "m5: All"))
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_year_fe.pdf", replace
+
+
+* Age margins plot - no controls model only
+estimates restore m1
+margins, at(currentage=(25(5)65))
+marginsplot, title("Predicted Alpha by Age (No Controls)") xtitle("Age") ytitle("Predicted Alpha")
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_age_margins.pdf", replace
 
 
 
