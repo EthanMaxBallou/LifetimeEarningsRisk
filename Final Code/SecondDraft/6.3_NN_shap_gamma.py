@@ -70,6 +70,7 @@ y_test = scaler_y.transform(y_test)
 
 
 
+np.random.seed(42)
 
 
 X_background = X_train[:50]

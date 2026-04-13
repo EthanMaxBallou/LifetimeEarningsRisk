@@ -1184,52 +1184,7 @@ restore
 
 
 
-* LASSO across occ and ind
-
-* occ
-quietly lasso linear Gamma ib0.(occ), selection(bic) rseed(12345)
-lassoknots
-
-tempfile lk
-capture log close _all
-log using `lk', text replace
-lassoknots
-log close
-
-preserve
-import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
-keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
-gen action = substr(strtrim(v3),1,1)          // A/R/U
-gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
-drop if vars==""                              // keep rows with names
-gen step = _n
-order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_occ.csv", replace
-restore
-
-
-
-
-* ind
-quietly lasso linear Gamma ib0.(twoind), selection(bic) rseed(12345)
-lassoknots
-
-tempfile lk
-capture log close _all
-log using `lk', text replace
-lassoknots
-log close
-
-preserve
-import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
-keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
-gen action = substr(strtrim(v3),1,1)          // A/R/U
-gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
-drop if vars==""                              // keep rows with names
-gen step = _n
-order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_ind.csv", replace
-restore
+* LASSO occ/ind models run externally in Python; SHAP CSVs imported below
 
 
 
@@ -1398,51 +1353,40 @@ restore
 
 
 
-* Create LASSO occupation selection order table (Gamma)
-tempfile occ_order
+* Create occupation importance table (Gamma) - LASSO SHAP, NN SHAP, RF SHAP from Python CSVs
+tempfile occ_lasso_shap
 preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_occ.csv", clear
-    keep if action == "A"
-    gen order = _n
-
-    split vars, gen(var_)
-    gen nvars = 0
-    foreach v of varlist var_* {
-        replace nvars = nvars + 1 if `v' != ""
-    }
-    expand nvars
-    bysort order: gen seq = _n
-
-    gen varname = ""
-    foreach i of numlist 1/50 {
-        capture confirm variable var_`i'
-        if _rc == 0 {
-            replace varname = var_`i' if seq == `i' & var_`i' != ""
-        }
-    }
-    replace varname = strtrim(varname)
-    gen occ_code = real(regexs(1)) if regexm(varname, "^([0-9]+)\.occ$")
-
-    keep if occ_code < .
-    bysort occ_code (order): keep if _n == 1
-    keep occ_code order
-    rename order occ_order
-    save `occ_order', replace
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_occupation_shap_gamma.csv", clear
+    rename occupationcode occ_code
+    rename averageshapvalue avg_shap
+    destring occ_code, replace force
+    gsort -avg_shap
+    gen lasso_shap_order = _n
+    keep occ_code lasso_shap_order
+    save `occ_lasso_shap', replace
 restore
 
-* Load SHAP values and create ranking
-tempfile occ_shap
+tempfile occ_nn_shap
 preserve
     import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/occupation_shap_gamma.csv", clear
     rename occupationcode occ_code
     rename averageshapvalue avg_shap
-    
-    * Sort by SHAP value (descending) and create rank
     gsort -avg_shap
-    gen shap_order = _n
-    
-    keep occ_code shap_order
-    save `occ_shap', replace
+    gen nn_shap_order = _n
+    keep occ_code nn_shap_order
+    save `occ_nn_shap', replace
+restore
+
+tempfile occ_rf_shap
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_occupation_shap_gamma.csv", clear
+    rename occupationcode occ_code
+    rename averageshapvalue avg_shap
+    destring occ_code, replace force
+    gsort -avg_shap
+    gen rf_shap_order = _n
+    keep occ_code rf_shap_order
+    save `occ_rf_shap', replace
 restore
 
 preserve
@@ -1458,22 +1402,22 @@ preserve
         tostring occ_code, gen(occ_label) format(%9.0g)
     }
 
-    * Merge both LASSO and SHAP rankings
-    merge 1:1 occ_code using `occ_order', nogenerate
-    merge 1:1 occ_code using `occ_shap', nogenerate
-    
-    label var occ_label "Occupation"
-    label var occ_order "LASSO Order"
-    label var shap_order "SHAP Order"
-    
-    * Sort by LASSO order first, then SHAP order
-    gsort occ_order shap_order occ_label
+    merge 1:1 occ_code using `occ_lasso_shap', nogenerate
+    merge 1:1 occ_code using `occ_nn_shap', nogenerate
+    merge 1:1 occ_code using `occ_rf_shap', nogenerate
 
-    listtex occ_label occ_order shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex", ///
+    label var occ_label "Occupation"
+    label var lasso_shap_order "LASSO SHAP Order"
+    label var nn_shap_order "NN SHAP Order"
+    label var rf_shap_order "Random Forest SHAP Order"
+
+    gsort lasso_shap_order nn_shap_order occ_label
+
+    listtex occ_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex", ///
         replace ///
-        head("\begin{tabular}{lcc}" ///
+        head("\begin{tabular}{lccc}" ///
              "\hline\hline" ///
-             "Occupation & LASSO Order & SHAP Order \\" ///
+             "Occupation & LASSO SHAP Order & NN SHAP Order & RF SHAP Order \\" ///
              "\hline") ///
         foot("\hline\hline" ///
              "\end{tabular}") ///
@@ -1481,51 +1425,40 @@ preserve
 restore
 
 
-* Create LASSO industry selection order table (Gamma)
-tempfile ind_order
+* Create industry importance table (Gamma) - LASSO SHAP, NN SHAP, RF SHAP from Python CSVs
+tempfile ind_lasso_shap
 preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_ind.csv", clear
-    keep if action == "A"
-    gen order = _n
-
-    split vars, gen(var_)
-    gen nvars = 0
-    foreach v of varlist var_* {
-        replace nvars = nvars + 1 if `v' != ""
-    }
-    expand nvars
-    bysort order: gen seq = _n
-
-    gen varname = ""
-    foreach i of numlist 1/50 {
-        capture confirm variable var_`i'
-        if _rc == 0 {
-            replace varname = var_`i' if seq == `i' & var_`i' != ""
-        }
-    }
-    replace varname = strtrim(varname)
-    gen ind_code = real(regexs(1)) if regexm(varname, "^([0-9]+)\.twoind$")
-
-    keep if ind_code < .
-    bysort ind_code (order): keep if _n == 1
-    keep ind_code order
-    rename order ind_order
-    save `ind_order', replace
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_industry_shap_gamma.csv", clear
+    rename industrycode ind_code
+    rename averageshapvalue avg_shap
+    destring ind_code, replace force
+    gsort -avg_shap
+    gen lasso_shap_order = _n
+    keep ind_code lasso_shap_order
+    save `ind_lasso_shap', replace
 restore
 
-* Load SHAP values and create ranking
-tempfile ind_shap
+tempfile ind_nn_shap
 preserve
     import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/industry_shap_gamma.csv", clear
     rename industrycode ind_code
     rename averageshapvalue avg_shap
-    
-    * Sort by SHAP value (descending) and create rank
     gsort -avg_shap
-    gen shap_order = _n
-    
-    keep ind_code shap_order
-    save `ind_shap', replace
+    gen nn_shap_order = _n
+    keep ind_code nn_shap_order
+    save `ind_nn_shap', replace
+restore
+
+tempfile ind_rf_shap
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_industry_shap_gamma.csv", clear
+    rename industrycode ind_code
+    rename averageshapvalue avg_shap
+    destring ind_code, replace force
+    gsort -avg_shap
+    gen rf_shap_order = _n
+    keep ind_code rf_shap_order
+    save `ind_rf_shap', replace
 restore
 
 preserve
@@ -1541,22 +1474,22 @@ preserve
         tostring ind_code, gen(ind_label) format(%9.0g)
     }
 
-    * Merge both LASSO and SHAP rankings
-    merge 1:1 ind_code using `ind_order', nogenerate
-    merge 1:1 ind_code using `ind_shap', nogenerate
-    
-    label var ind_label "Industry"
-    label var ind_order "LASSO Order"
-    label var shap_order "SHAP Order"
-    
-    * Sort by LASSO order first, then SHAP order
-    gsort ind_order shap_order ind_label
+    merge 1:1 ind_code using `ind_lasso_shap', nogenerate
+    merge 1:1 ind_code using `ind_nn_shap', nogenerate
+    merge 1:1 ind_code using `ind_rf_shap', nogenerate
 
-    listtex ind_label ind_order shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex", ///
+    label var ind_label "Industry"
+    label var lasso_shap_order "LASSO SHAP Order"
+    label var nn_shap_order "NN SHAP Order"
+    label var rf_shap_order "Random Forest SHAP Order"
+
+    gsort lasso_shap_order nn_shap_order ind_label
+
+    listtex ind_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex", ///
         replace ///
-        head("\begin{tabular}{lcc}" ///
+        head("\begin{tabular}{lccc}" ///
              "\hline\hline" ///
-             "Industry & LASSO Order & SHAP Order \\" ///
+             "Industry & LASSO SHAP Order & NN SHAP Order & RF SHAP Order \\" ///
              "\hline") ///
         foot("\hline\hline" ///
              "\end{tabular}") ///
@@ -2183,52 +2116,7 @@ restore
 
 
 
-* LASSO across occ and ind
-
-* occ
-quietly lasso linear Alpha ib0.(occ), selection(bic) rseed(12345)
-lassoknots
-
-tempfile lk
-capture log close _all
-log using `lk', text replace
-lassoknots
-log close
-
-preserve
-import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
-keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
-gen action = substr(strtrim(v3),1,1)          // A/R/U
-gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
-drop if vars==""                              // keep rows with names
-gen step = _n
-order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_occ.csv", replace
-restore
-
-
-
-
-* ind
-quietly lasso linear Alpha ib0.(twoind), selection(bic) rseed(12345)
-lassoknots
-
-tempfile lk
-capture log close _all
-log using `lk', text replace
-lassoknots
-log close
-
-preserve
-import delimited using `lk', delim("|") varnames(1) encoding("utf-8") clear
-keep if inlist(strtrim(v3),"U") | strpos(v3,"A ") | strpos(v3,"R ")
-gen action = substr(strtrim(v3),1,1)          // A/R/U
-gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
-drop if vars==""                              // keep rows with names
-gen step = _n
-order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_ind.csv", replace
-restore
+* LASSO occ/ind models run externally in Python; SHAP CSVs imported below
 
 
 
@@ -2387,51 +2275,40 @@ restore
 
 
 
-* Create LASSO occupation selection order table (Alpha)
-tempfile alpha_occ_order
+* Create occupation importance table (Alpha) - LASSO SHAP, NN SHAP, RF SHAP from Python CSVs
+tempfile alpha_occ_lasso_shap
 preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_occ.csv", clear
-    keep if action == "A"
-    gen order = _n
-
-    split vars, gen(var_)
-    gen nvars = 0
-    foreach v of varlist var_* {
-        replace nvars = nvars + 1 if `v' != ""
-    }
-    expand nvars
-    bysort order: gen seq = _n
-
-    gen varname = ""
-    foreach i of numlist 1/50 {
-        capture confirm variable var_`i'
-        if _rc == 0 {
-            replace varname = var_`i' if seq == `i' & var_`i' != ""
-        }
-    }
-    replace varname = strtrim(varname)
-    gen occ_code = real(regexs(1)) if regexm(varname, "^([0-9]+)\.occ$")
-
-    keep if occ_code < .
-    bysort occ_code (order): keep if _n == 1
-    keep occ_code order
-    rename order occ_order
-    save `alpha_occ_order', replace
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_occupation_shap_alpha.csv", clear
+    rename occupationcode occ_code
+    rename averageshapvalue avg_shap
+    destring occ_code, replace force
+    gsort -avg_shap
+    gen lasso_shap_order = _n
+    keep occ_code lasso_shap_order
+    save `alpha_occ_lasso_shap', replace
 restore
 
-* Load SHAP values and create ranking
-tempfile alpha_occ_shap
+tempfile alpha_occ_nn_shap
 preserve
     import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/occupation_shap_alpha.csv", clear
     rename occupationcode occ_code
     rename averageshapvalue avg_shap
-    
-    * Sort by SHAP value (descending) and create rank
     gsort -avg_shap
-    gen shap_order = _n
-    
-    keep occ_code shap_order
-    save `alpha_occ_shap', replace
+    gen nn_shap_order = _n
+    keep occ_code nn_shap_order
+    save `alpha_occ_nn_shap', replace
+restore
+
+tempfile alpha_occ_rf_shap
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_occupation_shap_alpha.csv", clear
+    rename occupationcode occ_code
+    rename averageshapvalue avg_shap
+    destring occ_code, replace force
+    gsort -avg_shap
+    gen rf_shap_order = _n
+    keep occ_code rf_shap_order
+    save `alpha_occ_rf_shap', replace
 restore
 
 preserve
@@ -2447,22 +2324,22 @@ preserve
         tostring occ_code, gen(occ_label) format(%9.0g)
     }
 
-    * Merge both LASSO and SHAP rankings
-    merge 1:1 occ_code using `alpha_occ_order', nogenerate
-    merge 1:1 occ_code using `alpha_occ_shap', nogenerate
-    
-    label var occ_label "Occupation"
-    label var occ_order "LASSO Order"
-    label var shap_order "SHAP Order"
-    
-    * Sort by LASSO order first, then SHAP order
-    gsort occ_order shap_order occ_label
+    merge 1:1 occ_code using `alpha_occ_lasso_shap', nogenerate
+    merge 1:1 occ_code using `alpha_occ_nn_shap', nogenerate
+    merge 1:1 occ_code using `alpha_occ_rf_shap', nogenerate
 
-    listtex occ_label occ_order shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex", ///
+    label var occ_label "Occupation"
+    label var lasso_shap_order "LASSO SHAP Order"
+    label var nn_shap_order "NN SHAP Order"
+    label var rf_shap_order "Random Forest SHAP Order"
+
+    gsort lasso_shap_order nn_shap_order occ_label
+
+    listtex occ_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex", ///
         replace ///
-        head("\begin{tabular}{lcc}" ///
+        head("\begin{tabular}{lccc}" ///
              "\hline\hline" ///
-             "Occupation & LASSO Order & SHAP Order \\" ///
+             "Occupation & LASSO SHAP Order & NN SHAP Order & RF SHAP Order \\" ///
              "\hline") ///
         foot("\hline\hline" ///
              "\end{tabular}") ///
@@ -2470,51 +2347,40 @@ preserve
 restore
 
 
-* Create LASSO industry selection order table (Alpha)
-tempfile alpha_ind_order
+* Create industry importance table (Alpha) - LASSO SHAP, NN SHAP, RF SHAP from Python CSVs
+tempfile alpha_ind_lasso_shap
 preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_ind.csv", clear
-    keep if action == "A"
-    gen order = _n
-
-    split vars, gen(var_)
-    gen nvars = 0
-    foreach v of varlist var_* {
-        replace nvars = nvars + 1 if `v' != ""
-    }
-    expand nvars
-    bysort order: gen seq = _n
-
-    gen varname = ""
-    foreach i of numlist 1/50 {
-        capture confirm variable var_`i'
-        if _rc == 0 {
-            replace varname = var_`i' if seq == `i' & var_`i' != ""
-        }
-    }
-    replace varname = strtrim(varname)
-    gen ind_code = real(regexs(1)) if regexm(varname, "^([0-9]+)\.twoind$")
-
-    keep if ind_code < .
-    bysort ind_code (order): keep if _n == 1
-    keep ind_code order
-    rename order ind_order
-    save `alpha_ind_order', replace
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_industry_shap_alpha.csv", clear
+    rename industrycode ind_code
+    rename averageshapvalue avg_shap
+    destring ind_code, replace force
+    gsort -avg_shap
+    gen lasso_shap_order = _n
+    keep ind_code lasso_shap_order
+    save `alpha_ind_lasso_shap', replace
 restore
 
-* Load SHAP values and create ranking
-tempfile alpha_ind_shap
+tempfile alpha_ind_nn_shap
 preserve
     import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/industry_shap_alpha.csv", clear
     rename industrycode ind_code
     rename averageshapvalue avg_shap
-    
-    * Sort by SHAP value (descending) and create rank
     gsort -avg_shap
-    gen shap_order = _n
-    
-    keep ind_code shap_order
-    save `alpha_ind_shap', replace
+    gen nn_shap_order = _n
+    keep ind_code nn_shap_order
+    save `alpha_ind_nn_shap', replace
+restore
+
+tempfile alpha_ind_rf_shap
+preserve
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_industry_shap_alpha.csv", clear
+    rename industrycode ind_code
+    rename averageshapvalue avg_shap
+    destring ind_code, replace force
+    gsort -avg_shap
+    gen rf_shap_order = _n
+    keep ind_code rf_shap_order
+    save `alpha_ind_rf_shap', replace
 restore
 
 preserve
@@ -2530,22 +2396,22 @@ preserve
         tostring ind_code, gen(ind_label) format(%9.0g)
     }
 
-    * Merge both LASSO and SHAP rankings
-    merge 1:1 ind_code using `alpha_ind_order', nogenerate
-    merge 1:1 ind_code using `alpha_ind_shap', nogenerate
-    
-    label var ind_label "Industry"
-    label var ind_order "LASSO Order"
-    label var shap_order "SHAP Order"
-    
-    * Sort by LASSO order first, then SHAP order
-    gsort ind_order shap_order ind_label
+    merge 1:1 ind_code using `alpha_ind_lasso_shap', nogenerate
+    merge 1:1 ind_code using `alpha_ind_nn_shap', nogenerate
+    merge 1:1 ind_code using `alpha_ind_rf_shap', nogenerate
 
-    listtex ind_label ind_order shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex", ///
+    label var ind_label "Industry"
+    label var lasso_shap_order "LASSO SHAP Order"
+    label var nn_shap_order "NN SHAP Order"
+    label var rf_shap_order "Random Forest SHAP Order"
+
+    gsort lasso_shap_order nn_shap_order ind_label
+
+    listtex ind_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex", ///
         replace ///
-        head("\begin{tabular}{lcc}" ///
+        head("\begin{tabular}{lccc}" ///
              "\hline\hline" ///
-             "Industry & LASSO Order & SHAP Order \\" ///
+             "Industry & LASSO SHAP Order & NN SHAP Order & RF SHAP Order \\" ///
              "\hline") ///
         foot("\hline\hline" ///
              "\end{tabular}") ///
