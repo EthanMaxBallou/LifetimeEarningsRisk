@@ -69,8 +69,8 @@ y_test = scaler_y.transform(y_test)
 
 
 rf1 = RandomForestRegressor(
-    n_estimators=500,        # number of trees
-    max_features='sqrt',     # features considered at each split (standard for regression)
+    n_estimators=450,        # number of trees
+    max_features=0.75,     # features considered at each split (standard for regression)
     max_depth=None,          # let trees grow fully (can tune this)
     min_samples_leaf=5,      # minimum samples per leaf (helps prevent overfitting)
     random_state=42,
@@ -198,8 +198,8 @@ y_test = scaler_y.transform(y_test)
 
 
 rf2 = RandomForestRegressor(
-    n_estimators=500,        # number of trees
-    max_features='sqrt',     # features considered at each split (standard for regression)
+    n_estimators=450,        # number of trees
+    max_features=0.75,     # features considered at each split (standard for regression)
     max_depth=None,          # let trees grow fully (can tune this)
     min_samples_leaf=5,      # minimum samples per leaf (helps prevent overfitting)
     random_state=42,

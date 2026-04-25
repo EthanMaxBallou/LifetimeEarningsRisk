@@ -53,6 +53,9 @@ columns_to_keep = [
 data = data[columns_to_keep]
 
 
+# Drop rows with missing values in any kept column
+data = data.dropna()
+
 
 for col in data.columns:
     s = data[col]

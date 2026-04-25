@@ -69,25 +69,45 @@ y_val = scaler_y.transform(y_val)
 y_test = scaler_y.transform(y_test)
 
 
-
 np.random.seed(42)
 
+# Number of observations to use
 
-X_background = X_train[:50]
-explainer = shap.DeepExplainer(nn1, X_background)
+background_n = 500
+explain_n = 3500
 
-shap_values = explainer.shap_values(X_test)
+# Background sample from training data
+
+background_idx = np.random.choice(
+    X_train.shape[0],
+    background_n,
+    replace=False
+
+)
+
+background = X_train[background_idx]
+
+# Test sample to explain
+
+sample_idx = np.random.choice(
+    X_test.shape[0],
+    explain_n,
+    replace=False
+
+)
+
+shap_sample = X_test[sample_idx]
+
+# Create SHAP explainer
+explainer = shap.DeepExplainer(nn1, background)
+
+# Compute SHAP values
+shap_values = explainer.shap_values(shap_sample)
+
 
 
 # Reshape to remove the singleton dimension (100, 8086, 1) -> (100, 8086)
 shap_values_reshaped = shap_values.squeeze(axis=-1)
-
-
-
-
-sample_indices = np.random.choice(X_test.shape[0], 5, replace=False)
-X_test_sample = X_test[sample_indices]
-
 
 
 # Average SHAP values across the 100 samples for each feature
@@ -125,8 +145,7 @@ print(f"X_test shape: {X_test.shape}")
 # Filter SHAP values and feature names to only include top_cont variables
 top_cont_indices = [data.columns.get_loc(feature) for feature in top_cont]
 shap_values_top_cont = shap_values_reshaped[:, top_cont_indices]
-X_test_top_cont = X_test[:, top_cont_indices]
-
+X_test_top_cont = shap_sample[:, top_cont_indices]
 
 
 

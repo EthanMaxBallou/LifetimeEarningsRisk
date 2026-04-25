@@ -54,6 +54,8 @@ columns_to_keep = [
 data = data[columns_to_keep]
 
 
+# Drop rows with missing values in any kept column
+data = data.dropna()
 
 
 # Create a vector with the names of the columns to convert
@@ -80,6 +82,7 @@ data = data.drop(columns=['personid', 'edmaxyrs'], errors='ignore')
 
 
 
+
 # Export the processed data to a CSV file
 processed_data_path = "/Users/ethanballou/Documents/Data/Risk/ALP_data_NN.csv"
 
@@ -100,6 +103,10 @@ y = target.values  # Target variables, dropping personid and year
 # Split data into train, validation, and test sets
 X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
 X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+
+
+
 
 
 scaler = MinMaxScaler()
@@ -159,6 +166,7 @@ print(f"Test MSE after training: {test_mse}")
 
 
 nn1.save("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN_Alpha.keras")
+
 
 
 

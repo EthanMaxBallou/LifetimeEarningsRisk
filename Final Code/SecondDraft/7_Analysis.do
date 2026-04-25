@@ -142,22 +142,22 @@ rename (gammaP_WEIGHTED alphaP_WEIGHTED) (Gamma Alpha)
 
 * Descriptive plots
 
-twoway (scatter Gamma currentage), title("Distribution of Age and Gamma") xlabel(, grid) ylabel(, grid)
+twoway (scatter Gamma currentage), title("Distribution of Age and Gamma") xlabel(, grid) ylabel(, grid) ytitle("Gamma") xtitle("Age")
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png", replace
 
 
-histogram Gamma, title("Distribution of Gamma") xlabel(, grid) ylabel(, grid)
+histogram Gamma, title("Distribution of Gamma") xlabel(, grid) ylabel(, grid) xtitle("Gamma")
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png", replace
 
 
 
 
 
-twoway (scatter Alpha currentage), title("Distribution of Age and Alpha") xlabel(, grid) ylabel(, grid)
+twoway (scatter Alpha currentage), title("Distribution of Age and Alpha") xlabel(, grid) ylabel(, grid) ytitle("Alpha") xtitle("Age")
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png", replace
 
 
-histogram Alpha, title("Distribution of Alpha") xlabel(, grid) ylabel(, grid)
+histogram Alpha, title("Distribution of Alpha") xlabel(, grid) ylabel(, grid) xtitle("Alpha")
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png", replace
 
 
@@ -658,6 +658,7 @@ estimates restore m1
 margins, at(currentage=(25(5)65))
 marginsplot, title("Predicted Gamma by Age (No Controls)") xtitle("Age") ytitle("Predicted Gamma")
 graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_age_margins.pdf", replace
+
 
 
 
@@ -1411,7 +1412,7 @@ preserve
     label var nn_shap_order "NN SHAP Order"
     label var rf_shap_order "Random Forest SHAP Order"
 
-    gsort lasso_shap_order nn_shap_order occ_label
+    gsort nn_shap_order lasso_shap_order occ_label
 
     listtex occ_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex", ///
         replace ///
@@ -1428,7 +1429,7 @@ preserve
     local maxr = r(N)
     twoway (scatter nn_shap_order lasso_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma Occ: LASSO vs NN") ///
+        title("Gamma v Occupation: LASSO vs NN") ///
         xtitle("LASSO SHAP Rank") ytitle("NN SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_lasso_vs_nn.pdf", replace
@@ -1437,7 +1438,7 @@ preserve
     local maxr = r(N)
     twoway (scatter rf_shap_order nn_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma Occ: NN vs RF") ///
+        title("Gamma v Occupation: NN vs RF") ///
         xtitle("NN SHAP Rank") ytitle("Random Forest SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_nn_vs_rf.pdf", replace
@@ -1446,7 +1447,7 @@ preserve
     local maxr = r(N)
     twoway (scatter rf_shap_order lasso_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma Occ: LASSO vs RF") ///
+        title("Gamma v Occupation: LASSO vs RF") ///
         xtitle("LASSO SHAP Rank") ytitle("Random Forest SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_lasso_vs_rf.pdf", replace
@@ -1511,7 +1512,7 @@ preserve
     label var nn_shap_order "NN SHAP Order"
     label var rf_shap_order "Random Forest SHAP Order"
 
-    gsort lasso_shap_order nn_shap_order ind_label
+    gsort nn_shap_order lasso_shap_order ind_label
 
     listtex ind_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex", ///
         replace ///
@@ -1528,7 +1529,7 @@ preserve
     local maxr = r(N)
     twoway (scatter nn_shap_order lasso_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma Ind: LASSO vs NN") ///
+        title("Gamma v Industry: LASSO vs NN") ///
         xtitle("LASSO SHAP Rank") ytitle("NN SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_lasso_vs_nn.pdf", replace
@@ -1537,7 +1538,7 @@ preserve
     local maxr = r(N)
     twoway (scatter rf_shap_order nn_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma Ind: NN vs RF") ///
+        title("Gamma v Industry: NN vs RF") ///
         xtitle("NN SHAP Rank") ytitle("Random Forest SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_nn_vs_rf.pdf", replace
@@ -1546,7 +1547,7 @@ preserve
     local maxr = r(N)
     twoway (scatter rf_shap_order lasso_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma Ind: LASSO vs RF") ///
+        title("Gamma v Industry: LASSO vs RF") ///
         xtitle("LASSO SHAP Rank") ytitle("Random Forest SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_lasso_vs_rf.pdf", replace
@@ -2389,7 +2390,7 @@ preserve
     label var nn_shap_order "NN SHAP Order"
     label var rf_shap_order "Random Forest SHAP Order"
 
-    gsort lasso_shap_order nn_shap_order occ_label
+    gsort nn_shap_order lasso_shap_order occ_label
 
     listtex occ_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex", ///
         replace ///
@@ -2406,7 +2407,7 @@ preserve
     local maxr = r(N)
     twoway (scatter nn_shap_order lasso_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha Occ: LASSO vs NN") ///
+        title("Alpha v Occupation: LASSO vs NN") ///
         xtitle("LASSO SHAP Rank") ytitle("NN SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_lasso_vs_nn.pdf", replace
@@ -2415,7 +2416,7 @@ preserve
     local maxr = r(N)
     twoway (scatter rf_shap_order nn_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha Occ: NN vs RF") ///
+        title("Alpha v Occupation: NN vs RF") ///
         xtitle("NN SHAP Rank") ytitle("Random Forest SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_nn_vs_rf.pdf", replace
@@ -2424,7 +2425,7 @@ preserve
     local maxr = r(N)
     twoway (scatter rf_shap_order lasso_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha Occ: LASSO vs RF") ///
+        title("Alpha v Occupation: LASSO vs RF") ///
         xtitle("LASSO SHAP Rank") ytitle("Random Forest SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_lasso_vs_rf.pdf", replace
@@ -2489,7 +2490,7 @@ preserve
     label var nn_shap_order "NN SHAP Order"
     label var rf_shap_order "Random Forest SHAP Order"
 
-    gsort lasso_shap_order nn_shap_order ind_label
+    gsort nn_shap_order lasso_shap_order ind_label
 
     listtex ind_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex", ///
         replace ///
@@ -2506,7 +2507,7 @@ preserve
     local maxr = r(N)
     twoway (scatter nn_shap_order lasso_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha Ind: LASSO vs NN") ///
+        title("Alpha v Industry: LASSO vs NN") ///
         xtitle("LASSO SHAP Rank") ytitle("NN SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_lasso_vs_nn.pdf", replace
@@ -2515,7 +2516,7 @@ preserve
     local maxr = r(N)
     twoway (scatter rf_shap_order nn_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha Ind: NN vs RF") ///
+        title("Alpha v Industry: NN vs RF") ///
         xtitle("NN SHAP Rank") ytitle("Random Forest SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_nn_vs_rf.pdf", replace
@@ -2524,7 +2525,7 @@ preserve
     local maxr = r(N)
     twoway (scatter rf_shap_order lasso_shap_order, mcolor(navy)) ///
            (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha Ind: LASSO vs RF") ///
+        title("Alpha v Industry: LASSO vs RF") ///
         xtitle("LASSO SHAP Rank") ytitle("Random Forest SHAP Rank") ///
         legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
     graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_lasso_vs_rf.pdf", replace

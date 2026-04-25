@@ -107,6 +107,7 @@ The rest of the paper is structured as follows. Section 2 discusses the model an
     \item preview the results at the end 
     \item Also preview the methods used a little more
     \item Spend a little more time explaining the contribution of this paper specifically, in both using some fancier methods and to identify covariance with this risk, but also the importance of being able to characterize people who are at an elevated risk in both permanent and transitory horizons
+    \item Do cross validation for RF and lasso?
 \end{enumerate}
 
 
@@ -189,7 +190,7 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \subsection{Permanent Shocks}
 
-The gamma for permanent shocks is a centered heavily around 0 with a standard deviation of 0.1686 as seen in Figure 1. Being centered at 0 is due to its derivation and as seen in Figure 2 there is not a clear correlation with age aside from possibly a slight tightening past the age of 60 as the variance of gamma appears to decrease at least somewhat. To formally quantify these patterns, we next present regression estimates of gamma across several specifications.
+%The gamma for permanent shocks is a centered heavily around 0 with a standard deviation of 0.1686 as seen in Figure 1. Being centered at 0 is due to its derivation and as seen in Figure 2 there is not a clear correlation with age aside from possibly a slight tightening past the age of 60 as the variance of gamma appears to decrease at least somewhat. To formally quantify these patterns, we next present regression estimates of gamma across several specifications.
 
 
 \begin{figure}[H]
@@ -223,6 +224,15 @@ The gamma for permanent shocks is a centered heavily around 0 with a standard de
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex}
 \end{table}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_lasso_vs_rf.pdf}
+    \caption{Gamma Industry SHAP Rank Comparisons}
+    \label{fig:gamma_ind_rank_scatter}
+\end{figure}
+
 
 
 
@@ -240,6 +250,15 @@ The gamma for permanent shocks is a centered heavily around 0 with a standard de
     \scriptsize
     \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex}
 \end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_lasso_vs_rf.pdf}
+    \caption{Gamma Occupation SHAP Rank Comparisons}
+    \label{fig:gamma_occ_rank_scatter}
+\end{figure}
 
 
 
@@ -264,18 +283,14 @@ The gamma for permanent shocks is a centered heavily around 0 with a standard de
 
 
 
-
-The beginning of the analysis is just simple OLS regressions of gamma. The further analysis will focus on which variables are most significant or importance and less on the actual size of the effect. However size of coefficients is something OLS can easily address. While gamma is centered around zero, variables do still have effects despite being small. Table 1 shows the OLS estimates for gamma across different specifications. The different specifications include different sets of controls, such as occupation and industry controls along with other controls such as state, year, cohort, and race.
-
-
-The coefficients are quite small however some are larger than others. Firstly the edcuation variables are all significant in every model. In addition they also are the largest coefficients outside of the fixed effects in just about every model. The less than high school variable is specifically a clear winner for being the largest averaging around -0.01.
-
-The high school and some college variables are smaller than less than highschoool which would imply that the common intution is still true and that a high school diploma and college education does provide stabler long term employment and earnings overall. 
+%The beginning of the analysis is just simple OLS regressions of gamma. The further analysis will focus on which variables are most significant or importance and less on the actual size of the effect. However size of coefficients is something OLS can easily address. While gamma is centered around zero, variables do still have effects despite being small. Table 1 shows the OLS estimates for gamma across different specifications. The different specifications include different sets of controls, such as occupation and industry controls along with other controls such as state, year, cohort, and race.
 
 
+%The coefficients are quite small however some are larger than others. Firstly the edcuation variables are all significant in every model. In addition they also are the largest coefficients outside of the fixed effects in just about every model. The less than high school variable is specifically a clear winner for being the largest averaging around -0.01.
 
+%The high school and some college variables are smaller than less than highschoool which would imply that the common intution is still true and that a high school diploma and college education does provide stabler long term employment and earnings overall. 
 
-The other variables that are significant are the age variables. The age, age squared, and age cubed variables are all significant in all models. The interesting result is that the age squared and cubed variables are slightly more significant than the regular age variable. On some level it is expected that towards the end of a person's career they would become more risk averse and it is possible the squared and cubed terms capture this variation occurring right before and after retirement. Regardless they do imply a nonlinear relation between age and permanent income shocks. Overall the OLS results show that education and age are important in explaining permanent earnings shocks. This pattern continues in the stepwise and lasso results.
+%The other variables that are significant are the age variables. The age, age squared, and age cubed variables are all significant in all models. The interesting result is that the age squared and cubed variables are slightly more significant than the regular age variable. On some level it is expected that towards the end of a person's career they would become more risk averse and it is possible the squared and cubed terms capture this variation occurring right before and after retirement. Regardless they do imply a nonlinear relation between age and permanent income shocks. Overall the OLS results show that education and age are important in explaining permanent earnings shocks. This pattern continues in the stepwise and lasso results.
 
 
 
@@ -294,11 +309,11 @@ The other variables that are significant are the age variables. The age, age squ
 
 
 
-The stepwise results in Table 2 follow closely the OLS output. This is unsurprising as they both in the end are just OLS where stepwise is just an extension that removes insignificant variables. As a result, you get somewhat analogous results to OLS.
+%The stepwise results in Table 2 follow closely the OLS output. This is unsurprising as they both in the end are just OLS where stepwise is just an extension that removes insignificant variables. As a result, you get somewhat analogous results to OLS.
 
-Similar to the OLS results, the education, variables, age variables and the annual earnings percentile variable, all play a role in predicting permanent income shocks and are all selected in almost every model. A surprising result is that none of the state, year, race, or cohort controls are selected in any of the models. 
+%Similar to the OLS results, the education, variables, age variables and the annual earnings percentile variable, all play a role in predicting permanent income shocks and are all selected in almost every model. A surprising result is that none of the state, year, race, or cohort controls are selected in any of the models. 
 
-The occupation and industry controls however, are a different story and are selected in every model where they can be selected. The part that stands out is that the linear age variable and the annual earnings percentile variable are not selected in the third model where only industry controls are allowed. However, surprisingly, they are both included in the fourth and fifth model that allows the occupation controls and furthermore the occupation and industry controls at the same time. This is to say that the within industry variation across age is highly nonlinear, whereas the within occupation or within industry occupation variation across age has some sort of linear component. 
+%The occupation and industry controls however, are a different story and are selected in every model where they can be selected. The part that stands out is that the linear age variable and the annual earnings percentile variable are not selected in the third model where only industry controls are allowed. However, surprisingly, they are both included in the fourth and fifth model that allows the occupation controls and furthermore the occupation and industry controls at the same time. This is to say that the within industry variation across age is highly nonlinear, whereas the within occupation or within industry occupation variation across age has some sort of linear component. 
 
 
 
@@ -314,12 +329,12 @@ The occupation and industry controls however, are a different story and are sele
 
 
 
-Now moving on to the lasso results shown in Table 3. As mentioned before lasso is a penalized regression and tries to force coefficients to zero. This means lasso gives some weight to the size of the coefficients (relatively speaking) compared to stepwise which cares only about the p-value. The first point to be made is that all the controls are selected in all cases. The configuration of this lasso model is the same as the stepwise model in that it can either include an entire set of controls or none of them. 
+%Now moving on to the lasso results shown in Table 3. As mentioned before lasso is a penalized regression and tries to force coefficients to zero. This means lasso gives some weight to the size of the coefficients (relatively speaking) compared to stepwise which cares only about the p-value. The first point to be made is that all the controls are selected in all cases. The configuration of this lasso model is the same as the stepwise model in that it can either include an entire set of controls or none of them. 
 
 
-Moving on from the controls, the three education variables are ranked quite high in importance similar to the stepwise models as they were in the top four variables in every case. In addition, the earnings percentile plays consistently an important role as it is always selected in the top five cases. 
+%Moving on from the controls, the three education variables are ranked quite high in importance similar to the stepwise models as they were in the top four variables in every case. In addition, the earnings percentile plays consistently an important role as it is always selected in the top five cases. 
 
-However one pattern that does break here is the age variables. The age variables are among the least relevant variables in this analysis. Particularly the higher order age variables which is were some of the last variables selected by the model. This is in contrast to the OLS results where the higher order age variables were slightly more significant than the regular age variable and where age as a whole was significant. The hypothesis there being that these higher order age terms were capturing a variation in earnings around retirement. However in the lasso models this is not the case and doesn't support the hypothesis that age and permanent income shocks share a nonlinear relationship.
+%However one pattern that does break here is the age variables. The age variables are among the least relevant variables in this analysis. Particularly the higher order age variables which is were some of the last variables selected by the model. This is in contrast to the OLS results where the higher order age variables were slightly more significant than the regular age variable and where age as a whole was significant. The hypothesis there being that these higher order age terms were capturing a variation in earnings around retirement. However in the lasso models this is not the case and doesn't support the hypothesis that age and permanent income shocks share a nonlinear relationship.
 
 
 
@@ -330,16 +345,16 @@ However one pattern that does break here is the age variables. The age variables
 \begin{figure}[H]
     \centering
     \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png}
-    \caption{SHAP Summary Plot for Gamma (Coefficients x 100)}
+    \caption{SHAP Summary Plot for Gamma}
 \end{figure}
 
 
 
-Finally, for the permanent income shocks, the SHAP summary plot in Figure 3 shows the importance of each variable in predicting gamma.
+%Finally, for the permanent income shocks, the SHAP summary plot in Figure 3 shows the importance of each variable in predicting gamma.
 
-For most variables, the distribution isn't particularly abnormal in an interesting way. However, the different distributions for the age variables do shed some light on what is going on in the earlier analysis. The two higher-order age variables show a very long tail at high age values, and this is true for both the squared and cubed terms. In contrast, the linear age variable doesn't show nearly as much deviation from zero.
+%For most variables, the distribution isn't particularly abnormal in an interesting way. However, the different distributions for the age variables do shed some light on what is going on in the earlier analysis. The two higher-order age variables show a very long tail at high age values, and this is true for both the squared and cubed terms. In contrast, the linear age variable doesn't show nearly as much deviation from zero.
 
-This result is consistent with the earlier analysis, which suggested a nonlinear relationship with age to some degree, and it supports the hypothesis that much of the risk captured in that nonlinear relationship reflects variation in income levels at much higher ages. For all three age variables here, the effects of a lower age remains relatively close to zero, whereas the high and exceptionally high age values push far away from zero and have a much larger effect.
+%This result is consistent with the earlier analysis, which suggested a nonlinear relationship with age to some degree, and it supports the hypothesis that much of the risk captured in that nonlinear relationship reflects variation in income levels at much higher ages. For all three age variables here, the effects of a lower age remains relatively close to zero, whereas the high and exceptionally high age values push far away from zero and have a much larger effect.
 
 
 
@@ -362,7 +377,7 @@ This result is consistent with the earlier analysis, which suggested a nonlinear
     \caption{Distribution of Alpha}
 \end{figure}
 
-Moving onto the transitory earnings shocks or alpha, it also is centered around zero. However, unlike gamma this distribution is somewhat skewed with the right tail, going off a bit farther than the left. This is further seen in the distribution of alpha across age where some values reach above 5 but no values come close to coming below -5.
+%Moving onto the transitory earnings shocks or alpha, it also is centered around zero. However, unlike gamma this distribution is somewhat skewed with the right tail, going off a bit farther than the left. This is further seen in the distribution of alpha across age where some values reach above 5 but no values come close to coming below -5.
 
 
 
@@ -390,6 +405,15 @@ Moving onto the transitory earnings shocks or alpha, it also is centered around 
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex}
 \end{table}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_lasso_vs_rf.pdf}
+    \caption{Alpha Industry SHAP Rank Comparisons}
+    \label{fig:alpha_ind_rank_scatter}
+\end{figure}
+
 
 \begin{table}[H]
     \centering
@@ -400,6 +424,15 @@ Moving onto the transitory earnings shocks or alpha, it also is centered around 
     \scriptsize
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex}
 \end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_lasso_vs_rf.pdf}
+    \caption{Alpha Occupation SHAP Rank Comparisons}
+    \label{fig:alpha_occ_rank_scatter}
+\end{figure}
 
 
 
@@ -420,10 +453,13 @@ Moving onto the transitory earnings shocks or alpha, it also is centered around 
 \end{figure}
 
 
-Similar to analysis of gamma we start with the OLS results where a much different story is being told. First education seems to play an important role still as both the less than high school and high school graduate variables are significant and every model. However the some college variable is not significant in any model. This implies that having some college experience is not correlated with transitory shock to income. This is interesting as one would expect college to decrease the risk of year-to-year shocks to someone's income however, this doesn't seem to be supported by the OLS results. 
 
 
-Moving on from education, age again seems to play an important role as all the age variables are significant in every model. However in contrast to gamma, here the age variable is significant and quite large relative to the higher order age variables. So it seems while there are nonlinear elements to the relationship, that much of the correlation is linear. Also as would be expected for a transitory shock like this, being out of the labor force has a very large and significant effect across all models.
+
+%Similar to analysis of gamma we start with the OLS results where a much different story is being told. First education seems to play an important role still as both the less than high school and high school graduate variables are significant and every model. However the some college variable is not significant in any model. This implies that having some college experience is not correlated with transitory shock to income. This is interesting as one would expect college to decrease the risk of year-to-year shocks to someone's income however, this doesn't seem to be supported by the OLS results. 
+
+
+%Moving on from education, age again seems to play an important role as all the age variables are significant in every model. However in contrast to gamma, here the age variable is significant and quite large relative to the higher order age variables. So it seems while there are nonlinear elements to the relationship, that much of the correlation is linear. Also as would be expected for a transitory shock like this, being out of the labor force has a very large and significant effect across all models.
 
 
 
@@ -441,9 +477,10 @@ Moving on from education, age again seems to play an important role as all the a
 \end{table}
 
 
-For the stepwise results, the same variables remain: the first two education variables, the age variables, being out of the labor force, and the moving average annual earnings percentile variable. In addition, real GDP growth and the 10-year variable are included in the very first model, as both were reasonably significant in the OLS results (though only in the first model).
 
-An intriguing piece of this puzzle is that, from the first model to the second model, the only change is that the state, year, race, and cohort controls are allowed. In the second model, the state, year, and race controls are selected by the model, and suddenly real GDP and the 10-year variable are no longer significant at a high enough level, though real GDP growth remains only mildly significant. The 10-year variable is very significant in the first model and drops off completely in the second model. Real GDP dropping out in the second model isn't surprising, since the year fixed effects would be expected to capture much of that variation. However, the 10-year variable dropping out is intriguing. It's tricky to imagine that the variation in the 10-year rate is being captured by state variation; however, year and race patterns, perhaps driven by strong structural or policy changes—could potentially explain the shift. This is something worth further exploration.
+%For the stepwise results, the same variables remain: the first two education variables, the age variables, being out of the labor force, and the moving average annual earnings percentile variable. In addition, real GDP growth and the 10-year variable are included in the very first model, as both were reasonably significant in the OLS results (though only in the first model).
+
+%An intriguing piece of this puzzle is that, from the first model to the second model, the only change is that the state, year, race, and cohort controls are allowed. In the second model, the state, year, and race controls are selected by the model, and suddenly real GDP and the 10-year variable are no longer significant at a high enough level, though real GDP growth remains only mildly significant. The 10-year variable is very significant in the first model and drops off completely in the second model. Real GDP dropping out in the second model isn't surprising, since the year fixed effects would be expected to capture much of that variation. However, the 10-year variable dropping out is intriguing. It's tricky to imagine that the variation in the 10-year rate is being captured by state variation; however, year and race patterns, perhaps driven by strong structural or policy changes—could potentially explain the shift. This is something worth further exploration.
 
 
 
@@ -469,7 +506,7 @@ An intriguing piece of this puzzle is that, from the first model to the second m
 \begin{figure}[H]
     \centering
     \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png}
-    \caption{SHAP Summary Plot for Alpha (Coefficients x 100)}
+    \caption{SHAP Summary Plot for Alpha}
 \end{figure}
 
 
@@ -529,7 +566,6 @@ An intriguing piece of this puzzle is that, from the first model to the second m
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex}
 \end{table}
 
-
 \begin{table}[H]
     \centering
     \caption{Gamma Regressions: Lasso Occupation Selection Results}
@@ -539,7 +575,6 @@ An intriguing piece of this puzzle is that, from the first model to the second m
     \scriptsize
     \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex}
 \end{table}
-
 
 
 
@@ -560,7 +595,6 @@ An intriguing piece of this puzzle is that, from the first model to the second m
     \scriptsize
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex}
 \end{table}
-
 
 
 
