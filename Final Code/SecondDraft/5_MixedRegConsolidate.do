@@ -2,9 +2,23 @@
 
 * Replication Risk5_MixedREG.do from first draft
 
-
 * Mixed Regression (Table 5 in Paper)
 
+
+* ===========================================================================
+* This program consolidates the raw, noisy gamma and alpha estimates into a
+* single value per person-year. The raw file stores many estimates per
+* person-year (one for each J-Q combination); a mixed model separates a fixed
+* component (shared across all obs) from a person-year-specific random
+* intercept. The consolidated value is: fixed intercept + random intercept (b1).
+*
+* The procedure is run for BOTH earnings measures:
+*    fhwage = log real hourly wage    -- kept under the generic, unsuffixed
+*                                        names gammaP_WEIGHTED / alphaP_WEIGHTED
+*                                        because downstream code (6_*.py and
+*                                        7_Analysis.do) expects those names
+*    fearn  = log real annual earnings -- output names carry a _fearn suffix
+* ===========================================================================
 
 
 ******use "/Users/ethanballou/Documents/Data/Risk/old_gam_data.dta", clear
@@ -18,8 +32,9 @@ use "/Users/ethanballou/Documents/Data/Risk/AlphaGammaRaw.dta", clear
 drop if missing(J) | missing(Q)
 
 
-* Winsorize gamma and alpha at 1st and 99th percentiles to limit influence of outliers
-foreach var in gam_fhwage0_A_ alph_fhwage0_A_ {
+* Winsorize gamma and alpha at 1st and 99th percentiles to limit influence of
+* outliers. Done for both earnings measures (fhwage and fearn).
+foreach var in gam_fhwage0_A_ alph_fhwage0_A_ gam_fearn0_A_ alph_fearn0_A_ {
     _pctile `var', percentiles(1 99)
     local p1 = r(r1)
     local p99 = r(r2)
@@ -33,81 +48,96 @@ foreach var in gam_fhwage0_A_ alph_fhwage0_A_ {
 * ===========================================================================
 * GAMMA CONSOLIDATION
 *
-* Raw gamma estimates vary across J-Q combinations for each person-year.
-* The goal is to produce one gamma per person-year by running a mixed model
-* that separates a fixed component (shared across all obs) from a random
-* intercept that is specific to each person-year. The person-year gamma is
-* then: fixed intercept + random intercept (b1).
+* Raw gamma estimates vary across J-Q combinations for each person-year. The
+* goal is to produce one gamma per person-year by running a mixed model that
+* separates a fixed component (shared across all obs) from a random intercept
+* specific to each person-year. The person-year gamma is then:
+*    fixed intercept + random intercept (b1).
+*
+* The same procedure is applied to each earnings measure in turn.
 * ===========================================================================
 
-* Preserve the full dataset so we can restore it after the alpha consolidation
-preserve
+tempfile gamma_fhwage gamma_fearn
 
-* Drop obs with missing gamma
-drop if missing(gam_fhwage0_A_)
+foreach earn in fhwage fearn {
 
-* Keep only variables needed for estimation
-keep gam_fhwage0_A_ personid year J Q JplusQ JJQQ
+    * fhwage is the primary measure and keeps the generic (unsuffixed) names;
+    * fearn output names get a _fearn suffix.
+    if "`earn'" == "fhwage" {
+        local sfx ""
+    }
+    else {
+        local sfx "_`earn'"
+    }
 
-* sumjkq = total number of job spells used to compute this gamma estimate
-* (J jobs + Q quarters + 2 for the base categories)
-gen sumjkq = J + Q + 2
+    * Work on a copy so the full raw dataset is available for the next measure
+    preserve
 
-* Construct a unique person-year ID used as the grouping variable in the mixed model.
-* Encoded as 100*personid + (year - 1969) to fit within a long integer.
-gen idyear=.
-recast long idyear
-replace idyear=100*personid+(year-1969)
+    * Drop obs with missing gamma for this measure
+    drop if missing(gam_`earn'0_A_)
 
-ren gam_fhwage0_A_ GAMMA
+    * Keep only variables needed for estimation
+    keep gam_`earn'0_A_ personid year J Q JplusQ JJQQ
 
-* Mixed model: GAMMA ~ sumjkq + J (fixed effects) + random intercept and
-* random slope on sumjkq by person-year (idyear). The unstructured covariance
-* allows the random intercept and slope to covary freely. SEs are clustered
-* at the person level. The var option displays variance components.
-mixed GAMMA sumjkq J ||  idyear: sumjkq, cov(unstructured) cluster(personid) var ltol(0.0001) matlog
+    * sumjkq = total number of job spells used to compute this gamma estimate
+    * (J jobs + Q quarters + 2 for the base categories)
+    gen sumjkq = J + Q + 2
 
-* Compute the SE for person-year gamma as:
-*   SE = sqrt( Var(fixed intercept) + Var(random intercept) )
-* Var(fixed intercept) comes from the fixed-effects VCV matrix via _se[_cons].
-* Var(random intercept) is G[1,1] -- the (1,1) element of the random-effects
-* covariance matrix, which corresponds to the variance of the random intercept (b1).
-local var_cons_gamma = _se[_cons]^2
-estat recovar
-mat G_gamma = r(cov)
-local var_re_gamma = G_gamma[1,1]
-local se_gammaP = sqrt(`var_cons_gamma' + `var_re_gamma')
+    * Construct a unique person-year ID used as the grouping variable in the
+    * mixed model. Encoded as 100*personid + (year - 1969) to fit in a long int.
+    gen idyear = .
+    recast long idyear
+    replace idyear = 100*personid + (year - 1969)
 
-* Display the random-effects correlation matrix for inspection
-estat recovar, corr
+    rename gam_`earn'0_A_ GAMMA
 
-* Predict BLUPs (best linear unbiased predictors) of the random effects.
-* b1 = random intercept per idyear; b2 = random slope on sumjkq per idyear.
-predict b*, reffects
+    * Mixed model: GAMMA ~ sumjkq + J (fixed effects) + random intercept and
+    * random slope on sumjkq by person-year (idyear). The unstructured covariance
+    * lets the random intercept and slope covary freely. SEs are clustered at the
+    * person level; var displays the variance components.
+    mixed GAMMA sumjkq J ||  idyear: sumjkq, cov(unstructured) cluster(personid) var ltol(0.0001) matlog
 
-* Person-year gamma: fixed intercept + person-year-specific random intercept.
-* This gives each person-year a single gamma capturing baseline earnings risk,
-* net of the slope contributions of sumjkq and J.
-gen gammaP_WEIGHTED = _b[_cons] + b1
+    * SE for person-year gamma:
+    *   SE = sqrt( Var(fixed intercept) + Var(random intercept) )
+    * Var(fixed intercept) is _se[_cons]^2; Var(random intercept) is G[2,2], the
+    * (2,2) element of the random-effects covariance matrix. Stata orders the
+    * random effects with the named slope first and _cons (intercept) last, so
+    * the intercept variance is the second diagonal element, not the first.
+    local var_cons = _se[_cons]^2
+    estat recovar
+    mat G = r(cov)
+    local var_re = G[2,2]
+    local se_P = sqrt(`var_cons' + `var_re')
 
-* 95% CI bounds using the combined SE (same value for all person-years since
-* it is derived from model-level variance components, not individual BLUPs)
-gen gammaP_se = `se_gammaP'
-gen gammaP_ci_lo = gammaP_WEIGHTED - 1.96 * gammaP_se
-gen gammaP_ci_hi = gammaP_WEIGHTED + 1.96 * gammaP_se
+    * Display the random-effects correlation matrix for inspection
+    estat recovar, corr
 
-* Drop estimation inputs; gammaP_WEIGHTED and CI vars are retained
-drop J Q sumjkq JJQQ JplusQ GAMMA b1 b2
+    * Predict BLUPs of the random effects.
+    * b1 = random slope on sumjkq per idyear; b2 = random intercept per idyear.
+    predict b*, reffects
 
-* Each idyear maps to exactly one person-year, so collapse to one row per person-year
-duplicates drop
+    * Person-year gamma: fixed intercept + person-year-specific random intercept.
+    * This gives each person-year a single gamma capturing baseline earnings risk,
+    * net of the slope contributions of sumjkq and J.
+    gen gammaP_WEIGHTED`sfx' = _b[_cons] + b2
+    gen gammaP_se`sfx'       = `se_P'
+    gen gammaP_ci_lo`sfx'    = gammaP_WEIGHTED`sfx' - 1.96 * gammaP_se`sfx'
+    gen gammaP_ci_hi`sfx'    = gammaP_WEIGHTED`sfx' + 1.96 * gammaP_se`sfx'
 
-drop idyear
+    label variable gammaP_WEIGHTED`sfx' "Consolidated gamma (`earn')"
+    label variable gammaP_se`sfx'       "SE of consolidated gamma (`earn')"
 
-tempfile gamma_tempfile
-save `gamma_tempfile'
+    * Drop estimation inputs; gammaP_* vars are retained
+    drop J Q sumjkq JJQQ JplusQ GAMMA b1 b2
 
-restore
+    * Each idyear maps to exactly one person-year, so collapse to one row each
+    duplicates drop
+    drop idyear
+
+    save `gamma_`earn''
+
+    restore
+}
 
 
 
@@ -118,86 +148,101 @@ restore
 * Identical structure to gamma. Raw alpha estimates vary across J-Q combinations
 * for each person-year. The mixed model decomposes alpha into a fixed intercept
 * and a person-year random intercept. The person-year alpha is:
-* fixed intercept + random intercept (b1).
+*    fixed intercept + random intercept (b1).
+*
+* The same procedure is applied to each earnings measure in turn.
 * ===========================================================================
 
-preserve
+tempfile alpha_fhwage alpha_fearn
 
-* Drop obs with missing alpha
-drop if missing(alph_fhwage0_A_)
+foreach earn in fhwage fearn {
 
-* Keep only variables needed for estimation
-keep alph_fhwage0_A_ personid year J Q JplusQ JJQQ
+    if "`earn'" == "fhwage" {
+        local sfx ""
+    }
+    else {
+        local sfx "_`earn'"
+    }
 
-gen sumjkq = J + Q + 2
+    preserve
 
-* JQ = interaction of J and Q; this is the regressor used in the alpha mixed model
-gen JQ = J*Q
+    * Drop obs with missing alpha for this measure
+    drop if missing(alph_`earn'0_A_)
 
-* Same person-year ID encoding as gamma
-gen idyear=.
-recast long idyear
-replace idyear=100*personid+(year-1969)
+    * Keep only variables needed for estimation
+    keep alph_`earn'0_A_ personid year J Q JplusQ JJQQ
 
-ren alph_fhwage0_A_ ALPHA
+    * JQ = interaction of J and Q; this is the regressor used in the alpha model
+    gen JQ = J*Q
 
-* Mixed model: ALPHA ~ JQ (fixed) + random intercept and random slope on JQ
-* by person-year. Same options as gamma.
-mixed ALPHA JQ ||  idyear: JQ, cov(unstructured) cluster(personid) var ltol(0.0001) matlog
+    * Same person-year ID encoding as gamma
+    gen idyear = .
+    recast long idyear
+    replace idyear = 100*personid + (year - 1969)
 
-* Compute SE for person-year alpha:
-*   SE = sqrt( Var(fixed intercept) + Var(random intercept) )
-local var_cons_alpha = _se[_cons]^2
-estat recovar
-mat G_alpha = r(cov)
-local var_re_alpha = G_alpha[1,1]
-local se_alphaP = sqrt(`var_cons_alpha' + `var_re_alpha')
+    rename alph_`earn'0_A_ ALPHA
 
-* Display the random-effects correlation matrix for inspection
-estat recovar, corr
+    * Mixed model: ALPHA ~ JQ (fixed) + random intercept and random slope on JQ
+    * by person-year. Same options as gamma.
+    mixed ALPHA JQ ||  idyear: JQ, cov(unstructured) cluster(personid) var ltol(0.0001) matlog
 
-* Predict BLUPs of the random effects.
-* b1 = random intercept per idyear; b2 = random slope on JQ per idyear.
-predict b*, reffects
-*predict alpha_real, fitted
+    * SE for person-year alpha:
+    *   SE = sqrt( Var(fixed intercept) + Var(random intercept) )
+    local var_cons = _se[_cons]^2
+    estat recovar
+    mat G = r(cov)
+    local var_re = G[2,2]
+    local se_P = sqrt(`var_cons' + `var_re')
 
-* Person-year alpha: fixed intercept + person-year-specific random intercept
-gen alphaP_WEIGHTED = _b[_cons] + b1
+    * Display the random-effects correlation matrix for inspection
+    estat recovar, corr
 
-* 95% CI bounds
-gen alphaP_se = `se_alphaP'
-gen alphaP_ci_lo = alphaP_WEIGHTED - 1.96 * alphaP_se
-gen alphaP_ci_hi = alphaP_WEIGHTED + 1.96 * alphaP_se
+    * Predict BLUPs of the random effects.
+    * b1 = random slope on JQ per idyear; b2 = random intercept per idyear.
+    predict b*, reffects
 
-* Drop estimation inputs; alphaP_WEIGHTED and CI vars are retained
-drop J Q sumjkq JJQQ JplusQ ALPHA b1 b2 JQ
+    * Person-year alpha: fixed intercept + person-year-specific random intercept
+    gen alphaP_WEIGHTED`sfx' = _b[_cons] + b2
+    gen alphaP_se`sfx'       = `se_P'
+    gen alphaP_ci_lo`sfx'    = alphaP_WEIGHTED`sfx' - 1.96 * alphaP_se`sfx'
+    gen alphaP_ci_hi`sfx'    = alphaP_WEIGHTED`sfx' + 1.96 * alphaP_se`sfx'
 
-* Collapse to one row per person-year
-duplicates drop
+    label variable alphaP_WEIGHTED`sfx' "Consolidated alpha (`earn')"
+    label variable alphaP_se`sfx'       "SE of consolidated alpha (`earn')"
 
-drop idyear
+    * Drop estimation inputs; alphaP_* vars are retained
+    drop J Q JJQQ JplusQ ALPHA b1 b2 JQ
 
-tempfile alpha_tempfile
-save `alpha_tempfile'
+    * Collapse to one row per person-year
+    duplicates drop
+    drop idyear
 
-restore
+    save `alpha_`earn''
+
+    restore
+}
 
 
 
 
-* Reduce main dataset to unique person-years, then merge in consolidated
-* gamma and alpha estimates from the tempfiles
+* ===========================================================================
+* MERGE CONSOLIDATED ESTIMATES
+* Reduce the main dataset to unique person-years, then merge in the consolidated
+* gamma and alpha estimates for both earnings measures.
+* ===========================================================================
 keep personid year
 
 duplicates drop
 
+merge 1:1 personid year using `gamma_fhwage', nogen
+merge 1:1 personid year using `gamma_fearn',  nogen
+merge 1:1 personid year using `alpha_fhwage', nogen
+merge 1:1 personid year using `alpha_fearn',  nogen
 
-merge 1:1 personid year using `gamma_tempfile', nogen
-merge 1:1 personid year using `alpha_tempfile', nogen
 
-
-* Drop person-years where both gamma and alpha are missing
-drop if missing(gammaP_WEIGHTED) & missing(alphaP_WEIGHTED)
+* Drop person-years with no consolidated estimate for any measure
+drop if missing(gammaP_WEIGHTED) & missing(gammaP_WEIGHTED_fearn) ///
+      & missing(alphaP_WEIGHTED) & missing(alphaP_WEIGHTED_fearn)
 
 
 
@@ -235,7 +280,6 @@ replace occ = 0 if occ == 999
 
 
 save "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", replace
-
 
 
 

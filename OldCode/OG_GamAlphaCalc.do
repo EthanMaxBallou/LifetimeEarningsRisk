@@ -41,7 +41,7 @@ foreach y in `DVLIST' {
 
 ** Random effect has intercept only
 
-mixed `y' EDU1 EDU2 EDU3 PrRecess OLF tenure i.(censdiv year occ race cohort twoind) i.currentage c.currentagesq c.currentagecube c.currentagefourth || personid: , tech(nr 5 dfp 5 bfgs 5)
+mixed `y' i.year i.censdiv i.currentage c.currentagesq c.currentagecube c.currentagefourth || personid: , tech(nr 5 dfp 5 bfgs 5)
 
 	predict `y'_xb0, xb
 	predict `y'D0, fitted
@@ -57,7 +57,7 @@ mixed `y' EDU1 EDU2 EDU3 PrRecess OLF tenure i.(censdiv year occ race cohort two
 
 ** Random effect has intercept and growth rate
 
-mixed `y' EDU1 EDU2 EDU3 PrRecess OLF tenure i.(censdiv year occ race cohort twoind) i.currentage c.currentagesq c.currentagecube c.currentagefourth || personid: currentage, cov(uns) tech(nr 5 dfp 5 bfgs 5)
+mixed `y' i.year i.censdiv i.currentage c.currentagesq c.currentagecube c.currentagefourth || personid: currentage, cov(uns) tech(nr 5 dfp 5 bfgs 5)
 
 	predict `y'_xb1, xb
 	predict `y'D1, fitted

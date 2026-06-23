@@ -106,12 +106,6 @@ use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemograp
 
 
 
-* some clean up set numeric values of state to missing
-
-replace state = . if state < 0
-
-replace edyrs = . if edyrs < 0
-replace edmaxyrs = . if edmaxyrs < 0
 
 
 
@@ -169,11 +163,6 @@ graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/his
 * Gamma Analysis
 
 
-gen EDU1 = (edyrs < 12)
-gen EDU2 = (edyrs >= 12) & (edyrs < 14)
-gen EDU3 = (edyrs >= 14) & (edyrs < 16)
-
-
 
 
 
@@ -207,9 +196,6 @@ gen rGDPsquare = rGDPgrow^2
 
 * CLEAN UP LABELS HERE
 
-label var EDU1 "Less than High School"
-label var EDU2 "High School Graduate"
-label var EDU3 "Some College"
 label var currentage "Age"
 label var currentagesq "Age Squared"
 label var currentagecube "Age Cubed"
@@ -239,18 +225,18 @@ tabulate occ_year, generate(occ_year_dum)
 * (Excludes no-controls model since we're testing control significance)
 
 * Initialize matrices to store F-statistics and p-values for Gamma
-* Rows: state, year, race, cohort, occ, twoind (6 control sets)
+* Rows: censdiv, year, race, cohort, occ, twoind (6 control sets)
 * Columns: m2 (no occ/ind), m3 (no occ), m4 (no ind), m5 (all controls)
 matrix gamma_fstat = J(6, 4, .)
 matrix gamma_pval = J(6, 4, .)
-matrix rownames gamma_fstat = "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
+matrix rownames gamma_fstat = "Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
 matrix colnames gamma_fstat = "No Occ/Ind" "No Occ" "No Ind" "All Controls"
-matrix rownames gamma_pval = "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
+matrix rownames gamma_pval = "Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
 matrix colnames gamma_pval = "No Occ/Ind" "No Occ" "No Ind" "All Controls"
 
 * Model 2: controls - no occ or ind
-quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
-testparm i.state
+quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year race cohort)
+testparm i.censdiv
 matrix gamma_fstat[1,1] = r(F)
 matrix gamma_pval[1,1] = r(p)
 testparm i.year
@@ -269,8 +255,8 @@ matrix gamma_fstat[6,1] = .
 matrix gamma_pval[6,1] = .
 
 * Model 3: controls - no occ
-quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
-testparm i.state
+quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year race cohort twoind)
+testparm i.censdiv
 matrix gamma_fstat[1,2] = r(F)
 matrix gamma_pval[1,2] = r(p)
 testparm i.year
@@ -290,8 +276,8 @@ matrix gamma_fstat[6,2] = r(F)
 matrix gamma_pval[6,2] = r(p)
 
 * Model 4: controls - no ind
-quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
-testparm i.state
+quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year occ race cohort)
+testparm i.censdiv
 matrix gamma_fstat[1,3] = r(F)
 matrix gamma_pval[1,3] = r(p)
 testparm i.year
@@ -311,8 +297,8 @@ matrix gamma_fstat[6,3] = .
 matrix gamma_pval[6,3] = .
 
 * Model 5: All controls
-quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
-testparm i.state
+quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year occ race cohort twoind)
+testparm i.censdiv
 matrix gamma_fstat[1,4] = r(F)
 matrix gamma_pval[1,4] = r(p)
 testparm i.year
@@ -342,7 +328,7 @@ preserve
 clear
 set obs 6
 gen fe_name = ""
-replace fe_name = "State FE" in 1
+replace fe_name = "Census Division FE" in 1
 replace fe_name = "Year FE" in 2
 replace fe_name = "Race FE" in 3
 replace fe_name = "Cohort FE" in 4
@@ -406,14 +392,14 @@ restore
 * Initialize matrices to store F-statistics and p-values for Alpha
 matrix alpha_fstat = J(6, 4, .)
 matrix alpha_pval = J(6, 4, .)
-matrix rownames alpha_fstat = "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
+matrix rownames alpha_fstat = "Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
 matrix colnames alpha_fstat = "No Occ/Ind" "No Occ" "No Ind" "All Controls"
-matrix rownames alpha_pval = "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
+matrix rownames alpha_pval = "Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE"
 matrix colnames alpha_pval = "No Occ/Ind" "No Occ" "No Ind" "All Controls"
 
 * Model 2: controls - no occ or ind
-quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort)
-testparm i.state
+quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year race cohort)
+testparm i.censdiv
 matrix alpha_fstat[1,1] = r(F)
 matrix alpha_pval[1,1] = r(p)
 testparm i.year
@@ -432,8 +418,8 @@ matrix alpha_fstat[6,1] = .
 matrix alpha_pval[6,1] = .
 
 * Model 3: controls - no occ
-quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year race cohort twoind)
-testparm i.state
+quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year race cohort twoind)
+testparm i.censdiv
 matrix alpha_fstat[1,2] = r(F)
 matrix alpha_pval[1,2] = r(p)
 testparm i.year
@@ -453,8 +439,8 @@ matrix alpha_fstat[6,2] = r(F)
 matrix alpha_pval[6,2] = r(p)
 
 * Model 4: controls - no ind
-quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort)
-testparm i.state
+quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year occ race cohort)
+testparm i.censdiv
 matrix alpha_fstat[1,3] = r(F)
 matrix alpha_pval[1,3] = r(p)
 testparm i.year
@@ -474,8 +460,8 @@ matrix alpha_fstat[6,3] = .
 matrix alpha_pval[6,3] = .
 
 * Model 5: All controls
-quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(state year occ race cohort twoind)
-testparm i.state
+quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year occ race cohort twoind)
+testparm i.censdiv
 matrix alpha_fstat[1,4] = r(F)
 matrix alpha_pval[1,4] = r(p)
 testparm i.year
@@ -505,7 +491,7 @@ preserve
 clear
 set obs 6
 gen fe_name = ""
-replace fe_name = "State FE" in 1
+replace fe_name = "Census Division FE" in 1
 replace fe_name = "Year FE" in 2
 replace fe_name = "Race FE" in 3
 replace fe_name = "Cohort FE" in 4
@@ -596,7 +582,7 @@ estadd local ind_fe   "No": m1
 estadd local age_cubic "Yes": m1
 
 * controls - no occ or ind
-eststo m2: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year race cohort)
+eststo m2: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year race cohort)
 estadd local state_fe "Yes": m2
 estadd local year_fe  "Yes": m2
 estadd local race_fe  "Yes": m2
@@ -606,7 +592,7 @@ estadd local ind_fe   "No": m2
 estadd local age_cubic "Yes": m2
 
 * controls - no occ
-eststo m3: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year race cohort twoind)
+eststo m3: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year race cohort twoind)
 estadd local state_fe "Yes": m3
 estadd local year_fe  "Yes": m3
 estadd local race_fe  "Yes": m3
@@ -616,7 +602,7 @@ estadd local ind_fe   "Yes": m3
 estadd local age_cubic "Yes": m3
 
 * controls - no ind
-eststo m4: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year occ race cohort)
+eststo m4: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year occ race cohort)
 estadd local state_fe "Yes": m4
 estadd local year_fe  "Yes": m4
 estadd local race_fe  "Yes": m4
@@ -626,7 +612,7 @@ estadd local ind_fe   "No": m4
 estadd local age_cubic "Yes": m4
 
 * All controls
-eststo m5: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year occ race cohort twoind)
+eststo m5: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year occ race cohort twoind)
 estadd local state_fe "Yes": m5
 estadd local year_fe  "Yes": m5
 estadd local race_fe  "Yes": m5
@@ -641,7 +627,7 @@ esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarning
     replace se r2 label ///
     keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure) ///
     stats(age_cubic state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
-          labels("Age (cubic)" "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
+          labels("Age (cubic)" "Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
           fmt(%9s %9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
     star(* 0.10 ** 0.05 *** 0.01)
 
@@ -700,7 +686,7 @@ estadd local ind_selected   " ": step1
 * controls - no occ or ind - capture output
 tempfile stepwise_log2
 log using `stepwise_log2', text replace
-eststo step2: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step2: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -729,7 +715,7 @@ local cohort_selected "No"
 matrix b = e(b)
 local varnames : colnames b
 foreach var of local varnames {
-    if regexm("`var'", "^state_dum") {
+    if regexm("`var'", "^censdiv_dum") {
         local state_selected "Yes"
     }
     if regexm("`var'", "^year_dum") {
@@ -772,7 +758,7 @@ estadd local ind_selected "": step2
 * controls - no occ - capture output
 tempfile stepwise_log3
 log using `stepwise_log3', text replace
-eststo step3: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step3: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -802,7 +788,7 @@ local ind_selected "No"
 matrix b = e(b)
 local varnames : colnames b
 foreach var of local varnames {
-    if regexm("`var'", "^state_dum") {
+    if regexm("`var'", "^censdiv_dum") {
         local state_selected "Yes"
     }
     if regexm("`var'", "^year_dum") {
@@ -853,7 +839,7 @@ else {
 * controls - no ind - capture output
 tempfile stepwise_log4
 log using `stepwise_log4', text replace
-eststo step4: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step4: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -883,7 +869,7 @@ local occ_selected "No"
 matrix b = e(b)
 local varnames : colnames b
 foreach var of local varnames {
-    if regexm("`var'", "^state_dum") {
+    if regexm("`var'", "^censdiv_dum") {
         local state_selected "Yes"
     }
     if regexm("`var'", "^year_dum") {
@@ -934,7 +920,7 @@ estadd local ind_selected "": step4
 * All controls - capture output
 tempfile stepwise_log5
 log using `stepwise_log5', text replace
-eststo step5: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step5: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -965,7 +951,7 @@ local ind_selected "No"
 matrix b = e(b)
 local varnames : colnames b
 foreach var of local varnames {
-    if regexm("`var'", "^state_dum") {
+    if regexm("`var'", "^censdiv_dum") {
         local state_selected "Yes"
     }
     if regexm("`var'", "^year_dum") {
@@ -1028,7 +1014,7 @@ esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/
     replace se r2 label ///
     drop(*_dum*) ///
     stats(state_selected year_selected race_selected cohort_selected occ_selected ind_selected state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
-          labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "\midrule State FE Available" "Year FE Available" "Race FE Available" "Cohort FE Available" "Occupation FE Available" "Industry FE Available" "R-squared" "N") ///
+          labels("Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "\midrule Census Division FE Available" "Year FE Available" "Race FE Available" "Cohort FE Available" "Occupation FE Available" "Industry FE Available" "R-squared" "N") ///
           fmt(%9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9.3f %9.0g))
 
 
@@ -1068,7 +1054,7 @@ restore
 
 * (2) “controls – no occ or ind”
 quietly lasso linear Gamma ///
-        (i.(state year race cohort)) ///
+        (i.(censdiv year race cohort)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
         currentage currentagesq currentagecube, ///
         selection(bic) rseed(12345)
@@ -1098,7 +1084,7 @@ restore
 
 * (3) “controls – no occ”
 quietly lasso linear Gamma ///
-        (i.(state year race cohort twoind)) ///
+        (i.(censdiv year race cohort twoind)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
         currentage currentagesq currentagecube, ///
         selection(bic) rseed(12345)
@@ -1127,7 +1113,7 @@ restore
 
 * (4) “controls – no ind”
 quietly lasso linear Gamma ///
-        (i.(state year occ race cohort)) ///
+        (i.(censdiv year occ race cohort)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
         currentage currentagesq currentagecube, ///
         selection(bic) rseed(12345)
@@ -1156,7 +1142,7 @@ restore
 
 * (5) “All controls”
 quietly lasso linear Gamma ///
-        (i.(state year occ race cohort twoind)) ///
+        (i.(censdiv year occ race cohort twoind)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
         currentage currentagesq currentagecube, ///
         selection(bic) rseed(12345)
@@ -1334,7 +1320,7 @@ listtex varname noctrl nooccind noocc noind allctrl using "/Users/ethanballou/Do
          "\hline") ///
     foot("\hline" ///
          "\multicolumn{6}{l}{} \\" ///
-         "State FE & `state_fe_noctrl' & `state_fe_nooccind' & `state_fe_noocc' & `state_fe_noind' & `state_fe_allctrl' \\" ///
+         "Census Division FE & `state_fe_noctrl' & `state_fe_nooccind' & `state_fe_noocc' & `state_fe_noind' & `state_fe_allctrl' \\" ///
          "Year FE & `year_fe_noctrl' & `year_fe_nooccind' & `year_fe_noocc' & `year_fe_noind' & `year_fe_allctrl' \\" ///
          "Race FE & `race_fe_noctrl' & `race_fe_nooccind' & `race_fe_noocc' & `race_fe_noind' & `race_fe_allctrl' \\" ///
          "Cohort FE & `cohort_fe_noctrl' & `cohort_fe_nooccind' & `cohort_fe_noocc' & `cohort_fe_noind' & `cohort_fe_allctrl' \\" ///
@@ -1585,7 +1571,7 @@ estadd local ind_fe   "No": m1
 estadd local age_cubic "Yes": m1
 
 * controls - no occ or ind
-eststo m2: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year race cohort)
+eststo m2: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year race cohort)
 estadd local state_fe "Yes": m2
 estadd local year_fe  "Yes": m2
 estadd local race_fe  "Yes": m2
@@ -1595,7 +1581,7 @@ estadd local ind_fe   "No": m2
 estadd local age_cubic "Yes": m2
 
 * controls - no occ
-eststo m3: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year race cohort twoind)
+eststo m3: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year race cohort twoind)
 estadd local state_fe "Yes": m3
 estadd local year_fe  "Yes": m3
 estadd local race_fe  "Yes": m3
@@ -1605,7 +1591,7 @@ estadd local ind_fe   "Yes": m3
 estadd local age_cubic "Yes": m3
 
 * controls - no ind
-eststo m4: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year occ race cohort)
+eststo m4: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year occ race cohort)
 estadd local state_fe "Yes": m4
 estadd local year_fe  "Yes": m4
 estadd local race_fe  "Yes": m4
@@ -1615,7 +1601,7 @@ estadd local ind_fe   "No": m4
 estadd local age_cubic "Yes": m4
 
 * All controls
-eststo m5: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(state year occ race cohort twoind)
+eststo m5: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year occ race cohort twoind)
 estadd local state_fe "Yes": m5
 estadd local year_fe  "Yes": m5
 estadd local race_fe  "Yes": m5
@@ -1630,7 +1616,7 @@ esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarning
         replace se r2 label ///
         keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure) ///
         stats(age_cubic state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
-                  labels("Age (cubic)" "State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
+                  labels("Age (cubic)" "Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
                   fmt(%9s %9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
         star(* 0.10 ** 0.05 *** 0.01)
 
@@ -1688,7 +1674,7 @@ estadd local ind_selected   " ": step1
 * controls - no occ or ind - capture output
 tempfile stepwise_log2_alpha
 log using `stepwise_log2_alpha', text replace
-eststo step2: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step2: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -1717,7 +1703,7 @@ local cohort_selected "No"
 matrix b = e(b)
 local varnames : colnames b
 foreach var of local varnames {
-    if regexm("`var'", "^state_dum") {
+    if regexm("`var'", "^censdiv_dum") {
         local state_selected "Yes"
     }
     if regexm("`var'", "^year_dum") {
@@ -1760,7 +1746,7 @@ estadd local ind_selected "": step2
 * controls - no occ - capture output
 tempfile stepwise_log3_alpha
 log using `stepwise_log3_alpha', text replace
-eststo step3: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step3: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -1790,7 +1776,7 @@ local ind_selected "No"
 matrix b = e(b)
 local varnames : colnames b
 foreach var of local varnames {
-    if regexm("`var'", "^state_dum") {
+    if regexm("`var'", "^censdiv_dum") {
         local state_selected "Yes"
     }
     if regexm("`var'", "^year_dum") {
@@ -1841,7 +1827,7 @@ else {
 * controls - no ind - capture output
 tempfile stepwise_log4_alpha
 log using `stepwise_log4_alpha', text replace
-eststo step4: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step4: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -1871,7 +1857,7 @@ local occ_selected "No"
 matrix b = e(b)
 local varnames : colnames b
 foreach var of local varnames {
-    if regexm("`var'", "^state_dum") {
+    if regexm("`var'", "^censdiv_dum") {
         local state_selected "Yes"
     }
     if regexm("`var'", "^year_dum") {
@@ -1922,7 +1908,7 @@ estadd local ind_selected "": step4
 * All controls - capture output
 tempfile stepwise_log5_alpha
 log using `stepwise_log5_alpha', text replace
-eststo step5: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (state_dum1-state_dum51) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step5: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -1953,7 +1939,7 @@ local ind_selected "No"
 matrix b = e(b)
 local varnames : colnames b
 foreach var of local varnames {
-    if regexm("`var'", "^state_dum") {
+    if regexm("`var'", "^censdiv_dum") {
         local state_selected "Yes"
     }
     if regexm("`var'", "^year_dum") {
@@ -2014,7 +2000,7 @@ esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/
     replace se r2 label ///
     drop(*_dum*) ///
     stats(state_selected year_selected race_selected cohort_selected occ_selected ind_selected state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
-          labels("State FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "\midrule State FE Available" "Year FE Available" "Race FE Available" "Cohort FE Available" "Occupation FE Available" "Industry FE Available" "R-squared" "N") ///
+          labels("Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "\midrule Census Division FE Available" "Year FE Available" "Race FE Available" "Cohort FE Available" "Occupation FE Available" "Industry FE Available" "R-squared" "N") ///
           fmt(%9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9s %9.3f %9.0g))
 
 
@@ -2056,7 +2042,7 @@ restore
 
 * (2) “controls – no occ or ind”
 quietly lasso linear Alpha ///
-        (i.(state year race cohort)) ///
+        (i.(censdiv year race cohort)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
         currentage currentagesq currentagecube, ///
         selection(bic) rseed(12345)
@@ -2086,7 +2072,7 @@ restore
 
 * (3) “controls – no occ”
 quietly lasso linear Alpha ///
-        (i.(state year race cohort twoind)) ///
+        (i.(censdiv year race cohort twoind)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
         currentage currentagesq currentagecube, ///
         selection(bic) rseed(12345)
@@ -2115,7 +2101,7 @@ restore
 
 * (4) “controls – no ind”
 quietly lasso linear Alpha ///
-        (i.(state year occ race cohort)) ///
+        (i.(censdiv year occ race cohort)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
         currentage currentagesq currentagecube, ///
         selection(bic) rseed(12345)
@@ -2144,7 +2130,7 @@ restore
 
 * (5) “All controls”
 quietly lasso linear Alpha ///
-        (i.(state year occ race cohort twoind)) ///
+        (i.(censdiv year occ race cohort twoind)) ///
         EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
         currentage currentagesq currentagecube, ///
         selection(bic) rseed(12345)
@@ -2318,7 +2304,7 @@ listtex varname noctrl nooccind noocc noind allctrl using "/Users/ethanballou/Do
          "\hline") ///
     foot("\hline" ///
          "\multicolumn{6}{l}{} \\" ///
-         "State FE & `state_fe_noctrl' & `state_fe_nooccind' & `state_fe_noocc' & `state_fe_noind' & `state_fe_allctrl' \\" ///
+         "Census Division FE & `state_fe_noctrl' & `state_fe_nooccind' & `state_fe_noocc' & `state_fe_noind' & `state_fe_allctrl' \\" ///
          "Year FE & `year_fe_noctrl' & `year_fe_nooccind' & `year_fe_noocc' & `year_fe_noind' & `year_fe_allctrl' \\" ///
          "Race FE & `race_fe_noctrl' & `race_fe_nooccind' & `race_fe_noocc' & `race_fe_noind' & `race_fe_allctrl' \\" ///
          "Cohort FE & `cohort_fe_noctrl' & `cohort_fe_nooccind' & `cohort_fe_noocc' & `cohort_fe_noind' & `cohort_fe_allctrl' \\" ///

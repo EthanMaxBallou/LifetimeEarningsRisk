@@ -42,11 +42,11 @@ print(meta.column_names)
 
 # Columns to drop from the dataset
 columns_to_keep = [
-    'year', 'personid', 'state', 'occ', 'twoind', 'race', 
-    'currentage', 'veteran', 'rGDPgrow', 
+    'year', 'personid', 'censdiv', 'occ', 'twoind', 'race', 
+    'currentage',
     'PrRecess', 'OLF', 'tenure', 'currentagesq', 
-    'currentagecube', 'cohort', 'ma5aep', 
-    'fhwage', 'alphaP_WEIGHTED', 'edmaxyrs'
+    'currentagecube', 'cohort',
+    'alphaP_WEIGHTED', 'edmaxyrs'
 ]
 
 
@@ -59,7 +59,7 @@ data = data.dropna()
 
 
 # Create a vector with the names of the columns to convert
-columns_to_convert = ['race', 'occ', 'year', 'state', 'cohort', 'twoind']
+columns_to_convert = ['race', 'occ', 'year', 'censdiv', 'cohort', 'twoind']
 
 # Create dummy variables for all specified columns in one line
 data = pd.get_dummies(data, columns=columns_to_convert, drop_first=False)

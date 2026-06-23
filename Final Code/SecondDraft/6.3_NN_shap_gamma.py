@@ -130,10 +130,9 @@ shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk
 
 
 top_cont = [
-    'currentage', 'rGDPgrow', 
+    'currentage',
     'PrRecess', 'tenure', 'currentagesq', 
-    'currentagecube', 'ma5aep', 
-    'fhwage'
+    'currentagecube'
 ]
 
 

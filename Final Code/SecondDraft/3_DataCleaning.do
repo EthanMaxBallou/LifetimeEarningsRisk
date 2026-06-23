@@ -1799,8 +1799,6 @@ drop observation_date
 rename recprousm156n PrRecess
 
 
-replace year=year+1
-
 
 tempfile recess_data
 save `recess_data'
@@ -2196,9 +2194,9 @@ label variable group "= white (1st dig) + cohort (2nd) + educwrths (3rd)"
 *    						*
 ***********************************************
 
-gen realearn=earnings*(237.017/cpi) 
-	replace realearn=359116.9 if realearn!=. & realearn>359116.9
-label variable realearn "prior year earnings, in 2015 dollars"
+gen realearn=earnings*(313.689/cpi) 
+	replace realearn=475286.7 if realearn!=. & realearn>475286.7
+label variable realearn "prior year earnings, in 2024 dollars"
 
 ** Note: The maximum value reported in the PSID increased
 ** by a factor of 100 during the sample period, much faster
@@ -2214,7 +2212,7 @@ gen lhwage=ln(hwage)
 
 ** Note: $3/hr is about 1/2 of the lowest level of
 ** the real US federal minimum wage over this period,
-** in 2015 dollars.
+** in 2024 dollars.
 
 sort personid year
 
@@ -2222,11 +2220,11 @@ gen fearn=F2.lnrearn if F2.student!=1 & F2.OLF!=1
 gen fhwage=F2.lhwage if F2.student!=1
 
 
-label variable lnrearn "log real earnings last year (2015 dollars)"
-label variable fearn "log real earnings next year (2015 dollars)"
-label variable hwage "real hourly wage last year (2015 dollars)"
-label variable lhwage "log real hourly wage last year (2015 dollars)"
-label variable fhwage "log real hourly wage next year (2015 dollars)"
+label variable lnrearn "log real earnings last year (2024 dollars)"
+label variable fearn "log real earnings next year (2024 dollars)"
+label variable hwage "real hourly wage last year (2024 dollars)"
+label variable lhwage "log real hourly wage last year (2024 dollars)"
+label variable fhwage "log real hourly wage next year (2024 dollars)"
 
 
 
@@ -2266,12 +2264,42 @@ label variable ma5aep "5-year moving average of AEP"
 
 
 
+* Create binned age variable (reference category being middle age earnings peak)
+
+* 6 bins spanning the 22-69 sample: 22-29, 30-37, 38-45, 46-53, 54-61, 62-69
+* The 46-53 bin (middle-age earnings peak) is set as the reference category.
+gen agebin = .
+replace agebin = 1 if currentage>=22 & currentage<=29
+replace agebin = 2 if currentage>=30 & currentage<=37
+replace agebin = 3 if currentage>=38 & currentage<=45
+replace agebin = 4 if currentage>=46 & currentage<=53
+replace agebin = 5 if currentage>=54 & currentage<=61
+replace agebin = 6 if currentage>=62 & currentage<=69
+
+label define agebin_lbl 1 "22-29" 2 "30-37" 3 "38-45" 4 "46-53 (ref)" 5 "54-61" 6 "62-69"
+label values agebin agebin_lbl
+label variable agebin "Age bin (6 groups, 46-53 = reference)"
 
 
 
+* Education dummies
+
+gen EDU1 = (edyrs < 12)
+gen EDU2 = (edyrs >= 12) & (edyrs < 14)
+gen EDU3 = (edyrs >= 14) & (edyrs < 16)
+
+
+label var EDU1 "Less than High School"
+label var EDU2 "High School Graduate"
+label var EDU3 "Some College"
 
 
 
+* some clean up set numeric values of state to missing
+
+replace state = . if state < 0
+replace edyrs = . if edyrs < 0
+replace edmaxyrs = . if edmaxyrs < 0
 
 
 
