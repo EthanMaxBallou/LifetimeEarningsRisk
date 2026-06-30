@@ -1,10 +1,16 @@
 step,action,vars,v1,v2,v3
-1,A,1973.year                1974.year                1975.year,     1 , 2.55e-06        126    0.0057 , A 1973.year                1974.year                1975.year                                           
-2,A,tenure,     2 , 2.32e-06        127    0.0058 , A tenure                                                                                                
-3,A,ma5aep,     4 , 1.93e-06        128    0.0059 , A ma5aep                                                                                                
-4,A,OLF,     9 , 1.21e-06        129    0.0062 , A OLF                                                                                                   
-5,A,EDU3,    11 , 1.01e-06        130    0.0063 , A EDU3                                                                                                  
-6,A,EDU2,    13 , 8.35e-07        131    0.0064 , A EDU2                                                                                                  
-7,A,currentagecube,    21 , 3.97e-07        132    0.0066 , A currentagecube                                                                                        
-8,A,EDU1,    30 , 1.72e-07        133    0.0066 , A EDU1                                                                                                  
-9,A,currentage,    40 , 6.77e-08        134    0.0067 , A currentage                                                                                            
+1,A,1973.year            1974.year            1975.year,     1 , .0022979         84    0.0249 , A 1973.year            1974.year            1975.year                                  
+2,A,ma5aep,     2 , .0020937         85    0.0259 , A ma5aep                                                                               
+3,A,OLF,     7 , .0013149         86    0.0289 , A OLF                                                                                  
+4,A,agecat6,    10 , .0009947         87    0.0303 , A agecat6                                                                              
+5,A,EDU4,    22 , .0003257         88    0.0323 , A EDU4                                                                                 
+6,A,EDU3,    26 , .0002245         89    0.0325 , A EDU3                                                                                 
+7,A,agecat1,    28 , .0001864         90    0.0326 , A agecat1                                                                              
+8,A,EDU2,    29 , .0001698         91    0.0327 , A EDU2                                                                                 
+9,A,agecat3,    34 , .0001067         92    0.0329 , A agecat3                                                                              
+10,A,EDU1,    37 , .0000807         93    0.0330 , A EDU1                                                                                 
+11,A,agecat2,    39 ,  .000067         94    0.0330 , A agecat2                                                                              
+12,A,tenure,    40 ,  .000061         95    0.0330 , A tenure                                                                               
+13,R,agecat3,    43 , .0000462         94    0.0331 , R agecat3                                                                              
+14,A,agecat5,    45 , .0000383         95    0.0331 , A agecat5                                                                              
+15,A,agecat3,    60 , 9.49e-06         96    0.0332 , A agecat3                                                                              

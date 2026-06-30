@@ -1,14 +1,14 @@
 step,action,vars,v1,v2,v3
-1,A,1.occ                    2.occ                    3.occ,   * 1 , 1.59e-06        201    0.0029 , A 1.occ                    2.occ                    3.occ                                               
-2,A,EDU3,     2 , 1.45e-06        202    0.0029 , A EDU3                                                                                                  
-3,A,currentagecube,     3 , 1.32e-06        203    0.0030 , A currentagecube                                                                                        
-4,A,ma5aep,     7 , 9.11e-07        204    0.0030 , A ma5aep                                                                                                
-5,A,OLF,     8 , 8.30e-07        205    0.0031 , A OLF                                                                                                   
-6,A,EDU2,    16 , 3.94e-07        206    0.0031 , A EDU2                                                                                                  
-7,A,tenure                   currentage,    27 , 1.42e-07        208    0.0031 , A tenure                   currentage                                                                   
-8,A,EDU1,    49 , 1.83e-08        209    0.0032 , A EDU1                                                                                                  
-9,A,currentagesq,    50 , 1.67e-08        210    0.0032 , A currentagesq                                                                                          
-10,R,currentagecube,    53 , 1.26e-08        209    0.0032 , R currentagecube                                                                                        
-11,A,currentagecube,    60 , 6.58e-09        210    0.0032 , A currentagecube                                                                                        
-12,R,EDU1,    78 , 1.23e-09        209    0.0032 , R EDU1                                                                                                  
-13,A,EDU1,    87 , 5.34e-10        210    0.0032 , A EDU1                                                                                                  
+1,A,1.occ                2.occ                3.occ,   * 1 , .0000719        159    0.0042 , A 1.occ                2.occ                3.occ                                      
+2,A,agecat6,     2 , .0000655        160    0.0042 , A agecat6                                                                              
+3,A,EDU2,     4 , .0000544        161    0.0042 , A EDU2                                                                                 
+4,A,OLF                  EDU3                 agecat2,     5 , .0000496        164    0.0042 , A OLF                  EDU3                 agecat2                                    
+5,A,agecat3,     7 , .0000411        165    0.0043 , A agecat3                                                                              
+6,A,agecat5,     9 , .0000342        166    0.0044 , A agecat5                                                                              
+7,A,agecat1,    11 , .0000284        167    0.0044 , A agecat1                                                                              
+8,A,ma5aep,    16 , .0000178        168    0.0045 , A ma5aep                                                                               
+9,A,tenure,    18 , .0000148        168    0.0045 , A tenure                                                                               
+10,R,agecat3,    18 , .0000148        168    0.0045 , R agecat3                                                                              
+11,A,agecat3,    34 , 3.34e-06        169    0.0046 , A agecat3                                                                              
+12,A,EDU1,    35 , 3.04e-06        170    0.0046 , A EDU1                                                                                 
+13,A,EDU4,    43 , 1.44e-06        171    0.0046 , A EDU4                                                                                 

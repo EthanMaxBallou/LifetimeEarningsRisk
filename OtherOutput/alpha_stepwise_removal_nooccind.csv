@@ -1,3 +1,6 @@
 variable,pvalue,order
-rGDPgrow,.96030003,1
-PrRecess,.6099,2
+agecat5,.91060001,1
+agecat3,.7432,2
+EDU1,.34450001,3
+agecat2,.32120001,4
+agecat1,.25330001,5

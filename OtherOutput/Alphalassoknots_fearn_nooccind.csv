@@ -1,0 +1,13 @@
+step,action,vars,v1,v2,v3
+1,A,1973.year            1974.year            1975.year,     1 , .0140588         52    0.0079 , A 1973.year            1974.year            1975.year                                  
+2,A,ma5aep,     2 , .0128098         53    0.0129 , A ma5aep                                                                               
+3,A,OLF,    10 , .0060857         54    0.0323 , A OLF                                                                                  
+4,A,EDU4,    27 , .0012515         55    0.0410 , A EDU4                                                                                 
+5,A,tenure               agecat6,    28 , .0011403         57    0.0412 , A tenure               agecat6                                                         
+6,A,EDU3,    29 ,  .001039         58    0.0413 , A EDU3                                                                                 
+7,A,agecat3,    38 , .0004498         59    0.0421 , A agecat3                                                                              
+8,A,agecat1,    43 , .0002825         60    0.0423 , A agecat1                                                                              
+9,A,agecat2,    48 , .0001774         61    0.0423 , A agecat2                                                                              
+10,A,EDU2,    53 , .0001114         62    0.0424 , A EDU2                                                                                 
+11,A,EDU1,    64 ,   .00004         63    0.0424 , A EDU1                                                                                 
+12,A,agecat5,    68 , .0000276         64    0.0424 , A agecat5                                                                              

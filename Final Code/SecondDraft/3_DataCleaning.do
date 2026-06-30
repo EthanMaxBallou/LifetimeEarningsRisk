@@ -2284,14 +2284,17 @@ label variable agebin "Age bin (6 groups, 46-53 = reference)"
 
 * Education dummies
 
-gen EDU1 = (edyrs < 12)
-gen EDU2 = (edyrs >= 12) & (edyrs < 14)
-gen EDU3 = (edyrs >= 14) & (edyrs < 16)
+
+gen EDU1 = (edyrs >= 12) & (edyrs < 14)
+gen EDU2 = (edyrs >= 14) & (edyrs < 16)
+gen EDU3 = (edyrs == 16)
+gen EDU4 = (edyrs > 16)
 
 
-label var EDU1 "Less than High School"
-label var EDU2 "High School Graduate"
-label var EDU3 "Some College"
+label var EDU1 "High School Graduate"
+label var EDU2 "Some College"
+label var EDU3 "Bachelor's Degree"
+label var EDU4 "Bachelors+"
 
 
 

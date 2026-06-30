@@ -1,0 +1,11 @@
+step,action,vars,v1,v2,v3
+1,A,ma5aep               agecat6,     2 , .0028749          2    0.0001 , A ma5aep               agecat6                                                         
+2,A,EDU2,    13 , .0010332          3    0.0007 , A EDU2                                                                                 
+3,A,agecat5,    14 , .0009414          4    0.0007 , A agecat5                                                                              
+4,A,agecat3,    15 , .0008578          5    0.0007 , A agecat3                                                                              
+5,A,EDU3,    18 , .0006489          6    0.0008 , A EDU3                                                                                 
+6,A,agecat2,    20 , .0005387          7    0.0009 , A agecat2                                                                              
+7,A,OLF                  PrRecess,    28 , .0002559          9    0.0009 , A OLF                  PrRecess                                                        
+8,A,EDU4,    29 , .0002332         10    0.0009 , A EDU4                                                                                 
+9,A,agecat1,    40 , .0000838         11    0.0010 , A agecat1                                                                              
+10,A,EDU1,    41 , .0000764         12    0.0010 , A EDU1                                                                                 

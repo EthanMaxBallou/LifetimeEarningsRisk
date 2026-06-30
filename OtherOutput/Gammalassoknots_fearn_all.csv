@@ -1,0 +1,14 @@
+step,action,vars,v1,v2,v3
+1,A,1.occ                2.occ                3.occ,     1 , .0001922        159    0.0047 , A 1.occ                2.occ                3.occ                                      
+2,A,agecat6,     2 , .0001751        160    0.0047 , A agecat6                                                                              
+3,A,ma5aep,     4 , .0001454        161    0.0048 , A ma5aep                                                                               
+4,A,EDU2,    12 , .0000691        162    0.0051 , A EDU2                                                                                 
+5,A,agecat2,    13 , .0000629        163    0.0052 , A agecat2                                                                              
+6,A,OLF,    15 , .0000522        164    0.0052 , A OLF                                                                                  
+7,A,agecat3              agecat5,    20 , .0000328        166    0.0053 , A agecat3              agecat5                                                         
+8,A,EDU3,    24 , .0000226        167    0.0053 , A EDU3                                                                                 
+9,A,EDU1                 tenure,    27 , .0000171        169    0.0053 , A EDU1                 tenure                                                          
+10,A,agecat1,    33 , 9.79e-06        169    0.0054 , A agecat1                                                                              
+11,R,agecat3,    33 , 9.79e-06        169    0.0054 , R agecat3                                                                              
+12,A,EDU4,    36 , 7.41e-06        170    0.0054 , A EDU4                                                                                 
+13,A,agecat3,    45 , 3.21e-06        171    0.0054 , A agecat3                                                                              

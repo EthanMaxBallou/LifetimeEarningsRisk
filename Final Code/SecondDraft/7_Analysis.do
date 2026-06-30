@@ -2,108 +2,37 @@
 
 
 
-
-clear all
-
-
-
-
-
-* Load first dataset and compute stratified means by year
-use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", clear
-
-capture confirm variable edyrs
-if !_rc replace edyrs = 0 if edyrs < 0
-
-capture confirm variable edmaxyrs
-if !_rc replace edmaxyrs = 0 if edmaxyrs < 0
-
-
-
-
-
-rename (gammaP_WEIGHTED alphaP_WEIGHTED) (Gamma Alpha)
-
-collapse (mean) Gamma currentage edmaxyrs OLF ma5aep tenure (count) N_new=Gamma, by(year)
-rename Gamma Gamma_new
-rename currentage Age_new
-rename edmaxyrs Edu_new
-rename OLF OLF_new
-rename ma5aep ma5aep_new
-rename tenure tenure_new
-
-tempfile new_means
-save `new_means', replace
-
-* Load second dataset and compute stratified means by year
-use "/Users/ethanballou/Documents/Data/Risk/old_gam_data_modified.dta", clear
-
-collapse (mean) gammaP_WEIGHTED currentage edmaxyrs OLF ma5aep tenure (count) N_old=gammaP_WEIGHTED, by(year)
-rename gammaP_WEIGHTED Gamma_old
-rename currentage Age_old
-rename edmaxyrs Edu_old
-rename OLF OLF_old
-rename ma5aep ma5aep_old
-rename tenure tenure_old
-
-* Merge both datasets
-merge 1:1 year using `new_means', nogenerate
-
-* Compute percentage change for each variable: 100 * (new - old) / old
-* All pct_change vars are generated together here so columns are grouped at the end
-gen pct_Gamma   = 100 * (Gamma_new   - Gamma_old)   / Gamma_old
-gen pct_Age     = 100 * (Age_new     - Age_old)     / Age_old
-gen pct_Edu     = 100 * (Edu_new     - Edu_old)     / Edu_old
-gen pct_OLF     = 100 * (OLF_new     - OLF_old)     / OLF_old
-gen pct_ma5aep  = 100 * (ma5aep_new  - ma5aep_old)  / ma5aep_old
-gen pct_tenure  = 100 * (tenure_new  - tenure_old)  / tenure_old
-gen pct_N       = 100 * (N_new       - N_old)       / N_old
-
-* Order columns: year | old/new pairs | pct changes
-order year Gamma_old Gamma_new Age_old Age_new Edu_old Edu_new OLF_old OLF_new ma5aep_old ma5aep_new tenure_old tenure_new N_old N_new pct_Gamma pct_Age pct_Edu pct_OLF pct_ma5aep pct_tenure pct_N
-
-* Display comparison
-list year Gamma_old Gamma_new Age_old Age_new Edu_old Edu_new OLF_old OLF_new ma5aep_old ma5aep_new tenure_old tenure_new N_old N_new pct_Gamma pct_Age pct_Edu pct_OLF pct_ma5aep pct_tenure pct_N
-
-* Export comparison table to LaTeX
-listtex year Gamma_old Gamma_new pct_Gamma Age_old Age_new pct_Age Edu_old Edu_new pct_Edu OLF_old OLF_new pct_OLF ma5aep_old ma5aep_new pct_ma5aep tenure_old tenure_new pct_tenure N_old N_new pct_N ///
-    using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/dataset_comparison.tex", ///
-    replace ///
-    head("\begin{tabular}{lcccccccccccccccccccccc}" ///
-         "\hline\hline" ///
-         "Year & \multicolumn{3}{c}{Gamma} & \multicolumn{3}{c}{Age} & \multicolumn{3}{c}{Education} & \multicolumn{3}{c}{OLF} & \multicolumn{3}{c}{ma5aep} & \multicolumn{3}{c}{Tenure} & \multicolumn{3}{c}{N} \\" ///
-         " & Old & New & \% Chg & Old & New & \% Chg & Old & New & \% Chg & Old & New & \% Chg & Old & New & \% Chg & Old & New & \% Chg & Old & New & \% Chg \\" ///
-         "\hline") ///
-    foot("\hline\hline" ///
-         "\end{tabular}") ///
-    rstyle(tabular)
-
-
-
-
-
-
-
-
-
-
-
+/*
 
 ssc install estout
 ssc install listtex
 ssc install coefplot
 
 
-
+*/
 
 
 
 clear all
 
+* ===========================================================================
+* Earnings-measure switch. The master loop sets global MEAS (fhwage|fearn);
+* defaults to fhwage when this file is run on its own. SFX selects the
+* consolidated DV (gammaP_WEIGHTED vs gammaP_WEIGHTED_fearn) and is appended to
+* every output filename so the two measures don't overwrite each other.
+* ===========================================================================
+if "$MEAS"=="" global MEAS "fhwage"
+global SFX ""
+if "$MEAS"=="fearn" global SFX "_fearn"
+
 use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", replace
 
 
+label var gammaP_WEIGHTED "Gamma (${MEAS})"
+label var alphaP_WEIGHTED "Alpha (${MEAS})"
 
+label var gammaP_WEIGHTED_fearn "Gamma (${MEAS})"
+label var alphaP_WEIGHTED_fearn "Alpha (${MEAS})"
 
 
 
@@ -122,12 +51,21 @@ tabulate state, generate(state_dum)
 tabulate cohort, generate(cohort_dum)
 tabulate twoind, generate(twoind_dum)
 
+* Age bin dummies (6 groups; bin 4 = 46-53 is the reference and is omitted
+* from the model specifications). Labeled so they print like the EDU dummies.
+tabulate agebin, generate(agecat)
+label var agecat1 "Age 22-29"
+label var agecat2 "Age 30-37"
+label var agecat3 "Age 38-45"
+label var agecat5 "Age 54-61"
+label var agecat6 "Age 62-69"
 
 
 
 
 
-rename (gammaP_WEIGHTED alphaP_WEIGHTED) (Gamma Alpha)
+
+rename (gammaP_WEIGHTED${SFX} alphaP_WEIGHTED${SFX}) (Gamma Alpha)
 
 
 
@@ -137,22 +75,22 @@ rename (gammaP_WEIGHTED alphaP_WEIGHTED) (Gamma Alpha)
 * Descriptive plots
 
 twoway (scatter Gamma currentage), title("Distribution of Age and Gamma") xlabel(, grid) ylabel(, grid) ytitle("Gamma") xtitle("Age")
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png", replace
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED${SFX}.png", replace
 
 
 histogram Gamma, title("Distribution of Gamma") xlabel(, grid) ylabel(, grid) xtitle("Gamma")
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png", replace
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED${SFX}.png", replace
 
 
 
 
 
 twoway (scatter Alpha currentage), title("Distribution of Age and Alpha") xlabel(, grid) ylabel(, grid) ytitle("Alpha") xtitle("Age")
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png", replace
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED${SFX}.png", replace
 
 
 histogram Alpha, title("Distribution of Alpha") xlabel(, grid) ylabel(, grid) xtitle("Alpha")
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png", replace
+graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED${SFX}.png", replace
 
 
 
@@ -169,6 +107,7 @@ graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/his
 replace EDU1 = EDU1 / 100
 replace EDU2 = EDU2 / 100
 replace EDU3 = EDU3 / 100
+replace EDU4 = EDU4 / 100
 replace currentage = currentage / 100
 replace currentagesq = currentagesq / 100
 replace currentagecube = currentagecube / 100
@@ -235,7 +174,7 @@ matrix rownames gamma_pval = "Census Division FE" "Year FE" "Race FE" "Cohort FE
 matrix colnames gamma_pval = "No Occ/Ind" "No Occ" "No Ind" "All Controls"
 
 * Model 2: controls - no occ or ind
-quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year race cohort)
+quietly regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year race cohort)
 testparm i.censdiv
 matrix gamma_fstat[1,1] = r(F)
 matrix gamma_pval[1,1] = r(p)
@@ -255,7 +194,7 @@ matrix gamma_fstat[6,1] = .
 matrix gamma_pval[6,1] = .
 
 * Model 3: controls - no occ
-quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year race cohort twoind)
+quietly regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year race cohort twoind)
 testparm i.censdiv
 matrix gamma_fstat[1,2] = r(F)
 matrix gamma_pval[1,2] = r(p)
@@ -276,7 +215,7 @@ matrix gamma_fstat[6,2] = r(F)
 matrix gamma_pval[6,2] = r(p)
 
 * Model 4: controls - no ind
-quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year occ race cohort)
+quietly regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year occ race cohort)
 testparm i.censdiv
 matrix gamma_fstat[1,3] = r(F)
 matrix gamma_pval[1,3] = r(p)
@@ -297,7 +236,7 @@ matrix gamma_fstat[6,3] = .
 matrix gamma_pval[6,3] = .
 
 * Model 5: All controls
-quietly regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year occ race cohort twoind)
+quietly regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year occ race cohort twoind)
 testparm i.censdiv
 matrix gamma_fstat[1,4] = r(F)
 matrix gamma_pval[1,4] = r(p)
@@ -369,7 +308,7 @@ forvalues j = 1/4 {
     }
 }
 
-listtex fe_name col1 col2 col3 col4 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ftest.tex", ///
+listtex fe_name col1 col2 col3 col4 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma${SFX}_ftest.tex", ///
     replace ///
     head("\begin{tabular}{lcccc}" ///
          "\hline\hline" ///
@@ -398,7 +337,7 @@ matrix rownames alpha_pval = "Census Division FE" "Year FE" "Race FE" "Cohort FE
 matrix colnames alpha_pval = "No Occ/Ind" "No Occ" "No Ind" "All Controls"
 
 * Model 2: controls - no occ or ind
-quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year race cohort)
+quietly regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year race cohort)
 testparm i.censdiv
 matrix alpha_fstat[1,1] = r(F)
 matrix alpha_pval[1,1] = r(p)
@@ -418,7 +357,7 @@ matrix alpha_fstat[6,1] = .
 matrix alpha_pval[6,1] = .
 
 * Model 3: controls - no occ
-quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year race cohort twoind)
+quietly regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year race cohort twoind)
 testparm i.censdiv
 matrix alpha_fstat[1,2] = r(F)
 matrix alpha_pval[1,2] = r(p)
@@ -439,7 +378,7 @@ matrix alpha_fstat[6,2] = r(F)
 matrix alpha_pval[6,2] = r(p)
 
 * Model 4: controls - no ind
-quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year occ race cohort)
+quietly regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year occ race cohort)
 testparm i.censdiv
 matrix alpha_fstat[1,3] = r(F)
 matrix alpha_pval[1,3] = r(p)
@@ -460,7 +399,7 @@ matrix alpha_fstat[6,3] = .
 matrix alpha_pval[6,3] = .
 
 * Model 5: All controls
-quietly regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube i.(censdiv year occ race cohort twoind)
+quietly regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year occ race cohort twoind)
 testparm i.censdiv
 matrix alpha_fstat[1,4] = r(F)
 matrix alpha_pval[1,4] = r(p)
@@ -532,7 +471,7 @@ forvalues j = 1/4 {
     }
 }
 
-listtex fe_name col1 col2 col3 col4 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ftest.tex", ///
+listtex fe_name col1 col2 col3 col4 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha${SFX}_ftest.tex", ///
     replace ///
     head("\begin{tabular}{lcccc}" ///
          "\hline\hline" ///
@@ -572,78 +511,94 @@ display "The standard deviation of gammaP_WEIGHTED is: " r(sd)
 eststo clear
 
 * No controls
-eststo m1: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage
+eststo m1: regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin
 estadd local state_fe "No": m1
 estadd local year_fe  "No": m1
 estadd local race_fe  "No": m1
 estadd local cohort_fe "No": m1
 estadd local occ_fe   "No": m1
 estadd local ind_fe   "No": m1
-estadd local age_cubic "Yes": m1
 
 * controls - no occ or ind
-eststo m2: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year race cohort)
+eststo m2: regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year race cohort)
 estadd local state_fe "Yes": m2
 estadd local year_fe  "Yes": m2
 estadd local race_fe  "Yes": m2
 estadd local cohort_fe "Yes": m2
 estadd local occ_fe   "No": m2
 estadd local ind_fe   "No": m2
-estadd local age_cubic "Yes": m2
 
 * controls - no occ
-eststo m3: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year race cohort twoind)
+eststo m3: regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year race cohort twoind)
 estadd local state_fe "Yes": m3
 estadd local year_fe  "Yes": m3
 estadd local race_fe  "Yes": m3
 estadd local cohort_fe "Yes": m3
 estadd local occ_fe   "No": m3
 estadd local ind_fe   "Yes": m3
-estadd local age_cubic "Yes": m3
 
 * controls - no ind
-eststo m4: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year occ race cohort)
+eststo m4: regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year occ race cohort)
 estadd local state_fe "Yes": m4
 estadd local year_fe  "Yes": m4
 estadd local race_fe  "Yes": m4
 estadd local cohort_fe "Yes": m4
 estadd local occ_fe   "Yes": m4
 estadd local ind_fe   "No": m4
-estadd local age_cubic "Yes": m4
 
 * All controls
-eststo m5: regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year occ race cohort twoind)
+eststo m5: regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year occ race cohort twoind)
 estadd local state_fe "Yes": m5
 estadd local year_fe  "Yes": m5
 estadd local race_fe  "Yes": m5
 estadd local cohort_fe "Yes": m5
 estadd local occ_fe   "Yes": m5
 estadd local ind_fe   "Yes": m5
-estadd local age_cubic "Yes": m5
 
 
 * Export to LaTeX
-esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex", ///
+esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma${SFX}_regressions.tex", ///
     replace se r2 label ///
-    keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure) ///
-    stats(age_cubic state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
-          labels("Age (cubic)" "Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
-          fmt(%9s %9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
+    keep(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin 6.agebin PrRecess ma5aep OLF tenure) ///
+    order(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin 6.agebin PrRecess ma5aep OLF tenure) ///
+    stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
+          labels("Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
+          fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
     star(* 0.10 ** 0.05 *** 0.01)
 
 
-* Year fixed effects plot across models
-coefplot m2 m3 m4 m5, keep(*.year) vertical recast(connected) ///
-    title("Year Fixed Effects - Gamma") xtitle("Year") ytitle("Coefficient") ///
-    legend(order(2 "m2: Base FEs" 4 "m3: + Industry" 6 "m4: + Occupation" 8 "m5: All"))
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_year_fe.pdf", replace
-
-
-* Age margins plot - no controls model only
-estimates restore m1
-margins, at(currentage=(25(5)65))
-marginsplot, title("Predicted Gamma by Age (No Controls)") xtitle("Age") ytitle("Predicted Gamma")
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_age_margins.pdf", replace
+* Year fixed effects plot - m5 only
+* Extract the year FE coefficients into a dataset and plot on a true numeric
+* year axis (coefplot's label-parsing does not handle i.year coefficient names).
+preserve
+    estimates restore m5
+    matrix b = e(b)
+    matrix V = e(V)
+    local names : colnames b
+    local K = colsof(b)
+    clear
+    set obs `K'
+    gen str40 cname = ""
+    gen coef = .
+    gen se   = .
+    forvalues j = 1/`K' {
+        local nm : word `j' of `names'
+        replace cname = "`nm'" in `j'
+        replace coef = b[1,`j'] in `j'
+        replace se   = sqrt(V[`j',`j']) in `j'
+    }
+    keep if regexm(cname, "\.year$")
+    gen yr = real(regexs(1)) if regexm(cname, "^([0-9]+)")
+    drop if missing(yr)
+    sort yr
+    gen lo = coef - 1.96*se
+    gen hi = coef + 1.96*se
+    twoway (rarea lo hi yr, color(gs13)) ///
+           (connected coef yr, msymbol(o) msize(small) lcolor(navy) mcolor(navy)), ///
+        title("Year Fixed Effects - Gamma") xtitle("Year") ytitle("Coefficient") ///
+        xlabel(1970(10)2020) legend(off)
+    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma${SFX}_year_fe.pdf", replace
+restore
 
 
 
@@ -655,7 +610,7 @@ eststo clear
 * No controls - capture output
 tempfile stepwise_log1
 log using `stepwise_log1', text replace
-eststo step1: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube 
+eststo step1: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6 
 log close
 
 * Extract removal order from log
@@ -667,7 +622,7 @@ gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
 keep if variable != ""
 gen order = _n
 keep order variable pvalue
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise_removal_noctrl.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma${SFX}_stepwise_removal_noctrl.csv", replace
 restore
 
 estadd local state_fe "No": step1
@@ -686,7 +641,7 @@ estadd local ind_selected   " ": step1
 * controls - no occ or ind - capture output
 tempfile stepwise_log2
 log using `stepwise_log2', text replace
-eststo step2: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step2: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6 (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -697,7 +652,7 @@ gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
 keep if variable != ""
 gen order = _n
 keep order variable pvalue
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise_removal_nooccind.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma${SFX}_stepwise_removal_nooccind.csv", replace
 restore
 
 estadd local state_fe "Yes": step2
@@ -758,7 +713,7 @@ estadd local ind_selected "": step2
 * controls - no occ - capture output
 tempfile stepwise_log3
 log using `stepwise_log3', text replace
-eststo step3: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step3: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6 (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -769,7 +724,7 @@ gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
 keep if variable != ""
 gen order = _n
 keep order variable pvalue
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise_removal_noocc.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma${SFX}_stepwise_removal_noocc.csv", replace
 restore
 
 estadd local state_fe "Yes": step3
@@ -839,7 +794,7 @@ else {
 * controls - no ind - capture output
 tempfile stepwise_log4
 log using `stepwise_log4', text replace
-eststo step4: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step4: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6 (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -850,7 +805,7 @@ gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
 keep if variable != ""
 gen order = _n
 keep order variable pvalue
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise_removal_noind.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma${SFX}_stepwise_removal_noind.csv", replace
 restore
 
 estadd local state_fe "Yes": step4
@@ -920,7 +875,7 @@ estadd local ind_selected "": step4
 * All controls - capture output
 tempfile stepwise_log5
 log using `stepwise_log5', text replace
-eststo step5: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step5: stepwise, pr(.05): regress Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6 (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -931,7 +886,7 @@ gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
 keep if variable != ""
 gen order = _n
 keep order variable pvalue
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise_removal_allctrl.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma${SFX}_stepwise_removal_allctrl.csv", replace
 restore
 
 estadd local state_fe "Yes": step5
@@ -1010,7 +965,7 @@ else {
 * Export stepwise results to LaTeX
 * Note: Only include variables that are retained in at least some models
 * EDU3 may be dropped during stepwise regression in some/all models
-esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex", ///
+esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma${SFX}_stepwise.tex", ///
     replace se r2 label ///
     drop(*_dum*) ///
     stats(state_selected year_selected race_selected cohort_selected occ_selected ind_selected state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
@@ -1024,8 +979,8 @@ esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/
 
 
 * (1) No controls
-quietly lasso linear Gamma EDU1 EDU2 EDU3 PrRecess rGDPgrow ///
-        ma5aep OLF tenure currentage currentagesq currentagecube, ///
+quietly lasso linear Gamma EDU1 EDU2 EDU3 EDU4 PrRecess ///
+        ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6, ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoControls
 lassoknots
@@ -1045,7 +1000,7 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_noctrl.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots${SFX}_noctrl.csv", replace
 restore
 
 
@@ -1055,8 +1010,8 @@ restore
 * (2) “controls – no occ or ind”
 quietly lasso linear Gamma ///
         (i.(censdiv year race cohort)) ///
-        EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
-        currentage currentagesq currentagecube, ///
+        EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ///
+        agecat1 agecat2 agecat3 agecat5 agecat6, ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoOccNoInd
 lassoknots
@@ -1075,7 +1030,7 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_nooccind.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots${SFX}_nooccind.csv", replace
 restore
 
 
@@ -1085,8 +1040,8 @@ restore
 * (3) “controls – no occ”
 quietly lasso linear Gamma ///
         (i.(censdiv year race cohort twoind)) ///
-        EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
-        currentage currentagesq currentagecube, ///
+        EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ///
+        agecat1 agecat2 agecat3 agecat5 agecat6, ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoOcc
 lassoknots
@@ -1105,7 +1060,7 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_noocc.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots${SFX}_noocc.csv", replace
 restore
 
 
@@ -1114,8 +1069,8 @@ restore
 * (4) “controls – no ind”
 quietly lasso linear Gamma ///
         (i.(censdiv year occ race cohort)) ///
-        EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
-        currentage currentagesq currentagecube, ///
+        EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ///
+        agecat1 agecat2 agecat3 agecat5 agecat6, ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoInd
 lassoknots
@@ -1134,7 +1089,7 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_noind.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots${SFX}_noind.csv", replace
 restore
 
 
@@ -1143,8 +1098,8 @@ restore
 * (5) “All controls”
 quietly lasso linear Gamma ///
         (i.(censdiv year occ race cohort twoind)) ///
-        EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
-        currentage currentagesq currentagecube, ///
+        EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ///
+        agecat1 agecat2 agecat3 agecat5 agecat6, ///
         selection(bic) rseed(12345)
 estimates store Lasso_AllControls
 lassoknots
@@ -1163,7 +1118,7 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_all.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots${SFX}_all.csv", replace
 restore
 
 
@@ -1176,11 +1131,6 @@ restore
 
 
 
-
-
-
-
-
 * Create LASSO selection order table
 * Combine all LASSO knots files and create a table showing selection order
 
@@ -1188,7 +1138,7 @@ preserve
 clear
 
 * Define the main variables of interest (not FE dummies)
-local main_vars "EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube"
+local main_vars "EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6"
 
 * Create empty dataset with variables
 local nvars : word count `main_vars'
@@ -1215,7 +1165,7 @@ foreach spec in noctrl nooccind noocc noind all {
     tempfile current_data
     save `current_data', replace
     
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots_`spec'.csv", clear
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Gammalassoknots${SFX}_`spec'.csv", clear
     
     * Keep only additions (A) as these show when variables entered
     keep if action == "A"
@@ -1312,7 +1262,7 @@ local occ_fe_allctrl "Yes"
 local ind_fe_allctrl "Yes"
 
 * Export to LaTeX
-listtex varname noctrl nooccind noocc noind allctrl using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_selection.tex", ///
+listtex varname noctrl nooccind noocc noind allctrl using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma${SFX}_lasso_selection.tex", ///
     replace ///
     head("\begin{tabular}{lccccc}" ///
          "\hline\hline" ///
@@ -1340,208 +1290,6 @@ restore
 
 
 
-* Create occupation importance table (Gamma) - LASSO SHAP, NN SHAP, RF SHAP from Python CSVs
-tempfile occ_lasso_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_occupation_shap_gamma.csv", clear
-    rename occupationcode occ_code
-    rename averageshapvalue avg_shap
-    destring occ_code, replace force
-    gsort -avg_shap
-    gen lasso_shap_order = _n
-    keep occ_code lasso_shap_order
-    save `occ_lasso_shap', replace
-restore
-
-tempfile occ_nn_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/occupation_shap_gamma.csv", clear
-    rename occupationcode occ_code
-    rename averageshapvalue avg_shap
-    gsort -avg_shap
-    gen nn_shap_order = _n
-    keep occ_code nn_shap_order
-    save `occ_nn_shap', replace
-restore
-
-tempfile occ_rf_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_occupation_shap_gamma.csv", clear
-    rename occupationcode occ_code
-    rename averageshapvalue avg_shap
-    destring occ_code, replace force
-    gsort -avg_shap
-    gen rf_shap_order = _n
-    keep occ_code rf_shap_order
-    save `occ_rf_shap', replace
-restore
-
-preserve
-    local occ_vl : value label occ
-    keep occ
-    duplicates drop occ, force
-    rename occ occ_code
-    if "`occ_vl'" != "" {
-        label values occ_code `occ_vl'
-        decode occ_code, gen(occ_label)
-    }
-    else {
-        tostring occ_code, gen(occ_label) format(%9.0g)
-    }
-
-    merge 1:1 occ_code using `occ_lasso_shap', nogenerate
-    merge 1:1 occ_code using `occ_nn_shap', nogenerate
-    merge 1:1 occ_code using `occ_rf_shap', nogenerate
-
-    label var occ_label "Occupation"
-    label var lasso_shap_order "LASSO SHAP Order"
-    label var nn_shap_order "NN SHAP Order"
-    label var rf_shap_order "Random Forest SHAP Order"
-
-    gsort nn_shap_order lasso_shap_order occ_label
-
-    listtex occ_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex", ///
-        replace ///
-        head("\begin{tabular}{lccc}" ///
-             "\hline\hline" ///
-             "Occupation & LASSO SHAP Order & NN SHAP Order & RF SHAP Order \\" ///
-             "\hline") ///
-        foot("\hline\hline" ///
-             "\end{tabular}") ///
-        rstyle(tabular)
-
-    * Scatter plots comparing SHAP rankings across models (Gamma, Occupation)
-    quietly count if !missing(lasso_shap_order) & !missing(nn_shap_order)
-    local maxr = r(N)
-    twoway (scatter nn_shap_order lasso_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma v Occupation: LASSO vs NN") ///
-        xtitle("LASSO SHAP Rank") ytitle("NN SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_lasso_vs_nn.pdf", replace
-
-    quietly count if !missing(nn_shap_order) & !missing(rf_shap_order)
-    local maxr = r(N)
-    twoway (scatter rf_shap_order nn_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma v Occupation: NN vs RF") ///
-        xtitle("NN SHAP Rank") ytitle("Random Forest SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_nn_vs_rf.pdf", replace
-
-    quietly count if !missing(lasso_shap_order) & !missing(rf_shap_order)
-    local maxr = r(N)
-    twoway (scatter rf_shap_order lasso_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma v Occupation: LASSO vs RF") ///
-        xtitle("LASSO SHAP Rank") ytitle("Random Forest SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_lasso_vs_rf.pdf", replace
-restore
-
-
-* Create industry importance table (Gamma) - LASSO SHAP, NN SHAP, RF SHAP from Python CSVs
-tempfile ind_lasso_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_industry_shap_gamma.csv", clear
-    rename industrycode ind_code
-    rename averageshapvalue avg_shap
-    destring ind_code, replace force
-    gsort -avg_shap
-    gen lasso_shap_order = _n
-    keep ind_code lasso_shap_order
-    save `ind_lasso_shap', replace
-restore
-
-tempfile ind_nn_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/industry_shap_gamma.csv", clear
-    rename industrycode ind_code
-    rename averageshapvalue avg_shap
-    gsort -avg_shap
-    gen nn_shap_order = _n
-    keep ind_code nn_shap_order
-    save `ind_nn_shap', replace
-restore
-
-tempfile ind_rf_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_industry_shap_gamma.csv", clear
-    rename industrycode ind_code
-    rename averageshapvalue avg_shap
-    destring ind_code, replace force
-    gsort -avg_shap
-    gen rf_shap_order = _n
-    keep ind_code rf_shap_order
-    save `ind_rf_shap', replace
-restore
-
-preserve
-    local ind_vl : value label twoind
-    keep twoind
-    duplicates drop twoind, force
-    rename twoind ind_code
-    if "`ind_vl'" != "" {
-        label values ind_code `ind_vl'
-        decode ind_code, gen(ind_label)
-    }
-    else {
-        tostring ind_code, gen(ind_label) format(%9.0g)
-    }
-
-    merge 1:1 ind_code using `ind_lasso_shap', nogenerate
-    merge 1:1 ind_code using `ind_nn_shap', nogenerate
-    merge 1:1 ind_code using `ind_rf_shap', nogenerate
-
-    label var ind_label "Industry"
-    label var lasso_shap_order "LASSO SHAP Order"
-    label var nn_shap_order "NN SHAP Order"
-    label var rf_shap_order "Random Forest SHAP Order"
-
-    gsort nn_shap_order lasso_shap_order ind_label
-
-    listtex ind_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex", ///
-        replace ///
-        head("\begin{tabular}{lccc}" ///
-             "\hline\hline" ///
-             "Industry & LASSO SHAP Order & NN SHAP Order & RF SHAP Order \\" ///
-             "\hline") ///
-        foot("\hline\hline" ///
-             "\end{tabular}") ///
-        rstyle(tabular)
-
-    * Scatter plots comparing SHAP rankings across models (Gamma, Industry)
-    quietly count if !missing(lasso_shap_order) & !missing(nn_shap_order)
-    local maxr = r(N)
-    twoway (scatter nn_shap_order lasso_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma v Industry: LASSO vs NN") ///
-        xtitle("LASSO SHAP Rank") ytitle("NN SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_lasso_vs_nn.pdf", replace
-
-    quietly count if !missing(nn_shap_order) & !missing(rf_shap_order)
-    local maxr = r(N)
-    twoway (scatter rf_shap_order nn_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma v Industry: NN vs RF") ///
-        xtitle("NN SHAP Rank") ytitle("Random Forest SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_nn_vs_rf.pdf", replace
-
-    quietly count if !missing(lasso_shap_order) & !missing(rf_shap_order)
-    local maxr = r(N)
-    twoway (scatter rf_shap_order lasso_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Gamma v Industry: LASSO vs RF") ///
-        xtitle("LASSO SHAP Rank") ytitle("Random Forest SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_lasso_vs_rf.pdf", replace
-restore
-
-
-
-
 
 
 
@@ -1561,78 +1309,94 @@ display "The standard deviation of alphaP_WEIGHTED is: " r(sd)
 eststo clear
 
 * No controls
-eststo m1: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage
+eststo m1: regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin
 estadd local state_fe "No": m1
 estadd local year_fe  "No": m1
 estadd local race_fe  "No": m1
 estadd local cohort_fe "No": m1
 estadd local occ_fe   "No": m1
 estadd local ind_fe   "No": m1
-estadd local age_cubic "Yes": m1
 
 * controls - no occ or ind
-eststo m2: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year race cohort)
+eststo m2: regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year race cohort)
 estadd local state_fe "Yes": m2
 estadd local year_fe  "Yes": m2
 estadd local race_fe  "Yes": m2
 estadd local cohort_fe "Yes": m2
 estadd local occ_fe   "No": m2
 estadd local ind_fe   "No": m2
-estadd local age_cubic "Yes": m2
 
 * controls - no occ
-eststo m3: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year race cohort twoind)
+eststo m3: regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year race cohort twoind)
 estadd local state_fe "Yes": m3
 estadd local year_fe  "Yes": m3
 estadd local race_fe  "Yes": m3
 estadd local cohort_fe "Yes": m3
 estadd local occ_fe   "No": m3
 estadd local ind_fe   "Yes": m3
-estadd local age_cubic "Yes": m3
 
 * controls - no ind
-eststo m4: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year occ race cohort)
+eststo m4: regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year occ race cohort)
 estadd local state_fe "Yes": m4
 estadd local year_fe  "Yes": m4
 estadd local race_fe  "Yes": m4
 estadd local cohort_fe "Yes": m4
 estadd local occ_fe   "Yes": m4
 estadd local ind_fe   "No": m4
-estadd local age_cubic "Yes": m4
 
 * All controls
-eststo m5: regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure c.currentage##c.currentage##c.currentage i.(censdiv year occ race cohort twoind)
+eststo m5: regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ib4.agebin i.(censdiv year occ race cohort twoind)
 estadd local state_fe "Yes": m5
 estadd local year_fe  "Yes": m5
 estadd local race_fe  "Yes": m5
 estadd local cohort_fe "Yes": m5
 estadd local occ_fe   "Yes": m5
 estadd local ind_fe   "Yes": m5
-estadd local age_cubic "Yes": m5
 
 
 * Export to LaTeX
-esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex", ///
+esttab m1 m2 m3 m4 m5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha${SFX}_regressions.tex", ///
         replace se r2 label ///
-        keep(EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure) ///
-        stats(age_cubic state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
-                  labels("Age (cubic)" "Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
-                  fmt(%9s %9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
+        keep(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin 6.agebin PrRecess ma5aep OLF tenure) ///
+        order(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin 6.agebin PrRecess ma5aep OLF tenure) ///
+        stats(state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
+                  labels("Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
+                  fmt(%9s %9s %9s %9s %9s %9.3f %9.0g)) ///
         star(* 0.10 ** 0.05 *** 0.01)
 
 
-* Year fixed effects plot across models
-coefplot m2 m3 m4 m5, keep(*.year) vertical recast(connected) ///
-    title("Year Fixed Effects - Alpha") xtitle("Year") ytitle("Coefficient") ///
-    legend(order(2 "m2: Base FEs" 4 "m3: + Industry" 6 "m4: + Occupation" 8 "m5: All"))
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_year_fe.pdf", replace
-
-
-* Age margins plot - no controls model only
-estimates restore m1
-margins, at(currentage=(25(5)65))
-marginsplot, title("Predicted Alpha by Age (No Controls)") xtitle("Age") ytitle("Predicted Alpha")
-graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_age_margins.pdf", replace
+* Year fixed effects plot - m5 only
+* Extract the year FE coefficients into a dataset and plot on a true numeric
+* year axis (coefplot's label-parsing does not handle i.year coefficient names).
+preserve
+    estimates restore m5
+    matrix b = e(b)
+    matrix V = e(V)
+    local names : colnames b
+    local K = colsof(b)
+    clear
+    set obs `K'
+    gen str40 cname = ""
+    gen coef = .
+    gen se   = .
+    forvalues j = 1/`K' {
+        local nm : word `j' of `names'
+        replace cname = "`nm'" in `j'
+        replace coef = b[1,`j'] in `j'
+        replace se   = sqrt(V[`j',`j']) in `j'
+    }
+    keep if regexm(cname, "\.year$")
+    gen yr = real(regexs(1)) if regexm(cname, "^([0-9]+)")
+    drop if missing(yr)
+    sort yr
+    gen lo = coef - 1.96*se
+    gen hi = coef + 1.96*se
+    twoway (rarea lo hi yr, color(gs13)) ///
+           (connected coef yr, msymbol(o) msize(small) lcolor(navy) mcolor(navy)), ///
+        title("Year Fixed Effects - Alpha") xtitle("Year") ytitle("Coefficient") ///
+        xlabel(1970(10)2020) legend(off)
+    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha${SFX}_year_fe.pdf", replace
+restore
 
 
 
@@ -1643,7 +1407,7 @@ eststo clear
 * No controls - capture output
 tempfile stepwise_log1_alpha
 log using `stepwise_log1_alpha', text replace
-eststo step1: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube 
+eststo step1: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6 
 log close
 
 * Extract removal order from log
@@ -1655,7 +1419,7 @@ gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
 keep if variable != ""
 gen order = _n
 keep order variable pvalue
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise_removal_noctrl.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha${SFX}_stepwise_removal_noctrl.csv", replace
 restore
 
 estadd local state_fe "No": step1
@@ -1674,7 +1438,7 @@ estadd local ind_selected   " ": step1
 * controls - no occ or ind - capture output
 tempfile stepwise_log2_alpha
 log using `stepwise_log2_alpha', text replace
-eststo step2: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step2: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6 (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -1685,7 +1449,7 @@ gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
 keep if variable != ""
 gen order = _n
 keep order variable pvalue
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise_removal_nooccind.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha${SFX}_stepwise_removal_nooccind.csv", replace
 restore
 
 estadd local state_fe "Yes": step2
@@ -1746,7 +1510,7 @@ estadd local ind_selected "": step2
 * controls - no occ - capture output
 tempfile stepwise_log3_alpha
 log using `stepwise_log3_alpha', text replace
-eststo step3: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step3: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6 (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -1757,7 +1521,7 @@ gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
 keep if variable != ""
 gen order = _n
 keep order variable pvalue
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise_removal_noocc.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha${SFX}_stepwise_removal_noocc.csv", replace
 restore
 
 estadd local state_fe "Yes": step3
@@ -1827,7 +1591,7 @@ else {
 * controls - no ind - capture output
 tempfile stepwise_log4_alpha
 log using `stepwise_log4_alpha', text replace
-eststo step4: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
+eststo step4: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6 (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4)
 log close
 
 preserve
@@ -1838,7 +1602,7 @@ gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
 keep if variable != ""
 gen order = _n
 keep order variable pvalue
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise_removal_noind.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha${SFX}_stepwise_removal_noind.csv", replace
 restore
 
 estadd local state_fe "Yes": step4
@@ -1908,7 +1672,7 @@ estadd local ind_selected "": step4
 * All controls - capture output
 tempfile stepwise_log5_alpha
 log using `stepwise_log5_alpha', text replace
-eststo step5: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
+eststo step5: stepwise, pr(.05): regress Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6 (censdiv_dum1-censdiv_dum10) (year_dum1-year_dum27) (occ_dum1-occ_dum77) (race_dum1-race_dum5) (cohort_dum1-cohort_dum4) (twoind_dum1-twoind_dum30)
 log close
 
 preserve
@@ -1919,7 +1683,7 @@ gen pvalue = real(regexs(1)) if regexm(v1, "p = ([0-9.]+)")
 keep if variable != ""
 gen order = _n
 keep order variable pvalue
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise_removal_allctrl.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha${SFX}_stepwise_removal_allctrl.csv", replace
 restore
 
 estadd local state_fe "Yes": step5
@@ -1996,7 +1760,7 @@ else {
 }
 
 * Export stepwise results to LaTeX
-esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex", ///
+esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha${SFX}_stepwise.tex", ///
     replace se r2 label ///
     drop(*_dum*) ///
     stats(state_selected year_selected race_selected cohort_selected occ_selected ind_selected state_fe year_fe race_fe cohort_fe occ_fe ind_fe r2 N, ///
@@ -2012,8 +1776,8 @@ esttab step1 step2 step3 step4 step5 using "/Users/ethanballou/Documents/GitHub/
 
 
 * (1) No controls
-quietly lasso linear Alpha EDU1 EDU2 EDU3 PrRecess rGDPgrow ///
-        ma5aep OLF tenure currentage currentagesq currentagecube, ///
+quietly lasso linear Alpha EDU1 EDU2 EDU3 EDU4 PrRecess ///
+        ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6, ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoControls
 lassoknots
@@ -2033,7 +1797,7 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_noctrl.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots${SFX}_noctrl.csv", replace
 restore
 
 
@@ -2043,8 +1807,8 @@ restore
 * (2) “controls – no occ or ind”
 quietly lasso linear Alpha ///
         (i.(censdiv year race cohort)) ///
-        EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
-        currentage currentagesq currentagecube, ///
+        EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ///
+        agecat1 agecat2 agecat3 agecat5 agecat6, ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoOccNoInd
 lassoknots
@@ -2063,7 +1827,7 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_nooccind.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots${SFX}_nooccind.csv", replace
 restore
 
 
@@ -2073,8 +1837,8 @@ restore
 * (3) “controls – no occ”
 quietly lasso linear Alpha ///
         (i.(censdiv year race cohort twoind)) ///
-        EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
-        currentage currentagesq currentagecube, ///
+        EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ///
+        agecat1 agecat2 agecat3 agecat5 agecat6, ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoOcc
 lassoknots
@@ -2093,7 +1857,7 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_noocc.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots${SFX}_noocc.csv", replace
 restore
 
 
@@ -2102,8 +1866,8 @@ restore
 * (4) “controls – no ind”
 quietly lasso linear Alpha ///
         (i.(censdiv year occ race cohort)) ///
-        EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
-        currentage currentagesq currentagecube, ///
+        EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ///
+        agecat1 agecat2 agecat3 agecat5 agecat6, ///
         selection(bic) rseed(12345)
 estimates store Lasso_NoInd
 lassoknots
@@ -2122,7 +1886,7 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_noind.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots${SFX}_noind.csv", replace
 restore
 
 
@@ -2131,8 +1895,8 @@ restore
 * (5) “All controls”
 quietly lasso linear Alpha ///
         (i.(censdiv year occ race cohort twoind)) ///
-        EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure ///
-        currentage currentagesq currentagecube, ///
+        EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure ///
+        agecat1 agecat2 agecat3 agecat5 agecat6, ///
         selection(bic) rseed(12345)
 estimates store Lasso_AllControls
 lassoknots
@@ -2151,7 +1915,7 @@ gen vars = strtrim(substr(strtrim(v3),2,.))   // names after A/R/U
 drop if vars==""                              // keep rows with names
 gen step = _n
 order step action vars
-export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_all.csv", replace
+export delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots${SFX}_all.csv", replace
 restore
 
 
@@ -2172,7 +1936,7 @@ preserve
 clear
 
 * Define the main variables of interest (not FE dummies)
-local main_vars "EDU1 EDU2 EDU3 PrRecess rGDPgrow ma5aep OLF tenure currentage currentagesq currentagecube"
+local main_vars "EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF tenure agecat1 agecat2 agecat3 agecat5 agecat6"
 
 * Create empty dataset with variables
 local nvars : word count `main_vars'
@@ -2199,7 +1963,7 @@ foreach spec in noctrl nooccind noocc noind all {
     tempfile current_data
     save `current_data', replace
     
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots_`spec'.csv", clear
+    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Alphalassoknots${SFX}_`spec'.csv", clear
     
     * Keep only additions (A) as these show when variables entered
     keep if action == "A"
@@ -2296,7 +2060,7 @@ local occ_fe_allctrl "Yes"
 local ind_fe_allctrl "Yes"
 
 * Export to LaTeX
-listtex varname noctrl nooccind noocc noind allctrl using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_selection.tex", ///
+listtex varname noctrl nooccind noocc noind allctrl using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha${SFX}_lasso_selection.tex", ///
     replace ///
     head("\begin{tabular}{lccccc}" ///
          "\hline\hline" ///
@@ -2316,205 +2080,5 @@ listtex varname noctrl nooccind noocc noind allctrl using "/Users/ethanballou/Do
 
 restore
 
-
-
-* Create occupation importance table (Alpha) - LASSO SHAP, NN SHAP, RF SHAP from Python CSVs
-tempfile alpha_occ_lasso_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_occupation_shap_alpha.csv", clear
-    rename occupationcode occ_code
-    rename averageshapvalue avg_shap
-    destring occ_code, replace force
-    gsort -avg_shap
-    gen lasso_shap_order = _n
-    keep occ_code lasso_shap_order
-    save `alpha_occ_lasso_shap', replace
-restore
-
-tempfile alpha_occ_nn_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/occupation_shap_alpha.csv", clear
-    rename occupationcode occ_code
-    rename averageshapvalue avg_shap
-    gsort -avg_shap
-    gen nn_shap_order = _n
-    keep occ_code nn_shap_order
-    save `alpha_occ_nn_shap', replace
-restore
-
-tempfile alpha_occ_rf_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_occupation_shap_alpha.csv", clear
-    rename occupationcode occ_code
-    rename averageshapvalue avg_shap
-    destring occ_code, replace force
-    gsort -avg_shap
-    gen rf_shap_order = _n
-    keep occ_code rf_shap_order
-    save `alpha_occ_rf_shap', replace
-restore
-
-preserve
-    local occ_vl : value label occ
-    keep occ
-    duplicates drop occ, force
-    rename occ occ_code
-    if "`occ_vl'" != "" {
-        label values occ_code `occ_vl'
-        decode occ_code, gen(occ_label)
-    }
-    else {
-        tostring occ_code, gen(occ_label) format(%9.0g)
-    }
-
-    merge 1:1 occ_code using `alpha_occ_lasso_shap', nogenerate
-    merge 1:1 occ_code using `alpha_occ_nn_shap', nogenerate
-    merge 1:1 occ_code using `alpha_occ_rf_shap', nogenerate
-
-    label var occ_label "Occupation"
-    label var lasso_shap_order "LASSO SHAP Order"
-    label var nn_shap_order "NN SHAP Order"
-    label var rf_shap_order "Random Forest SHAP Order"
-
-    gsort nn_shap_order lasso_shap_order occ_label
-
-    listtex occ_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex", ///
-        replace ///
-        head("\begin{tabular}{lccc}" ///
-             "\hline\hline" ///
-             "Occupation & LASSO SHAP Order & NN SHAP Order & RF SHAP Order \\" ///
-             "\hline") ///
-        foot("\hline\hline" ///
-             "\end{tabular}") ///
-        rstyle(tabular)
-
-    * Scatter plots comparing SHAP rankings across models (Alpha, Occupation)
-    quietly count if !missing(lasso_shap_order) & !missing(nn_shap_order)
-    local maxr = r(N)
-    twoway (scatter nn_shap_order lasso_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha v Occupation: LASSO vs NN") ///
-        xtitle("LASSO SHAP Rank") ytitle("NN SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_lasso_vs_nn.pdf", replace
-
-    quietly count if !missing(nn_shap_order) & !missing(rf_shap_order)
-    local maxr = r(N)
-    twoway (scatter rf_shap_order nn_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha v Occupation: NN vs RF") ///
-        xtitle("NN SHAP Rank") ytitle("Random Forest SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_nn_vs_rf.pdf", replace
-
-    quietly count if !missing(lasso_shap_order) & !missing(rf_shap_order)
-    local maxr = r(N)
-    twoway (scatter rf_shap_order lasso_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha v Occupation: LASSO vs RF") ///
-        xtitle("LASSO SHAP Rank") ytitle("Random Forest SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_lasso_vs_rf.pdf", replace
-restore
-
-
-* Create industry importance table (Alpha) - LASSO SHAP, NN SHAP, RF SHAP from Python CSVs
-tempfile alpha_ind_lasso_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_industry_shap_alpha.csv", clear
-    rename industrycode ind_code
-    rename averageshapvalue avg_shap
-    destring ind_code, replace force
-    gsort -avg_shap
-    gen lasso_shap_order = _n
-    keep ind_code lasso_shap_order
-    save `alpha_ind_lasso_shap', replace
-restore
-
-tempfile alpha_ind_nn_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/industry_shap_alpha.csv", clear
-    rename industrycode ind_code
-    rename averageshapvalue avg_shap
-    gsort -avg_shap
-    gen nn_shap_order = _n
-    keep ind_code nn_shap_order
-    save `alpha_ind_nn_shap', replace
-restore
-
-tempfile alpha_ind_rf_shap
-preserve
-    import delimited using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_industry_shap_alpha.csv", clear
-    rename industrycode ind_code
-    rename averageshapvalue avg_shap
-    destring ind_code, replace force
-    gsort -avg_shap
-    gen rf_shap_order = _n
-    keep ind_code rf_shap_order
-    save `alpha_ind_rf_shap', replace
-restore
-
-preserve
-    local ind_vl : value label twoind
-    keep twoind
-    duplicates drop twoind, force
-    rename twoind ind_code
-    if "`ind_vl'" != "" {
-        label values ind_code `ind_vl'
-        decode ind_code, gen(ind_label)
-    }
-    else {
-        tostring ind_code, gen(ind_label) format(%9.0g)
-    }
-
-    merge 1:1 ind_code using `alpha_ind_lasso_shap', nogenerate
-    merge 1:1 ind_code using `alpha_ind_nn_shap', nogenerate
-    merge 1:1 ind_code using `alpha_ind_rf_shap', nogenerate
-
-    label var ind_label "Industry"
-    label var lasso_shap_order "LASSO SHAP Order"
-    label var nn_shap_order "NN SHAP Order"
-    label var rf_shap_order "Random Forest SHAP Order"
-
-    gsort nn_shap_order lasso_shap_order ind_label
-
-    listtex ind_label lasso_shap_order nn_shap_order rf_shap_order using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex", ///
-        replace ///
-        head("\begin{tabular}{lccc}" ///
-             "\hline\hline" ///
-             "Industry & LASSO SHAP Order & NN SHAP Order & RF SHAP Order \\" ///
-             "\hline") ///
-        foot("\hline\hline" ///
-             "\end{tabular}") ///
-        rstyle(tabular)
-
-    * Scatter plots comparing SHAP rankings across models (Alpha, Industry)
-    quietly count if !missing(lasso_shap_order) & !missing(nn_shap_order)
-    local maxr = r(N)
-    twoway (scatter nn_shap_order lasso_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha v Industry: LASSO vs NN") ///
-        xtitle("LASSO SHAP Rank") ytitle("NN SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_lasso_vs_nn.pdf", replace
-
-    quietly count if !missing(nn_shap_order) & !missing(rf_shap_order)
-    local maxr = r(N)
-    twoway (scatter rf_shap_order nn_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha v Industry: NN vs RF") ///
-        xtitle("NN SHAP Rank") ytitle("Random Forest SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_nn_vs_rf.pdf", replace
-
-    quietly count if !missing(lasso_shap_order) & !missing(rf_shap_order)
-    local maxr = r(N)
-    twoway (scatter rf_shap_order lasso_shap_order, mcolor(navy)) ///
-           (function y=x, range(1 `maxr') lcolor(gs8) lpattern(dash)), ///
-        title("Alpha v Industry: LASSO vs RF") ///
-        xtitle("LASSO SHAP Rank") ytitle("Random Forest SHAP Rank") ///
-        legend(off) xscale(range(0 `maxr')) yscale(range(0 `maxr')) xlabel(0(10)`maxr') ylabel(0(10)`maxr') xsize(5) ysize(5) plotregion(margin(zero))
-    graph export "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_lasso_vs_rf.pdf", replace
-restore
 
 

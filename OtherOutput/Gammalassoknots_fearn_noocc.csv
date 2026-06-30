@@ -1,0 +1,16 @@
+step,action,vars,v1,v2,v3
+1,A,1973.year            1974.year            1975.year,     1 , .0003464         82    0.0029 , A 1973.year            1974.year            1975.year                                  
+2,A,agecat6,     2 , .0003156         83    0.0029 , A agecat6                                                                              
+3,A,ma5aep,     6 , .0002176         84    0.0031 , A ma5aep                                                                               
+4,A,EDU2,    11 , .0001366         85    0.0032 , A EDU2                                                                                 
+5,A,agecat2,    14 , .0001034         86    0.0033 , A agecat2                                                                              
+6,A,OLF,    16 , .0000858         87    0.0034 , A OLF                                                                                  
+7,A,agecat3,    17 , .0000782         88    0.0034 , A agecat3                                                                              
+8,A,agecat5,    18 , .0000712         89    0.0034 , A agecat5                                                                              
+9,A,EDU3,    19 , .0000649         90    0.0034 , A EDU3                                                                                 
+10,A,tenure,    25 , .0000371         91    0.0035 , A tenure                                                                               
+11,A,EDU1,    31 , .0000213         92    0.0035 , A EDU1                                                                                 
+12,A,EDU4,    32 , .0000194         93    0.0035 , A EDU4                                                                                 
+13,A,agecat1,    36 , .0000133         94    0.0035 , A agecat1                                                                              
+14,R,agecat3,    39 , .0000101         93    0.0035 , R agecat3                                                                              
+15,A,agecat3,    50 , 3.63e-06         94    0.0036 , A agecat3                                                                              

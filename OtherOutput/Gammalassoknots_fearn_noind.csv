@@ -1,0 +1,15 @@
+step,action,vars,v1,v2,v3
+1,A,1.occ                2.occ                3.occ,     1 , .0002456        127    0.0037 , A 1.occ                2.occ                3.occ                                      
+2,A,agecat6,     2 , .0002238        128    0.0037 , A agecat6                                                                              
+3,A,ma5aep,     3 , .0002039        129    0.0038 , A ma5aep                                                                               
+4,A,EDU2,    13 , .0000804        130    0.0043 , A EDU2                                                                                 
+5,A,agecat2,    14 , .0000733        131    0.0043 , A agecat2                                                                              
+6,A,OLF,    17 , .0000554        132    0.0043 , A OLF                                                                                  
+7,A,agecat5,    19 ,  .000046        133    0.0044 , A agecat5                                                                              
+8,A,agecat3,    22 , .0000348        134    0.0044 , A agecat3                                                                              
+9,A,EDU3,    27 , .0000219        135    0.0044 , A EDU3                                                                                 
+10,A,EDU1                 tenure,    29 , .0000181        137    0.0045 , A EDU1                 tenure                                                          
+11,A,agecat1,    32 , .0000137        138    0.0045 , A agecat1                                                                              
+12,R,agecat3,    33 , .0000125        137    0.0045 , R agecat3                                                                              
+13,A,EDU4,    37 , 8.62e-06        138    0.0045 , A EDU4                                                                                 
+14,A,agecat3,    44 , 4.50e-06        139    0.0045 , A agecat3                                                                              

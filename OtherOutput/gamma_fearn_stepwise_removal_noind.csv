@@ -1,0 +1,13 @@
+variable,pvalue,order
+tenure,.73000002,1
+EDU4,.67720002,2
+race_dum1,.66430002,3
+agecat3,.61570001,4
+agecat1,.33629999,5
+EDU1,.2994,6
+EDU3,.49739999,7
+agecat5,.28600001,8
+OLF,.1683,9
+EDU2,.076099999,10
+agecat2,.060800001,11
+cohort_dum1,.1089,12

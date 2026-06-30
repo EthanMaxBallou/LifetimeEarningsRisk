@@ -1,12 +1,13 @@
 step,action,vars,v1,v2,v3
-1,A,EDU3                     ma5aep,     2 , .0000293          2    0.0000 , A EDU3                     ma5aep                                                                       
-2,A,OLF,    11 , .0000127          3    0.0001 , A OLF                                                                                                   
-3,A,rGDPgrow,    15 , 8.73e-06          4    0.0001 , A rGDPgrow                                                                                              
-4,A,EDU2                     currentage,    16 , 7.95e-06          6    0.0001 , A EDU2                     currentage                                                                   
-5,A,currentagecube,    22 , 4.55e-06          7    0.0001 , A currentagecube                                                                                        
-6,A,EDU1,    26 , 3.14e-06          8    0.0002 , A EDU1                                                                                                  
-7,A,tenure,    31 , 1.97e-06          9    0.0002 , A tenure                                                                                                
-8,A,PrRecess,    39 , 9.36e-07         10    0.0002 , A PrRecess                                                                                              
-9,A,currentagesq,    52 , 2.79e-07         11    0.0002 , A currentagesq                                                                                          
-10,R,currentagecube,    55 , 2.11e-07         10    0.0002 , R currentagecube                                                                                        
-11,A,currentagecube,    61 , 1.21e-07         11    0.0002 , A currentagecube                                                                                        
+1,A,agecat6,     2 , .0012027          1    0.0000 , A agecat6                                                                              
+2,A,EDU1,     3 , .0010958          2    0.0001 , A EDU1                                                                                 
+3,A,EDU3,     4 , .0009985          3    0.0001 , A EDU3                                                                                 
+4,A,EDU2                 agecat3,     8 , .0006882          5    0.0002 , A EDU2                 agecat3                                                         
+5,A,OLF,    12 , .0004744          6    0.0003 , A OLF                                                                                  
+6,A,agecat2,    14 , .0003938          7    0.0003 , A agecat2                                                                              
+7,A,ma5aep,    16 ,  .000327          8    0.0004 , A ma5aep                                                                               
+8,A,agecat5,    19 , .0002473          9    0.0004 , A agecat5                                                                              
+9,A,tenure,    25 , .0001415         10    0.0004 , A tenure                                                                               
+10,A,agecat1,    27 , .0001175         11    0.0004 , A agecat1                                                                              
+11,A,EDU4,    33 , .0000672         12    0.0004 , A EDU4                                                                                 
+12,A,PrRecess,    34 , .0000613         13    0.0004 , A PrRecess                                                                             

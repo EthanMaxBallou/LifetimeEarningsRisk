@@ -58,20 +58,6 @@
 
 
 
-\begin{enumerate}
-    \item Edit Introduction
-    \item Redo Theoretical Framework
-    \item Edit Data
-    \item Edit Empirical Strategy
-    \item Rewrite Results
-    \item Rewrite Conclusion
-    \item Consistent formatting of bibliography
-    \item Use old sections as well as suggested edits as an outline for rewritten sections
-    \item Lasso tables don't include ordering of FE groups
-\end{enumerate}
-
-
-
 
 \clearpage
 \setcounter{page}{1}
@@ -82,35 +68,6 @@
 
 \section{Introduction}
 
-Understanding the nature of earnings risk is central to both individual decision making and policy. People are often thought to be risk averse not risk neutral and therefore earnings risk has an effect on how individuals make intertemporal decisions such as saving. Especially on the analysis side, structural life cycle models have to make assumptions about the nature of earnings dispersion and risk. Misspecifying the earnings process can lead to inaccurate or incorrect conclusions in many cases and this is why understanding the nature of earnings risk and the earnings process is so important.
-
-To better pin down the quantitative importance of shocks versus profile heterogeneity, this paper builds on the work of (Drewianka and Oberg 2025, 2019) \cite{drewianka2025,drewianka_oberg2019} which uses a moment condition approach to test for heterogeneity in expected income processes. The paper uses a Restricted Income Profile (RIP) model to estimate lifetime earnings risk and then tests for heterogeneity in expected income processes using a moment condition approach. 
-
-Restricted Income Profile (RIP) models posit that all individuals with the same observed characteristics follow the same earnings trajectory. Deviations then being attributed to shocks to the individuals income process. In RIP, dispersion is then attributed to the variance of these shocks. (Abowd and Card, 1989; Meghir and Pistaferri, 2004) \cite{abowd_card1989,meghir_pistaferri2004} This means that the variance of shocks and variance in observed characteristics are sources of dispersion in earnings. Some of the variance is due to shocks the rest of the variance is due to the different expected income processes. (Guvenen 2007; Baker 1997) \cite{guvenen2009,baker1997}
-
-This paper tests for predictors of lifetime earnings risk as parameterized by the model in Drewianka and Oberg (2025) \cite{drewianka2025}. The paper hopes to find which characteristics are important in explaining the variance of shocks in the RIP framework.
-
-% Add more preview of the methods used here
-
-
-This paper finds that education and age are important in explaining lifetime earnings risk. The paper also finds that macroeconomic variables such as probability of recession and real GDP growth are important and play at least a small role and that the inclusion of state controls may further the hypothesis of government policy playing a role. Finally, the paper finds that occupation controls are important while industry controls do not appear to play a large role.
-
-
-% add more preview of results
-
-This paper contributes to multiple strands of literature. The first is the literature around (RIP) models and their use in life cycle models. (MaCurdy 1982; Abowd and Card 1989; Hryshko 2012). \cite{macurdy1982, abowd_card1989, hryshko2012} In addition to that it also contributes to a second strand of literature focusing on lifetime earnings risk. (Drewianka and Oberg 2025; Guvenen 2007; Meghir and Pistaferri 2004). \cite{drewianka2025,guvenen2007,meghir_pistaferri2004} Finally the paper contributes to the literature on machine learning and its use in economics by utilizing neural networks and SHAP values to interpret the results (Lundberg and Lee, 2017). \cite{lundberq} 
-
-The rest of the paper is structured as follows. Section 2 discusses the model and data, Section 3 discusses the empirical strategy, Section 4 discusses the results, and Section 5 concludes the paper. 
-
-
-\begin{enumerate}
-    \item preview the results at the end 
-    \item Also preview the methods used a little more
-    \item Spend a little more time explaining the contribution of this paper specifically, in both using some fancier methods and to identify covariance with this risk, but also the importance of being able to characterize people who are at an elevated risk in both permanent and transitory horizons
-    \item Do cross validation for RF and lasso?
-\end{enumerate}
-
-
 
 \section{Theoretical Framework}
 
@@ -119,68 +76,7 @@ The rest of the paper is structured as follows. Section 2 discusses the model an
 
 
 
-The data used is the 1970-2023 waves of the Panel Study of Income Dynamics (PSID 2023). \cite{psid2023} The sample is of men between the ages of 22 and 69 with students being excluded. Many of the men in the sample come from the Survey of Economic Opportunity which has been shown to be representative of the main PSID sample (SEO; Hill 1992; Drewianka 2010). \cite{hill1992, drewianka2010} Income is calculated in 2015 dollars using the Consumer Price Index (CPI 2017). \cite{cpi2017} The analysis uses several key variables, including education (categorized as less than high school, high school or some college, and bachelor's degree but less than a master's degree), age (with higher-order polynomial terms Age$^2$ and Age$^3$ to capture non-linear effects), and macroeconomic indicators such as the probability of a recession (P(Recession)) and real GDP growth. Individual-specific variables include fixed effects for wages, a moving average of income over the last five years (MA(Last 5 years income)), employment status (Employed), and job tenure (years in the current job). The primary outcome variables, gamma ($\gamma$) and alpha ($\alpha$), measure lifetime earnings risk. The gamma statistic measures the variance in permanent income shocks while the alpha statistic measures the variance in temporary income shocks. Both these statistics are calculated using the moment condition approach outlined in Drewianka and Oberg (2025). \cite{drewianka2025}. The income variable used is the log of the individual's hourly wage. The hourly wage is calculated by dividing annual labor income by the product of weeks worked and usual hours worked per week.
-
-Additionally, the analysis incorporates fixed effects for occupation, industry, state of residence, and other controls such as year, race, and cohort. With the theoretical framework and data laid out, the following section turns to the empirical implementation of the model.
-
-
-\begin{enumerate}
-    \item Mention CNEF and how it was combined with the PSID
-    \item Mention that macro economic variables are from another source and cite it
-    \item Discuss inconsistencies with some of the variables across years, general PSID BS, tenure, occ, ind, race even
-    \item Add a table with summary stats maybe? Describing people with certain combinations of characteristics, possibly a concern for overfitting with ML methods
-\end{enumerate}
-
-
-
 \section{Empirical Strategy}
-
-The empirical strategy of this paper is broken into two parts. The first part is estimating gamma and alpha, then contruct a weighted gamma and alpha for each individual in each year since both statistics are across i, t, j, and q. (i - individual, t - time, j and q - period or "window" used in calculation). The second part of the empirical strategy is estimating the then weighted values of each statistic using various models and variables to look for trends in the characteristics of individuals in regards to lifetime earnings risk.
-
-For the estimation of both gamma and alpha, consolidation across j and q is done by using a mixed regression for the gamma and then a fixed effects regression to get the composite or weighted value for each person year.
-
-The following mixed regression is used to estimate gamma based on the above equation. This is done to get an estimate of gamma for each individual in each year across j and q. A mixed regression used instead of standard OLS because $\sigma^2_{\eta_i}$ is correlated with both the constant and the coefficient on (j+k+q) as seen in equation 8 and therefore a mixed regression is used to account for this by allowing the residuals to be separately correlated with (j+k+q) for each individual i in year t. (For more on this see Drewianka and Oberg (2025) \cite{drewianka2025}) The mixed regression is as follows:
-
-
-\vspace{-0.75cm}
-
-
-
-\begin{align}
-\gamma_{itjq}
-&= \beta_{0}
-  + \beta_{1}\,(j + k + q)
-  + \beta_{2}\,j
-  + \epsilon_{itjq}, \\[1ex]
-\epsilon_{itjq}
-&= \beta_{0it}
-  + \beta_{1it}\,(j + k + q)
-  + e_{itjq}.
-\end{align}
-
-The random effects component (j+k+q) models how each person-year combination may have a unique relationship with the (j+k+q) variable while the cov(unstructured) option in Stata allows for unrestricted correlation between the random intercept and slope. The standard errors are clustered at the person level to account for within-person correlation across time.
-
-From here a regression is run across fixed effects for each combination of j and q with year effects absorbed. Weights are then calculated for each combination of j and q based on their accuracy in predicting gamma using inverse MSE. Specifically, after estimating the fixed effects model, the mean squared residual (MSE) is calculated for each (j,q) combination, then use the square root of the inverse of these values ($\sqrt{(1/MSE)}$) as weights. Then the weighted gamma is calculated consolidating across j and q so that there are only individual-year gamma values. Having obtained individual-year estimates of earnings risk, we now examine the determinants of this risk using several regression techniques.
-
-The second part of the empirical strategy uses various models to estimate lifetime earnings risk (gamma). We begin with the simplest specification to establish a baseline before introducing more sophisticated selection and machine-learning methods. The first model is a standard OLS regression of the lifetime earnings risk variable, gamma, on various controls and variables. The second model is a stepwise regression which selects variables based on a p-value threshold. The third model is a lasso regression which penalizes the size of the coefficients to select variables. Finally, the fourth model uses a multi-layer perceptron and SHAP values to interpret the results.
-
-The OLS regressions are fairly standard however the stepwise and lasso models do have components that are worth mentioning. For the stepwise regression model a cutoff p-value of 0.05 is used to select variables. The model removes the least significant variable (or group of variables in the case of a set of controls) in rounds until it reaches the cutoff. 0.05 was selected so that the model would still select some variables but the rankings of the many of the variables would be clear. A higher cutoff and most of the variables would be selected and cardinal rankings would not be visible. Too low of a cutoff value and many of the variables would not be selected at all. 
-
-As for the lasso model, the model is set up to select variables based on the Bayesian Information Criterion (BIC) which is a common method for selecting variables in penalized regression. While the model selects lambda based on cross-validation, the selected model isn't very relevant to the analysis as the rankings are so the selected model isn't discussed. It is worth mentioning however that the lasso model is a penalized regression and therefore some weight is assigned to the size of the coefficients when selecting variables. This is different from the stepwise regression which is indiscriminate regarding the size of the coefficient and only considered the significance of a variable.
-
-Finally the multi-layer perceptron model is a neural network that is used to estimate lifetime earnings risk. The model is trained on the same variables and data used by the OLS, stepwise, and lasso models. The model is 4 dense layers (excluding the input layer) with 1000 nodes each and a linear output layer at the end. The model used a sigmoid activation function in the hidden layers to allow for continuous support. This was done instead of a ReLU activation function to allow for more definition in the parameters instead of some parts of the perceptron being "dead" and not contributing and complicating the SHAP value interpretation. This model size and structure was selected as it achieved the best performance in terms of mean squared error (MSE). The model trained with MSE as its loss function and used early stopping to prevent overfitting and trained on 70 percent of the data with the rest being used for test and validation.
-
-The SHAP values are then used to interpret the results of the multi-layer perceptron model. SHAP values are constructed by calculating marginal contribution of a variable as a deviation from the output variable's mean if the variable was changed. This is done across a sample of observations and gives each variable a distribution of SHAP values. The summary plot shows the distribution of SHAP values for the continuous variables. 
-
-
-
-\begin{enumerate}
-    \item be sure to mention Alpha and how alpha is estimated because it is estimated differently
-    \item explain some of the strengths and weaknesses of some of the models, particularly lasso
-    \item explain the neural network part much more in depth
-    \item explain the reasoning being behind using OLS, as in kitchen sink approach to just see some covariates, but also that it is subject to overfitting
-    \item explain the advantages and disadvantages of the step wise regression, particularly mention it's advantages and disadvantages in contrast to just standard OLS, along with similarities to OLS
-\end{enumerate}
 
 
 
@@ -195,21 +91,23 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png}
-    \caption{Distribution of Gamma}
+    \includegraphics[width=.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED.png}\hfill
+    \includegraphics[width=.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_gammaP_WEIGHTED_fearn.png}
+    \caption{Distribution of Gamma: Hourly earnings (fhwage, left) and Annual earnings (fearn, right)}
 \end{figure}
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png}
-    \caption{Scatterplot of Age vs. Gamma}
+    \includegraphics[width=.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED.png}\hfill
+    \includegraphics[width=.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_gammaP_WEIGHTED_fearn.png}
+    \caption{Scatterplot of Age vs. Gamma: Hourly earnings (fhwage, left) and Annual earnings (fearn, right)}
 \end{figure}
 
 
 \begin{table}[H]
     \centering
-    \caption{Gamma Regressions: F-Test Results}
+    \caption{Gamma Regressions: F-Test Results (Hourly Earnings, fhwage)}
     \label{tab:gamma_ftest}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ftest.tex}
@@ -219,9 +117,32 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \begin{table}[H]
     \centering
+    \caption{Gamma Regressions: F-Test Results (Annual Earnings, fearn)}
+    \label{tab:gamma_fearn_ftest}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_ftest.tex}
+    }
+\end{table}
+
+
+\begin{table}[H]
+    \centering
     \caption{Gamma Regressions: Industry Selection Results}
     \label{tab:gamma_lasso_ind}
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings (fhwage)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings (fearn)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_lasso_ind_selection.tex}
+        }
+    \end{minipage}
 \end{table}
 
 \begin{figure}[H]
@@ -229,8 +150,34 @@ The SHAP values are then used to interpret the results of the multi-layer percep
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_lasso_vs_nn.pdf}\hfill
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_nn_vs_rf.pdf}\hfill
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_lasso_vs_rf.pdf}
-    \caption{Gamma Industry SHAP Rank Comparisons}
+    \caption{Gamma Industry SHAP Rank Comparisons (Hourly Earnings, fhwage)}
     \label{fig:gamma_ind_rank_scatter}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_ind_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_ind_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_ind_rank_lasso_vs_rf.pdf}
+    \caption{Gamma Industry SHAP Rank Comparisons (Annual Earnings, fearn)}
+    \label{fig:gamma_fearn_ind_rank_scatter}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_lasso_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_lasso_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_lasso_fhwage_vs_rf_fearn.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_nn_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_nn_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_nn_fhwage_vs_rf_fearn.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_rf_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_rf_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_rf_fhwage_vs_rf_fearn.pdf}
+    \caption{Gamma Industry SHAP Rank: fhwage (rows: LASSO, NN, RF) vs.\ fearn (columns: LASSO, NN, RF)}
+    \label{fig:gamma_ind_xrank_3x3}
 \end{figure}
 
 
@@ -245,10 +192,21 @@ The SHAP values are then used to interpret the results of the multi-layer percep
     \centering
     \caption{Gamma Regressions: Occupation Selection Results}
     \label{tab:gamma_lasso_occ}
-    \setlength{\tabcolsep}{4pt}
     \renewcommand{\arraystretch}{0.7}
-    \scriptsize
-    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings (fhwage)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings (fearn)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_lasso_occ_selection.tex}
+        }
+    \end{minipage}
 \end{table}
 
 \begin{figure}[H]
@@ -256,8 +214,34 @@ The SHAP values are then used to interpret the results of the multi-layer percep
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_lasso_vs_nn.pdf}\hfill
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_nn_vs_rf.pdf}\hfill
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_rank_lasso_vs_rf.pdf}
-    \caption{Gamma Occupation SHAP Rank Comparisons}
+    \caption{Gamma Occupation SHAP Rank Comparisons (Hourly Earnings, fhwage)}
     \label{fig:gamma_occ_rank_scatter}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_occ_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_occ_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_occ_rank_lasso_vs_rf.pdf}
+    \caption{Gamma Occupation SHAP Rank Comparisons (Annual Earnings, fearn)}
+    \label{fig:gamma_fearn_occ_rank_scatter}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_lasso_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_lasso_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_lasso_fhwage_vs_rf_fearn.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_nn_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_nn_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_nn_fhwage_vs_rf_fearn.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_rf_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_rf_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_rf_fhwage_vs_rf_fearn.pdf}
+    \caption{Gamma Occupation SHAP Rank: fhwage (rows: LASSO, NN, RF) vs.\ fearn (columns: LASSO, NN, RF)}
+    \label{fig:gamma_occ_xrank_3x3}
 \end{figure}
 
 
@@ -266,18 +250,28 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \begin{table}[H]
     \centering
-    \caption{Gamma Regressions: OLS Results (Coefficients x 100)}
+    \caption{Gamma Regressions: OLS Results (Coefficients x 100), Hourly Earnings (fhwage)}
     \label{tab:gamma_regressions}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_regressions.tex}
     }
 \end{table}
 
+\begin{table}[H]
+    \centering
+    \caption{Gamma Regressions: OLS Results (Coefficients x 100), Annual Earnings (fearn)}
+    \label{tab:gamma_fearn_regressions}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_regressions.tex}
+    }
+\end{table}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_age_margins.pdf}
-    \caption{Predicted Gamma by Age (No Controls)}
-    \label{fig:gamma_age_margins}
+    \includegraphics[width=0.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_year_fe.pdf}\hfill
+    \includegraphics[width=0.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_year_fe.pdf}
+    \caption{Year Fixed Effects on Gamma (All-Controls Model, 95\% CI): Hourly earnings (fhwage, left) and Annual earnings (fearn, right)}
+    \label{fig:gamma_year_fe}
 \end{figure}
 
 
@@ -299,10 +293,19 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \begin{table}[H]
     \centering
-    \caption{Gamma Regressions: Stepwise Selection Results (Coefficients x 100)}
+    \caption{Gamma Regressions: Stepwise Selection Results (Coefficients x 100), Hourly Earnings (fhwage)}
     \label{tab:gamma_stepwise}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_stepwise.tex}
+    }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Gamma Regressions: Stepwise Selection Results (Coefficients x 100), Annual Earnings (fearn)}
+    \label{tab:gamma_fearn_stepwise}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_stepwise.tex}
     }
 \end{table}
 
@@ -320,43 +323,21 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \begin{table}[H]
     \centering
-    \caption{Gamma Regressions: Lasso Selection Results}
+    \caption{Gamma Regressions: Lasso Selection Results, Hourly Earnings (fhwage)}
     \label{tab:gamma_lasso}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_selection.tex}
     }
 \end{table}
 
-
-
-%Now moving on to the lasso results shown in Table 3. As mentioned before lasso is a penalized regression and tries to force coefficients to zero. This means lasso gives some weight to the size of the coefficients (relatively speaking) compared to stepwise which cares only about the p-value. The first point to be made is that all the controls are selected in all cases. The configuration of this lasso model is the same as the stepwise model in that it can either include an entire set of controls or none of them. 
-
-
-%Moving on from the controls, the three education variables are ranked quite high in importance similar to the stepwise models as they were in the top four variables in every case. In addition, the earnings percentile plays consistently an important role as it is always selected in the top five cases. 
-
-%However one pattern that does break here is the age variables. The age variables are among the least relevant variables in this analysis. Particularly the higher order age variables which is were some of the last variables selected by the model. This is in contrast to the OLS results where the higher order age variables were slightly more significant than the regular age variable and where age as a whole was significant. The hypothesis there being that these higher order age terms were capturing a variation in earnings around retirement. However in the lasso models this is not the case and doesn't support the hypothesis that age and permanent income shocks share a nonlinear relationship.
-
-
-
-
-
-
-
-\begin{figure}[H]
+\begin{table}[H]
     \centering
-    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png}
-    \caption{SHAP Summary Plot for Gamma}
-\end{figure}
-
-
-
-%Finally, for the permanent income shocks, the SHAP summary plot in Figure 3 shows the importance of each variable in predicting gamma.
-
-%For most variables, the distribution isn't particularly abnormal in an interesting way. However, the different distributions for the age variables do shed some light on what is going on in the earlier analysis. The two higher-order age variables show a very long tail at high age values, and this is true for both the squared and cubed terms. In contrast, the linear age variable doesn't show nearly as much deviation from zero.
-
-%This result is consistent with the earlier analysis, which suggested a nonlinear relationship with age to some degree, and it supports the hypothesis that much of the risk captured in that nonlinear relationship reflects variation in income levels at much higher ages. For all three age variables here, the effects of a lower age remains relatively close to zero, whereas the high and exceptionally high age values push far away from zero and have a much larger effect.
-
-
+    \caption{Gamma Regressions: Lasso Selection Results, Annual Earnings (fearn)}
+    \label{tab:gamma_fearn_lasso}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_lasso_selection.tex}
+    }
+\end{table}
 
 
 
@@ -373,8 +354,9 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png}
-    \caption{Distribution of Alpha}
+    \includegraphics[width=.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED.png}\hfill
+    \includegraphics[width=.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/histogram_alphaP_WEIGHTED_fearn.png}
+    \caption{Distribution of Alpha: Hourly earnings (fhwage, left) and Annual earnings (fearn, right)}
 \end{figure}
 
 %Moving onto the transitory earnings shocks or alpha, it also is centered around zero. However, unlike gamma this distribution is somewhat skewed with the right tail, going off a bit farther than the left. This is further seen in the distribution of alpha across age where some values reach above 5 but no values come close to coming below -5.
@@ -383,18 +365,29 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png}
-    \caption{Scatterplot of Age vs. Alpha}
+    \includegraphics[width=.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED.png}\hfill
+    \includegraphics[width=.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/scatter_age_alphaP_WEIGHTED_fearn.png}
+    \caption{Scatterplot of Age vs. Alpha: Hourly earnings (fhwage, left) and Annual earnings (fearn, right)}
 \end{figure}
 
 
 
 \begin{table}[H]
     \centering
-    \caption{Alpha Regressions: F-Test Results}
+    \caption{Alpha Regressions: F-Test Results (Hourly Earnings, fhwage)}
     \label{tab:alpha_ftest}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ftest.tex}
+    }
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: F-Test Results (Annual Earnings, fearn)}
+    \label{tab:alpha_fearn_ftest}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_ftest.tex}
     }
 \end{table}
 
@@ -402,7 +395,20 @@ The SHAP values are then used to interpret the results of the multi-layer percep
     \centering
     \caption{Alpha Regressions: Lasso Industry Selection Results}
     \label{tab:alpha_lasso_ind}
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings (fhwage)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings (fearn)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_lasso_ind_selection.tex}
+        }
+    \end{minipage}
 \end{table}
 
 \begin{figure}[H]
@@ -410,8 +416,34 @@ The SHAP values are then used to interpret the results of the multi-layer percep
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_lasso_vs_nn.pdf}\hfill
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_nn_vs_rf.pdf}\hfill
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_lasso_vs_rf.pdf}
-    \caption{Alpha Industry SHAP Rank Comparisons}
+    \caption{Alpha Industry SHAP Rank Comparisons (Hourly Earnings, fhwage)}
     \label{fig:alpha_ind_rank_scatter}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_ind_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_ind_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_ind_rank_lasso_vs_rf.pdf}
+    \caption{Alpha Industry SHAP Rank Comparisons (Annual Earnings, fearn)}
+    \label{fig:alpha_fearn_ind_rank_scatter}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_lasso_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_lasso_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_lasso_fhwage_vs_rf_fearn.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_nn_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_nn_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_nn_fhwage_vs_rf_fearn.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_rf_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_rf_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_rf_fhwage_vs_rf_fearn.pdf}
+    \caption{Alpha Industry SHAP Rank: fhwage (rows: LASSO, NN, RF) vs.\ fearn (columns: LASSO, NN, RF)}
+    \label{fig:alpha_ind_xrank_3x3}
 \end{figure}
 
 
@@ -419,10 +451,21 @@ The SHAP values are then used to interpret the results of the multi-layer percep
     \centering
     \caption{Alpha Regressions: Lasso Occupation Selection Results}
     \label{tab:alpha_lasso_occ}
-    \setlength{\tabcolsep}{4pt}
     \renewcommand{\arraystretch}{0.7}
-    \scriptsize
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings (fhwage)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings (fearn)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_lasso_occ_selection.tex}
+        }
+    \end{minipage}
 \end{table}
 
 \begin{figure}[H]
@@ -430,26 +473,62 @@ The SHAP values are then used to interpret the results of the multi-layer percep
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_lasso_vs_nn.pdf}\hfill
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_nn_vs_rf.pdf}\hfill
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_rank_lasso_vs_rf.pdf}
-    \caption{Alpha Occupation SHAP Rank Comparisons}
+    \caption{Alpha Occupation SHAP Rank Comparisons (Hourly Earnings, fhwage)}
     \label{fig:alpha_occ_rank_scatter}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_occ_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_occ_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_occ_rank_lasso_vs_rf.pdf}
+    \caption{Alpha Occupation SHAP Rank Comparisons (Annual Earnings, fearn)}
+    \label{fig:alpha_fearn_occ_rank_scatter}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_lasso_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_lasso_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_lasso_fhwage_vs_rf_fearn.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_nn_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_nn_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_nn_fhwage_vs_rf_fearn.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_rf_fhwage_vs_lasso_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_rf_fhwage_vs_nn_fearn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_rf_fhwage_vs_rf_fearn.pdf}
+    \caption{Alpha Occupation SHAP Rank: fhwage (rows: LASSO, NN, RF) vs.\ fearn (columns: LASSO, NN, RF)}
+    \label{fig:alpha_occ_xrank_3x3}
 \end{figure}
 
 
 
 \begin{table}[H]
     \centering
-    \caption{Alpha Regressions: OLS Results (Coefficients x 100)}
+    \caption{Alpha Regressions: OLS Results (Coefficients x 100), Hourly Earnings (fhwage)}
     \label{tab:alpha_regressions}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_regressions.tex}
     }
 \end{table}
 
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: OLS Results (Coefficients x 100), Annual Earnings (fearn)}
+    \label{tab:alpha_fearn_regressions}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_regressions.tex}
+    }
+\end{table}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_age_margins.pdf}
-    \caption{Predicted Alpha by Age (No Controls)}
-    \label{fig:alpha_age_margins}
+    \includegraphics[width=0.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_year_fe.pdf}\hfill
+    \includegraphics[width=0.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_year_fe.pdf}
+    \caption{Year Fixed Effects on Alpha (All-Controls Model, 95\% CI): Hourly earnings (fhwage, left) and Annual earnings (fearn, right)}
+    \label{fig:alpha_year_fe}
 \end{figure}
 
 
@@ -469,10 +548,19 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \begin{table}[H]
     \centering
-    \caption{Alpha Regressions: Stepwise Selection Results (Coefficients x 100)}
+    \caption{Alpha Regressions: Stepwise Selection Results (Coefficients x 100), Hourly Earnings (fhwage)}
     \label{tab:alpha_stepwise}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_stepwise.tex}
+    }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: Stepwise Selection Results (Coefficients x 100), Annual Earnings (fearn)}
+    \label{tab:alpha_fearn_stepwise}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_stepwise.tex}
     }
 \end{table}
 
@@ -488,26 +576,25 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 \begin{table}[htbp]
     \centering
-    \caption{Alpha Regressions: Lasso Selection Results}
+    \caption{Alpha Regressions: Lasso Selection Results, Hourly Earnings (fhwage)}
     \label{tab:alpha_lasso}
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_selection.tex}
     }
 \end{table}
 
-
-
-
-
-
-
-
-
-\begin{figure}[H]
+\begin{table}[H]
     \centering
-    \includegraphics[width=.7\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/ALPHA_shap_summary_plot.png}
-    \caption{SHAP Summary Plot for Alpha}
-\end{figure}
+    \caption{Alpha Regressions: Lasso Selection Results, Annual Earnings (fearn)}
+    \label{tab:alpha_fearn_lasso}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_lasso_selection.tex}
+    }
+\end{table}
+
+
+
+
 
 
 
@@ -559,42 +646,6 @@ The SHAP values are then used to interpret the results of the multi-layer percep
 
 
 
-\begin{table}[H]
-    \centering
-    \caption{Gamma Regressions: Lasso Industry Selection Results}
-    \label{tab:gamma_lasso_ind}
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex}
-\end{table}
-
-\begin{table}[H]
-    \centering
-    \caption{Gamma Regressions: Lasso Occupation Selection Results}
-    \label{tab:gamma_lasso_occ}
-    \setlength{\tabcolsep}{4pt}
-    \renewcommand{\arraystretch}{0.7}
-    \scriptsize
-    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex}
-\end{table}
-
-
-
-\begin{table}[H]
-    \centering
-    \caption{Alpha Regressions: Lasso Industry Selection Results}
-    \label{tab:alpha_lasso_ind}
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex}
-\end{table}
-
-
-\begin{table}[H]
-    \centering
-    \caption{Alpha Regressions: Lasso Occupation Selection Results}
-    \label{tab:alpha_lasso_occ}
-    \setlength{\tabcolsep}{4pt}
-    \renewcommand{\arraystretch}{0.7}
-    \scriptsize
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex}
-\end{table}
 
 
 
