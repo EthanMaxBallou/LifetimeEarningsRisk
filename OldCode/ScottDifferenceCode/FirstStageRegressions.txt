@@ -1,0 +1,133 @@
+use "C:\data\EarningsVolatility\PSIDdata\permVtemp7.dta", clear
+do "C:\Research\EarningsVolatility\PermanentVSTemporary\Programs8\VarLists.do"
+
+***********************************************************************
+**                                                             	     **  
+** CREATE DIFFERENCES                                          	     **
+**                                                             	     **
+** THEN RUN REGRESSIONS USING A SERIES OF MODELS              	     **
+**        AND FINALLY ANALYZE THE RESULTS                            **
+**                                                                   **
+***********************************************************************   
+set matsize 1200
+
+
+local xvec_A $xvec_A
+local xvec_B $xvec_B
+local xvec_C $xvec_C
+local xvec_D $xvec_D
+local xvec_E $xvec_E
+local xvec_F $xvec_F
+local xvec_G $xvec_G
+local xvec_H $xvec_H
+local xvec_I $xvec_I
+local xvec_J $xvec_J
+
+log using "C:\Research\EarningsVolatility\PermanentVSTemporary/$DRAFT/Analysis-Residuals.smcl", replace
+
+
+foreach x in $DVLIST {
+	sort personid year
+
+display "*********************************************************"
+display "**										**"
+display "**	FIRST-STAGE REGRESSIONS FOR `x'		**"
+display "**										**"
+display "*********************************************************"
+display _newline(4)
+
+
+	forvalues z=1(1)41 {
+ 		forvalues y=0/$MAXORDER {
+
+	 	gen G`z'_`x'`y' = F`z'.`x'`y' - `x'`y' if F`z'.`x'`y' !=. & `x'`y' !=. 
+
+		label variable G`z'_`x'`y' "growth of `x'`y' between years t+1 and t+`=`z'+1' "
+
+			foreach model in $MODELLIST {
+
+				display _newline(2)
+				display "**********************************************"
+				display "**  REGRESSION: G`z'_`x'`y' , MODEL `model'   "
+				display "**********************************************"
+				display _newline(1)
+
+
+
+reg G`z'_`x'`y' `xvec_`model''
+
+	predict RG`z'_`x'`y'_`model' if e(sample), r
+
+gen EG`z'_`x'`y'_`model' = F`z'.`x' - `x' - RG`z'_`x'`y'_`model' if F`z'.`x' !=. & `x'!=. & RG`z'_`x'`y'_`model' !=.
+
+		label variable EG`z'_`x'`y'_`model' "fitted value (`model') for `z'-year `x' growth"
+		label variable RG`z'_`x'`y'_`model' "residual (`model') `z'-year `x' growth "
+			}
+		}
+	}
+	compress
+	save "C:\data\EarningsVolatility/$DRAFT/Residuals.dta", replace
+
+
+display _newline(4)
+display "*********************************************************"
+display "**							                 **"
+display "**	ANALYSIS OF RESIDUALS FOR `x'		        **"
+display "**							                **"
+display "*********************************************************"
+display _newline(4)
+
+		display "	** BEFORE DIFFERENCING **	"
+
+		corr `x'* 
+		sum `x'*
+	
+		display _newline (2)
+		display " **  2 YEAR DIFFERENCES in `x'  ** "
+		
+		sum RG2_`x'* G2_`x'*
+
+		display " **	CORRELATIONS    ** "
+		display _newline (1)
+
+		corr RG2_`x'*	
+	
+		display _newline (2)
+
+		corr RG2_`x'*	
+
+		display _newline (2)
+		display "**  4 YEAR DIFFERENCES in `x'  **"
+	
+		sum RG4_`x'* G4_`x'*
+	
+		display " **	CORRELATIONS    ** "
+		display _newline (1)
+
+		corr RG4_`x'*	
+
+		display _newline (2)
+
+		corr G4_`x'*	
+
+
+		sort personid year
+	 	forvalues y=0/$MAXORDER {
+		foreach model in $MODELLIST {
+			display _newline (1)
+			display "	** CORRELATIONS ACROSS GAPS OF DIFFERENT LENGTHS for `x'`y'_`model'	** "
+			display _newline (1)
+
+			corr RG2_`x'`y'_`model' RG4_`x'`y'_`model' RG6_`x'`y'_`model' RG8_`x'`y'_`model' RG10_`x'`y'_`model' RG12_`x'`y'_`model' RG14_`x'`y'_`model' RG16_`x'`y'_`model' 
+
+			sort personid year
+
+			display _newline (1)
+			display " 	**	AUTOCORRELATIONS for RG2_`x'`y'_`model'		** "
+			display _newline (1)
+
+			corr RG2_`x'`y'_`model' F2.RG2_`x'`y'_`model' F4.RG2_`x'`y'_`model' F6.RG2_`x'`y'_`model' F8.RG2_`x'`y'_`model' F10.RG2_`x'`y'_`model' 
+	}
+	}
+}
+log close

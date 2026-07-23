@@ -1,0 +1,88 @@
+*********************************************************************************
+*                                                                               *    
+*  This file lists the order in which programs must be run to perform the       *
+*  analysis conducted in this project. The programs have been edited after      *
+*  the third draft of the paper in order to better organize the output; the     *
+*  calculations performed have not changed, except due to changes in the        *
+*  empirical specifications themselves.                                         *
+*                                                                               *
+*********************************************************************************
+
+*
+* START BY CREATING THE DATA SET FROM THE PSID
+*
+* 	Most recently done in June 2017
+*
+	FILES:	\Programs8\CREATE-permVtemp_data.do
+		\Programs8\IndividualTrendRemover.do
+
+	*** Note: To create residuals without allowing age-earnings profiles
+	*** to vary by groups, intead use the version called
+	***  " \Programs8\IndividualTrendRemover-NoGroups.do " 
+	*** 
+	*** The versions of the programs that end in "-REtrends-NoGr"
+	*** specify the earnings equations with a mixed model featuring
+	*** age fixed effects (common for everyone) and individual random
+	*** effects (intercept and earnings growth rate).
+
+
+
+*****************************************************************************************
+*											*
+*   FOR THE REMAINING PROGRAMS, IT IS IMPORTANT TO CHANGE SOME PARAMETERS 	   	*
+*   SO THAT THE OUTPUT IS SAVED IN THE APPROPRIATE FOLDER (DEPVAR, DRAFT)	        *
+*	- CONTROL WITH THE VARLISTS PROGRAM						*
+*											*
+*****************************************************************************************
+
+
+************************************************************************************
+****  NOTE: ALL OF THIS CAN BE RUN IN A SINGLE BATCH USING "ALL-PROCEDURES.DO" *****
+************************************************************************************
+
+
+
+* FIRST-STAGE REGRESSIONS TO GET RESIDUALS
+* 
+*     	FILE:	\Programs8\FirstStageRegressions.do
+
+
+* CREATE INTERSTAGE CALCULATIONS
+* 
+*     	FILE:	\Programs8\Interstage.do
+
+** Note: The "individual trend remover" programs above remove variation in earnings associated with (1) the average age-earning profile of a group, or sometimes of the entire population, and (2) individual variation around those trends, estimated as a individual-specific polynomial (of order 0, 1, or 2) in the person's age - i.e., as person-specific fixed effects, growth rates, and/or acceleration rates. The suffix on residual variables indicates the order of the person-specific parameters - e.g., "fearn0" is the residual of "fearn" in a model whose only person-specific parameter is the intercept, whereas "fearn1" is a residual from a model that has person-specific intercept and growth terms.
+
+** Note: The "first stage regression" program begins by computing persons' residual earnings growth over intervals of j years; for example, the variable "G4_fearn0" is the difference between "F4.fearn0" (the person's residual earnings 4 years ahead, reported in the survey wave collected 5 years ahead) and "fearn0" (the person's residual earnings during the current year). The program then removes the component of that residual growth that can be predicted from the person's current characteristics (reported in the current survey wave). The residuals from those regressions have names beginning with "R," such as "RG4_fearn0_A." (The final "A" is the name of the regression specification. This serves as a placeholder that can be used to compare specifications.)
+
+** Note:The "interstage" program then computes the "gamma" and "alpha" statistics specified in the paper, i.e., data whose means represent variances of permanent and temporary shocks, repsectively. The preferred "interstage" specification uses the residuals from "first stage regressions," i.e., variables like "RG4_fearn0_A". There are also some variations labeled as "testof2stage" that omit the "first stage regressions" (i.e., do not remove earnings growth predicted by current characteristics) and instead compute the "gamma" and "alpha" statistics using differences in the original residuals from "individual trend remover", i.e., variables like "G4_fearn0".
+
+
+
+* RUN SECOND-STAGE REGRESSIONS
+*
+*     	FILEs: 	\Programs8\SecondStageRegressions.do
+		\Programs8\PredEarnGrowth.do
+
+** Note: The "second stage regressions" program run regressions to compute mean values of the "gamma" and "alpha" statistics from "interstage" conditional on vectors of individual characteristics. The fitted values are then interpreted as the variance of permanent and (respectively) temporary shocks for persons with those combinations of characteristics.
+** Note: "Predicted earnings growth" uses the fitted values from the "first stage regressions" program (i.e., the predictable part of variables like G4_fearn0, which is also the counterpart to the residual component represented by RG4_fearn0_A). When those data are available, it uses them to compute an annualized predicted earning growth rate, and it also uses those available data to construct comparable estimates for other intervals where data are not available (e.g., because the period covered by the data ended before the interval would have ended; this is essentially a forecast of a person's earnings at future ages based on the observed earnings of other persons with similar characteristics who were observed for an interval of that duration).  
+
+
+* COMPUTE EXPECTED PV OF FUTURE EARNINGS AND ITS VARIANCE
+*
+*	FILE: \Programs8\PVcalculations.do
+*	FILE: \Programs8\theta_c-sq.do
+
+** Note: The "PVcalculations" program uses the results from the "second stage regressions" and "pred earn growth" to compute estimates of the individuals' present value of future earnings and its squared-coefficient of variation (called "c2"). The "theta_c-sq" program then brings in data on the wealth the person has already accumulated to create a final statistic that puts that risk into the context of the person's financial portfolio.
+
+
+
+*********************************************************************************************************
+NOTE: RETAIN THE FOLLOWING FILES (THE REST ARE JUST PLACEHOLDERS FOR INTERMEDIATE WORK)
+	1. 	Residuals.dta				(residuals from 1st stage)
+	2. 	interstagecalculations-reshaped-gam-collapsed.dta  
+		interstagecalculations-reshaped-alph-collapsed.dta  	(allows 2nd stage to be reestimated w/o changing first stage)
+	3.	AllAnnualPredictions.dta			(predicted variances of perm & temp ann shocks)
+	4. 	predgrow.dta				(predicted earnings growth rates)
+	5. 	PVcalcsPlusTheta.dta			(final calculations)
+************************************************************************************************************

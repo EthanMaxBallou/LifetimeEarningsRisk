@@ -1,0 +1,207 @@
+*** This program removes person-specific trends from individuals' wage and earnings series. 
+*** It first removes year effects and age-earnings profiles that are common to the group.
+*** Individual-specific levels and (in the latter specifications) trends are then removed.
+*** The output series represent deviations of individual wages from their own long-term trends.
+
+
+use "C:\Data\EarningsVolatility\PSIDdata\permVtemp7.dta", clear
+
+do "C:\Research\EarningsVolatility\PermanentVSTemporary\Programs8\VarLists.do"
+local xvec_A $xvec_A
+local xvec_B $xvec_B
+local xvec_C $xvec_C
+local xvec_D $xvec_D
+local xvec_E $xvec_E
+local xvec_F $xvec_F
+local xvec_G $xvec_G
+local xvec_H $xvec_H
+local xvec_I $xvec_I
+local xvec_J $xvec_J
+
+
+***************************************************************
+** Removing person FE, a state-specific (intercept+time trend), 
+**	and a group-specific quartic in age
+***************************************************************
+
+
+foreach y in $DVLIST {
+
+areg `y' i.year i.censdiv##c.year i.currentage i.(group postgrad)##(c.currentage c.currentagesq c.currentagecube c.currentagefourth) i.(educwrths postgrad)#c.year , a(personid)
+	predict `y'D, xbd
+	predict `y'0_P0, d
+	predict `y'0, r
+		label variable `y'D "fitted `y', from initial areg"
+		label variable `y'0_P0 "individual fixed effect for `y'"
+		label variable `y'0 "residual `y' (person FE removed)"
+}
+compress
+save, replace
+
+
+**************************************************************
+** This section is similar, but it also allows for a linear 
+** time trend for each person. The logic works as follows:
+** (1) Create variables that will be needed
+** (2) Remove person fixed-trend (intercept+linear trend)
+**	from both the dependen variable and each independent variable
+** (3) Regress the residual dependent variable on the residual
+**	dependent varaibles; collect residual
+***************************************************************
+
+
+tab censdiv, gen(cd)
+tab currentage, gen(ca)
+tab year, gen(yr)
+tab group, gen(grp)
+
+gen pgage1=postgrad*currentage
+gen pgage2=postgrad*currentagesq
+gen pgage3=postgrad*currentagecube
+gen pgage4=postgrad*currentagefourth
+gen ed1yr=0
+gen ed2yr=0
+gen ed3yr=0
+gen ed4yr=0
+gen ed5yr=0
+	replace ed1yr=year if educwrths==1
+	replace ed2yr=year if educwrths==2
+	replace ed3yr=year if educwrths==3
+	replace ed4yr=year if educwrths==4
+	replace ed5yr=year if postgrad==1
+
+forvalues z = 1/32 {
+	gen grp`z'age=grp`z'*currentage
+	gen grp`z'age2=grp`z'*currentagesq
+	gen grp`z'age3=grp`z'*currentagecube
+	gen grp`z'age4=grp`z'*currentagefourth
+} 
+forvalues x = 1/10{
+	gen cd`x'yr = cd`x'*c.year
+}
+
+
+foreach y in $DVLIST { 
+	gen test=1 if `y' !=. 
+	egen T=count(currentage) if test==1, by(personid)
+	egen A=sum(currentage) if test==1, by(personid)
+	egen B=sum(currentagesq) if test==1, by(personid)
+	gen F=(B-A*currentage)/(B*T-A*A)
+	gen G=(T*currentage-A)/(B*T-A*A)
+
+	egen temp1=sum(`y') if test==1, by(personid)
+	gen temp2=`y'*currentage
+	egen temp3=sum(temp2) if test==1, by(personid)
+	gen `y'_own_D1 =`y'-F*temp1-G*temp3
+	gen `y'1_P0 = (B*temp1 - A*temp3) / (B*T - A*A)
+	gen `y'1_P1 = (T*temp3 - A*temp1) / (B*T - A*A)
+	label variable `y'1_P0 "individual intercept for `y', linear fit"
+	label variable `y'1_P1 "individual slope for `y', linear fit"
+	drop temp1 temp2 temp3	
+
+	foreach w of varlist cd1-cd10yr {
+		egen temp1=sum(`w') if test==1, by(personid)
+		gen temp2=`w'*currentage
+		egen temp3=sum(temp2) if test==1, by(personid)
+		gen `w'_`y'_D1 =`w'-F*temp1-G*temp3
+		drop temp1 temp2 temp3
+		}
+	drop test T A B F G
+
+
+	reg `y'_own_D1 cd1_`y'_D1-cd10yr_`y'_D1
+	
+		predict `y'1resid, r
+	
+	label variable `y'1resid "residual `y' (linear FE in age removed)"
+
+ }
+
+
+**************************************************************
+** This section is similar, but it also allows for a quadratic 
+** time trend for each person. The logic is just as above:
+** (1) Create variables that will be needed
+** (2) Remove person fixed-trend (intercept + quadratic trend)
+**	from both the dependen variable and each independent variable
+** (3) Regress the residual dependent variable on the residual
+**	dependent varaibles; collect residual
+***************************************************************
+
+
+foreach y in $DVLIST { 
+	gen test=1 if `y' !=. 
+	egen T=count(currentage) if test==1, by(personid)
+	egen A=sum(currentage) if test==1, by(personid)
+	egen B=sum(currentagesq) if test==1, by(personid)
+	egen C=sum(currentagecube) if test==1, by(personid)
+	egen D=sum(currentagefourth) if test==1, by(personid)
+	gen E= T*B*D-T*C*C-A*A*D+2*A*B*C-B*B*B    	
+	gen F= [B*D-C*C + (B*C-A*D)*currentage + (A*C-B*B)*currentagesq]/E
+	gen G= [B*C-A*D + (T*D-B*B)*currentage + (A*B-T*C)*currentagesq]/E
+	gen H= [A*C-B*B + (A*B-T*C)*currentage + (T*B-A*A)*currentagesq]/E
+
+	gen temp1=`y'*currentage
+	gen temp2=`y'*currentagesq
+	egen temp3=sum(`y'), by(personid)
+	egen temp4=sum(temp1), by(personid)
+	egen temp5=sum(temp2), by(personid)
+	gen `y'_own_D2 =`y'-F*temp3-G*temp4-H*temp5
+	drop temp1-temp5
+
+	foreach w of varlist cd1-cd10yr  {
+		gen temp1=`w'*currentage
+		gen temp2=`w'*currentagesq
+		egen temp3=sum(`w'), by(personid)
+		egen temp4=sum(temp1), by(personid)
+		egen temp5=sum(temp2), by(personid)
+		gen `w'_`y'_D2 =`w'-F*temp3-G*temp4-H*temp5
+		drop temp1-temp5
+		}
+	drop test T A B C D E F G H 
+
+
+	reg `y'_own_D2 cd1_`y'_D2-cd10yr_`y'_D2
+
+		predict `y'2resid, r
+
+	label variable `y'2resid "residual `y' (quadratic FE in age removed)"
+}
+
+** Separating annual earnings into predicted and new components (for EV and VarV calculations)
+**************************
+** Note: This bit of code can be dropped if desired. 
+** These calculations are NOT used in the latest version of the algorithm for computing EV and VarV ("PVCalculations...").
+** Instead, the updated algorithm uses "fearn - fearn0" as the predicted component of earnings, i.e., the actual fitted value from the first earnings regression.
+** 
+
+areg lnrearn i.year i.censdiv##c.year i.currentage i.(group postgrad)##(c.currentage c.currentagesq c.currentagecube c.currentagefourth) i.(educwrths postgrad)#c.year , a(personid)
+	predict fitval, xb
+	predict fixeff, d
+	predict reslnrearn, resid
+	egen fe=mean(fixeff), by(personid)
+gen predlnrearn=fitval+fe  
+drop fitval fixeff fe
+
+keep personid year *1_P0 *1_P1 *1resid *2resid predlnrearn reslnrearn
+ren *1resid *1
+ren *2resid *2
+****************************
+
+sort personid year
+
+save "C:\Data\EarningsVolatility\PSIDdata\detrend.dta", replace
+
+use "C:\Data\EarningsVolatility\PSIDdata\permVtemp7.dta", clear
+
+	sort personid year
+
+merge m:1 personid year using "C:\Data\EarningsVolatility\PSIDdata\detrend.dta"
+
+	drop if _merge==2
+	drop _merge
+order predlnrearn reslnrearn, after(lnrearn) 
+label variable predlnrearn "predicted lnrearn from age-earnings profile w/FEs"
+label variable reslnrearn "residual lnrearn"
+compress
+save, replace
