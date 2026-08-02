@@ -281,12 +281,6 @@ E[\gamma_{itjq}]
 \end{table}
 
 
-\begin{table}[H]
-    \centering
-    \caption{Group SHAP Shares of Controls, Gamma (Average |SHAP| per Variable x 100)}
-    \label{tab:gamma_shap_shares}
-    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_shap_shares.tex}
-\end{table}
 
 \begin{table}[H]
     \centering
@@ -319,80 +313,6 @@ E[\gamma_{itjq}]
     }
 \end{table}
 
-
-\begin{table}[H]
-    \centering
-    \caption{Mean Predicted Gamma by Education and Age Bin, Hourly Earnings}
-    \label{tab:gamma_pred_matrix}
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Actual}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_actual.tex}
-        }
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Neural Network}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_nn.tex}
-        }
-    \end{minipage}
-
-    \vspace{10pt}
-
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Random Forest}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_rf.tex}
-        }
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{LASSO}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_lasso.tex}
-        }
-    \end{minipage}
-\end{table}
-
-\begin{table}[H]
-    \centering
-    \caption{Mean Predicted Gamma by Education and Age Bin, Annual Earnings}
-    \label{tab:gamma_fearn_pred_matrix}
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Actual}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_actual.tex}
-        }
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Neural Network}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_nn.tex}
-        }
-    \end{minipage}
-
-    \vspace{10pt}
-
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Random Forest}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_rf.tex}
-        }
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{LASSO}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_lasso.tex}
-        }
-    \end{minipage}
-\end{table}
 
 
 \begin{table}[H]
@@ -715,6 +635,94 @@ E[\gamma_{itjq}]
 \end{figure}
 
 
+
+
+
+
+\begin{table}[H]
+    \centering
+    \caption{Group SHAP Shares of Controls, Gamma (Average |SHAP| per Variable x 100)}
+    \label{tab:gamma_shap_shares}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_shap_shares.tex}
+\end{table}
+
+
+
+
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Gamma by Education and Age Bin, Hourly Earnings}
+    \label{tab:gamma_pred_matrix}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Actual}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_actual.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Neural Network}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_nn.tex}
+        }
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Random Forest}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_rf.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{LASSO}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_lasso.tex}
+        }
+    \end{minipage}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Gamma by Education and Age Bin, Annual Earnings}
+    \label{tab:gamma_fearn_pred_matrix}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Actual}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_actual.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Neural Network}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_nn.tex}
+        }
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Random Forest}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_rf.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{LASSO}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_lasso.tex}
+        }
+    \end{minipage}
+\end{table}
 
 
 
