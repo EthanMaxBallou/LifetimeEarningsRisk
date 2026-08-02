@@ -1,14 +1,5 @@
 step,action,vars,v1,v2,v3
-1,A,ma5aep,     2 , .0270727          1    0.0019 , A ma5aep                                                                               
-2,A,OLF,     8 ,  .015492          2    0.0084 , A OLF                                                                                  
-3,A,agecat6,    13 , .0097294          3    0.0118 , A agecat6                                                                              
-4,A,tenure,    20 , .0050729          4    0.0140 , A tenure                                                                               
-5,A,agecat1,    23 , .0038375          5    0.0145 , A agecat1                                                                              
-6,A,EDU4,    25 , .0031859          6    0.0149 , A EDU4                                                                                 
-7,A,agecat2,    27 ,  .002645          7    0.0151 , A agecat2                                                                              
-8,A,EDU3,    31 , .0018231          8    0.0156 , A EDU3                                                                                 
-9,A,EDU2,    33 , .0015136          9    0.0157 , A EDU2                                                                                 
-10,A,agecat5,    35 , .0012566         10    0.0159 , A agecat5                                                                              
-11,A,PrRecess,    36 ,  .001145         11    0.0159 , A PrRecess                                                                             
-12,A,EDU1,    43 ,  .000597         12    0.0161 , A EDU1                                                                                 
-13,A,agecat3,    49 , .0003416         13    0.0162 , A agecat3                                                                              
+1,A,EDU1                 EDU2                 EDU3,     1 , .0042804         11    0.0067 , A EDU1                 EDU2                 EDU3                                       
+2,A,ma5aep,     2 , .0039001         12    0.0083 , A ma5aep                                                                               
+3,A,OLF,    10 , .0018529         13    0.0144 , A OLF                                                                                  
+4,A,PrRecess,    30 , .0002882         14    0.0172 , A PrRecess                                                                             

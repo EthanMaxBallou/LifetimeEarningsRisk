@@ -1,13 +1,4 @@
 variable,pvalue,order
-race_dum1,.71569997,1
-agecat3,.72479999,2
-tenure,.62580001,3
-agecat1,.4364,4
-EDU4,.35679999,5
-EDU1,.39489999,6
-agecat5,.2471,7
-OLF,.1356,8
-EDU3,.1176,9
-agecat2,.078000002,10
-cohort_dum1,.051199999,11
-EDU2,.052700002,12
+ten_dum2,.5722,1
+PrRecess,.51679999,2
+race_dum1,.072899997,3

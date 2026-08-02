@@ -1,16 +1,4 @@
 step,action,vars,v1,v2,v3
-1,A,1973.year            1974.year            1975.year,   * 1 , .0002289         50    0.0008 , A 1973.year            1974.year            1975.year                                  
-2,A,agecat6,     2 , .0002086         51    0.0008 , A agecat6                                                                              
-3,A,EDU3,     3 ,   .00019         52    0.0008 , A EDU3                                                                                 
-4,A,EDU1,     4 , .0001732         53    0.0009 , A EDU1                                                                                 
-5,A,EDU2,     6 , .0001438         54    0.0009 , A EDU2                                                                                 
-6,A,agecat3,     7 ,  .000131         55    0.0010 , A agecat3                                                                              
-7,A,agecat2,     8 , .0001194         56    0.0010 , A agecat2                                                                              
-8,A,OLF,    11 , .0000903         57    0.0011 , A OLF                                                                                  
-9,A,agecat1,    13 ,  .000075         58    0.0011 , A agecat1                                                                              
-10,A,agecat5,    14 , .0000683         59    0.0011 , A agecat5                                                                              
-11,A,ma5aep,    16 , .0000567         60    0.0012 , A ma5aep                                                                               
-12,A,tenure,    22 , .0000324         60    0.0013 , A tenure                                                                               
-13,R,agecat3,    22 , .0000324         60    0.0013 , R agecat3                                                                              
-14,A,EDU4,    26 , .0000224         61    0.0013 , A EDU4                                                                                 
-15,A,agecat3,    38 , 7.32e-06         62    0.0013 , A agecat3                                                                              
+1,A,1973.year            1974.year            1975.year,   * 1 , .0000192         61    0.0012 , A 1973.year            1974.year            1975.year                                  
+2,A,OLF,     2 , .0000175         62    0.0012 , A OLF                                                                                  
+3,A,ma5aep,     4 , .0000145         63    0.0012 , A ma5aep                                                                               

@@ -1,11 +1,5 @@
 variable,pvalue,order
-PrRecess,.88450003,1
-agecat1,.7256,2
-EDU4,.68409997,3
-tenure,.56160003,4
-agecat5,.60930002,5
-agecat2,.44510001,6
-EDU1,.46939999,7
-ma5aep,.2098,8
-OLF,.1534,9
-agecat3,.0911,10
+ten_dum2,.42320001,1
+PrRecess,.3617,2
+OLF,.2212,3
+ma5aep,.1166,4

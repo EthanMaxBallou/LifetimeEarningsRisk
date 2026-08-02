@@ -1,4 +1,5 @@
 
+
 import os
 import shap
 import pandas as pd
@@ -28,12 +29,12 @@ from sklearn.linear_model import LassoCV
 
 
 # Load the CSV file
-data_path = '/Users/ethanballou/Documents/Data/Risk/ALP_data_NN.csv'
+data_path = '/Users/ethanballou/Documents/Data/LER_Draft2/ALP_data_NN.csv'
 data = pd.read_csv(data_path)
 
 
 # Load the target variable
-target_path = '/Users/ethanballou/Documents/Data/Risk/ALP_target_NN.csv'
+target_path = '/Users/ethanballou/Documents/Data/LER_Draft2/ALP_target_NN.csv'
 target = pd.read_csv(target_path)
 
 
@@ -116,6 +117,17 @@ shap_summary_df = pd.DataFrame({
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_shap_summary_alpha.csv', index=False)
 
 
+# Fitted values for ALL observations, converted back to natural units
+ids = pd.read_csv('/Users/ethanballou/Documents/Data/LER_Draft2/ALP_ids_NN.csv')
+X_all = scaler.transform(X)
+pred = scaler_y.inverse_transform(rf1.predict(X_all).reshape(-1, 1)).ravel()
+
+preds_out = ids.copy()
+preds_out['pred_rf'] = pred
+preds_out.to_csv('/Users/ethanballou/Documents/Data/LER_Draft2/RF_predictions_alpha.csv', index=False)
+print("RF predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/RF_predictions_alpha.csv")
+
+
 
 
 # Shap extractor code
@@ -157,12 +169,12 @@ print(f"Industry SHAP values saved to: {industry_output}")
 
 
 # Load the CSV file
-data_path = '/Users/ethanballou/Documents/Data/Risk/GAM_data_NN.csv'
+data_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_data_NN.csv'
 data = pd.read_csv(data_path)
 
 
 # Load the target variable
-target_path = '/Users/ethanballou/Documents/Data/Risk/GAM_target_NN.csv'
+target_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_target_NN.csv'
 target = pd.read_csv(target_path)
 
 
@@ -244,6 +256,17 @@ shap_summary_df = pd.DataFrame({
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_shap_summary_gamma.csv', index=False)
 
 
+# Fitted values for ALL observations, converted back to natural units
+ids = pd.read_csv('/Users/ethanballou/Documents/Data/LER_Draft2/GAM_ids_NN.csv')
+X_all = scaler.transform(X)
+pred = scaler_y.inverse_transform(rf2.predict(X_all).reshape(-1, 1)).ravel()
+
+preds_out = ids.copy()
+preds_out['pred_rf'] = pred
+preds_out.to_csv('/Users/ethanballou/Documents/Data/LER_Draft2/RF_predictions_gamma.csv', index=False)
+print("RF predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/RF_predictions_gamma.csv")
+
+
 
 
 # Shap extractor code
@@ -305,12 +328,12 @@ tf.keras.backend.clear_session()
 
 
 # Load the CSV file
-data_path = '/Users/ethanballou/Documents/Data/Risk/ALP_data_NN_fearn.csv'
+data_path = '/Users/ethanballou/Documents/Data/LER_Draft2/ALP_data_NN_fearn.csv'
 data = pd.read_csv(data_path)
 
 
 # Load the target variable
-target_path = '/Users/ethanballou/Documents/Data/Risk/ALP_target_NN_fearn.csv'
+target_path = '/Users/ethanballou/Documents/Data/LER_Draft2/ALP_target_NN_fearn.csv'
 target = pd.read_csv(target_path)
 
 
@@ -393,6 +416,17 @@ shap_summary_df = pd.DataFrame({
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_shap_summary_alpha_fearn.csv', index=False)
 
 
+# Fitted values for ALL observations, converted back to natural units
+ids = pd.read_csv('/Users/ethanballou/Documents/Data/LER_Draft2/ALP_ids_NN_fearn.csv')
+X_all = scaler.transform(X)
+pred = scaler_y.inverse_transform(rf1.predict(X_all).reshape(-1, 1)).ravel()
+
+preds_out = ids.copy()
+preds_out['pred_rf'] = pred
+preds_out.to_csv('/Users/ethanballou/Documents/Data/LER_Draft2/RF_predictions_alpha_fearn.csv', index=False)
+print("RF predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/RF_predictions_alpha_fearn.csv")
+
+
 
 
 # Shap extractor code
@@ -434,12 +468,12 @@ print(f"Industry SHAP values saved to: {industry_output}")
 
 
 # Load the CSV file
-data_path = '/Users/ethanballou/Documents/Data/Risk/GAM_data_NN_fearn.csv'
+data_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_data_NN_fearn.csv'
 data = pd.read_csv(data_path)
 
 
 # Load the target variable
-target_path = '/Users/ethanballou/Documents/Data/Risk/GAM_target_NN_fearn.csv'
+target_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_target_NN_fearn.csv'
 target = pd.read_csv(target_path)
 
 
@@ -519,6 +553,17 @@ shap_summary_df = pd.DataFrame({
 
 
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/RF_shap_summary_gamma_fearn.csv', index=False)
+
+
+# Fitted values for ALL observations, converted back to natural units
+ids = pd.read_csv('/Users/ethanballou/Documents/Data/LER_Draft2/GAM_ids_NN_fearn.csv')
+X_all = scaler.transform(X)
+pred = scaler_y.inverse_transform(rf2.predict(X_all).reshape(-1, 1)).ravel()
+
+preds_out = ids.copy()
+preds_out['pred_rf'] = pred
+preds_out.to_csv('/Users/ethanballou/Documents/Data/LER_Draft2/RF_predictions_gamma_fearn.csv', index=False)
+print("RF predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/RF_predictions_gamma_fearn.csv")
 
 
 

@@ -1,15 +1,4 @@
 step,action,vars,v1,v2,v3
-1,A,1.occ                2.occ                3.occ,     1 , .0017181        129    0.0254 , A 1.occ                2.occ                3.occ                                      
-2,A,ma5aep,     2 , .0015654        130    0.0267 , A ma5aep                                                                               
-3,A,OLF,     7 , .0009831        131    0.0305 , A OLF                                                                                  
-4,A,agecat6,    11 , .0006776        132    0.0326 , A agecat6                                                                              
-5,A,agecat1,    29 ,  .000127        133    0.0348 , A agecat1                                                                              
-6,A,EDU4,    30 , .0001157        134    0.0348 , A EDU4                                                                                 
-7,A,EDU2,    32 , .0000961        135    0.0349 , A EDU2                                                                                 
-8,A,tenure,    34 , .0000797        136    0.0349 , A tenure                                                                               
-9,A,agecat3,    35 , .0000727        137    0.0349 , A agecat3                                                                              
-10,A,EDU1,    37 , .0000603        138    0.0349 , A EDU1                                                                                 
-11,A,EDU3,    40 , .0000456        139    0.0350 , A EDU3                                                                                 
-12,A,agecat2,    41 , .0000416        140    0.0350 , A agecat2                                                                              
-13,A,agecat5,    45 , .0000287        141    0.0351 , A agecat5                                                                              
-14,R,agecat3,    48 , .0000217        140    0.0351 , R agecat3                                                                              
+1,A,1.occ                2.occ                3.occ,     1 , .0003175        140    0.0275 , A 1.occ                2.occ                3.occ                                      
+2,A,ma5aep,     2 , .0002893        141    0.0286 , A ma5aep                                                                               
+3,A,OLF,    10 , .0001374        142    0.0326 , A OLF                                                                                  

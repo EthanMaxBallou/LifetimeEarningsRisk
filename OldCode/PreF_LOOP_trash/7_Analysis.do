@@ -25,7 +25,7 @@ if "$MEAS"=="" global MEAS "fhwage"
 global SFX ""
 if "$MEAS"=="fearn" global SFX "_fearn"
 
-use "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", replace
+use "/Users/ethanballou/Documents/Data/LER_Draft2/Consolidated_AlphaGamma_withDemographics.dta", replace
 
 
 label var gammaP_WEIGHTED "Gamma (${MEAS})"

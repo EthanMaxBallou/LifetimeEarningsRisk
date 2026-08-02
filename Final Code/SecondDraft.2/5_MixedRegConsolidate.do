@@ -26,7 +26,7 @@
 
 * Load raw gamma and alpha estimates. Each obs is one person-year-J-Q combination,
 * meaning a given person-year appears multiple times with different J/Q values.
-use "/Users/ethanballou/Documents/Data/Risk/AlphaGammaRaw.dta", clear
+use "/Users/ethanballou/Documents/Data/LER_Draft2/AlphaGammaRaw.dta", clear
 
 * Drop obs where J or Q are missing -- both are required for the mixed model
 drop if missing(J) | missing(Q)
@@ -246,7 +246,7 @@ drop if missing(gammaP_WEIGHTED) & missing(gammaP_WEIGHTED_fearn) ///
 
 
 
-save "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma.dta", replace
+save "/Users/ethanballou/Documents/Data/LER_Draft2/Consolidated_AlphaGamma.dta", replace
 
 
 
@@ -259,7 +259,7 @@ use "/Users/ethanballou/Documents/Data/LER_Draft2/FullData_CombinedwithTEN.dta",
 
 **** DROP THE G VARS BEFORE MERGING
 
-merge 1:1 personid year using "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma.dta"
+merge 1:1 personid year using "/Users/ethanballou/Documents/Data/LER_Draft2/Consolidated_AlphaGamma.dta"
 
 keep if _merge == 3
 drop _merge
@@ -279,7 +279,7 @@ replace occ = 0 if occ == 999
 
 
 
-save "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta", replace
+save "/Users/ethanballou/Documents/Data/LER_Draft2/Consolidated_AlphaGamma_withDemographics.dta", replace
 
 
 

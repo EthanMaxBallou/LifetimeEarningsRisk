@@ -32,12 +32,12 @@ nn1 = tf.keras.models.load_model("/Users/ethanballou/Documents/Github/LifetimeEa
 
 
 # Load the CSV file
-data_path = '/Users/ethanballou/Documents/Data/Risk/GAM_data_NN.csv'
+data_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_data_NN.csv'
 data = pd.read_csv(data_path)
 
 
 # Load the target variable
-target_path = '/Users/ethanballou/Documents/Data/Risk/GAM_target_NN.csv'
+target_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_target_NN.csv'
 target = pd.read_csv(target_path)
 
 
@@ -132,40 +132,6 @@ print(shap_summary_df.head(10))
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/shap_summary_gamma.csv', index=False)
 
 
-top_cont = [
-    'currentage',
-    'PrRecess', 'tenure', 'currentagesq', 
-    'currentagecube'
-]
-
-
-# Verify the shapes of shap_values and X_test
-print(f"SHAP values shape: {shap_values[:,:,0].shape}")
-print(f"X_test shape: {X_test.shape}")
-
-
-# Filter SHAP values and feature names to only include top_cont variables
-top_cont_indices = [data.columns.get_loc(feature) for feature in top_cont]
-shap_values_top_cont = shap_values_reshaped[:, top_cont_indices]
-X_test_top_cont = shap_sample[:, top_cont_indices]
-
-
-
-plt.figure(figsize=(12, 8))
-shap.summary_plot(shap_values_top_cont, X_test_top_cont, feature_names=top_cont, max_display=len(top_cont), show=False)
-plt.tight_layout()
-plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot.png', bbox_inches='tight', dpi=300)
-plt.close()
-
-
-
-
-# Print all variable names in the dataset
-print("Variable names in the dataset:")
-print(data.columns.tolist())
-
-
-
 
 
 
@@ -230,12 +196,12 @@ nn1 = tf.keras.models.load_model("/Users/ethanballou/Documents/Github/LifetimeEa
 
 
 # Load the CSV file
-data_path = '/Users/ethanballou/Documents/Data/Risk/GAM_data_NN_fearn.csv'
+data_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_data_NN_fearn.csv'
 data = pd.read_csv(data_path)
 
 
 # Load the target variable
-target_path = '/Users/ethanballou/Documents/Data/Risk/GAM_target_NN_fearn.csv'
+target_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_target_NN_fearn.csv'
 target = pd.read_csv(target_path)
 
 
@@ -328,40 +294,6 @@ shap_summary_df = shap_summary_df.sort_values(by='Average SHAP Value', ascending
 print(shap_summary_df.head(10))
 
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/shap_summary_gamma_fearn.csv', index=False)
-
-
-top_cont = [
-    'currentage',
-    'PrRecess', 'tenure', 'currentagesq', 
-    'currentagecube'
-]
-
-
-# Verify the shapes of shap_values and X_test
-print(f"SHAP values shape: {shap_values[:,:,0].shape}")
-print(f"X_test shape: {X_test.shape}")
-
-
-# Filter SHAP values and feature names to only include top_cont variables
-top_cont_indices = [data.columns.get_loc(feature) for feature in top_cont]
-shap_values_top_cont = shap_values_reshaped[:, top_cont_indices]
-X_test_top_cont = shap_sample[:, top_cont_indices]
-
-
-
-plt.figure(figsize=(12, 8))
-shap.summary_plot(shap_values_top_cont, X_test_top_cont, feature_names=top_cont, max_display=len(top_cont), show=False)
-plt.tight_layout()
-plt.savefig('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/GAMMA_shap_summary_plot_fearn.png', bbox_inches='tight', dpi=300)
-plt.close()
-
-
-
-
-# Print all variable names in the dataset
-print("Variable names in the dataset:")
-print(data.columns.tolist())
-
 
 
 

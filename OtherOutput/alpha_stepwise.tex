@@ -5,41 +5,17 @@
                     &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}\\
                     &\multicolumn{1}{c}{Alpha (fhwage)}&\multicolumn{1}{c}{Alpha (fhwage)}&\multicolumn{1}{c}{Alpha (fhwage)}&\multicolumn{1}{c}{Alpha (fhwage)}&\multicolumn{1}{c}{Alpha (fhwage)}\\
 \hline
-High School Graduate&       0.708\sym{**} &                     &       0.727\sym{**} &                     &       0.809\sym{**} \\
-                    &     (0.253)         &                     &     (0.265)         &                     &     (0.266)         \\
+Probability of Recession&      0.0104\sym{*}  &                     &                     &      0.0222\sym{*}  &                     \\
+                    &   (0.00505)         &                     &                     &    (0.0113)         &                     \\
 [1em]
-Some College        &       1.305\sym{***}&       0.525\sym{*}  &       1.204\sym{***}&                     &       1.076\sym{**} \\
-                    &     (0.320)         &     (0.264)         &     (0.338)         &                     &     (0.346)         \\
+5-year moving average of AEP&       0.131\sym{***}&       0.132\sym{***}&       0.108\sym{***}&       0.121\sym{***}&       0.116\sym{***}\\
+                    &   (0.00435)         &   (0.00469)         &   (0.00490)         &   (0.00499)         &   (0.00512)         \\
 [1em]
-Bachelor's Degree   &       1.593\sym{***}&       0.849\sym{**} &       1.496\sym{***}&                     &       0.924\sym{*}  \\
-                    &     (0.319)         &     (0.258)         &     (0.345)         &                     &     (0.363)         \\
+Out of Labor Force  &       7.676\sym{***}&       7.668\sym{***}&       5.894\sym{***}&       5.931\sym{***}&       5.725\sym{***}\\
+                    &     (0.719)         &     (0.720)         &     (0.728)         &     (0.726)         &     (0.726)         \\
 [1em]
-Bachelors+          &       2.298\sym{***}&       1.465\sym{***}&       2.240\sym{***}&                     &       1.345\sym{**} \\
-                    &     (0.392)         &     (0.353)         &     (0.436)         &                     &     (0.465)         \\
-[1em]
-Age 62-69           &      0.0488\sym{***}&      0.0424\sym{***}&      0.0373\sym{***}&      0.0392\sym{***}&      0.0365\sym{***}\\
-                    &   (0.00555)         &   (0.00569)         &   (0.00566)         &   (0.00566)         &   (0.00566)         \\
-[1em]
-5-year moving average of AEP&       0.137\sym{***}&       0.138\sym{***}&       0.111\sym{***}&       0.122\sym{***}&       0.120\sym{***}\\
-                    &   (0.00446)         &   (0.00462)         &   (0.00495)         &   (0.00483)         &   (0.00517)         \\
-[1em]
-Out of Labor Force  &       9.840\sym{***}&       9.840\sym{***}&       7.741\sym{***}&       7.778\sym{***}&       7.517\sym{***}\\
-                    &     (0.743)         &     (0.743)         &     (0.752)         &     (0.750)         &     (0.750)         \\
-[1em]
-Tenure              &     -0.0842\sym{***}&     -0.0340\sym{*}  &     -0.0322\sym{*}  &     -0.0431\sym{**} &     -0.0351\sym{*}  \\
-                    &    (0.0130)         &    (0.0137)         &    (0.0139)         &    (0.0139)         &    (0.0139)         \\
-[1em]
-Age 22-29           &     -0.0197\sym{***}&                     &                     &                     &                     \\
-                    &   (0.00252)         &                     &                     &                     &                     \\
-[1em]
-Age 30-37           &     -0.0115\sym{***}&                     &                     &                     &                     \\
-                    &   (0.00212)         &                     &                     &                     &                     \\
-[1em]
-Probability of Recession&                     &      0.0337\sym{**} &      0.0325\sym{**} &      0.0324\sym{**} &      0.0322\sym{**} \\
-                    &                     &    (0.0116)         &    (0.0115)         &    (0.0115)         &    (0.0115)         \\
-[1em]
-Constant            &      0.0371\sym{***}&      0.0585\sym{***}&      0.0314\sym{*}  &      0.0686\sym{***}&      0.0556\sym{***}\\
-                    &   (0.00332)         &    (0.0121)         &    (0.0129)         &    (0.0142)         &    (0.0146)         \\
+Constant            &      0.0433\sym{***}&      0.0465\sym{***}&      0.0171         &      0.0389\sym{**} &      0.0371\sym{*}  \\
+                    &   (0.00376)         &    (0.0125)         &    (0.0129)         &    (0.0146)         &    (0.0146)         \\
 \hline
 Census Division FE  &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
 Year FE             &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
@@ -47,14 +23,20 @@ Race FE             &                     &  \checkmark         &  \checkmark   
 Cohort FE           &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
 Occupation FE       &                     &                     &                     &  \checkmark         &  \checkmark         \\
 Industry FE         &                     &                     &  \checkmark         &                     &  \checkmark         \\
+Education FE        &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
+Age Bin FE          &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
+Tenure FE           &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
 \midrule Census Division FE Available&          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Year FE Available   &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Race FE Available   &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Cohort FE Available &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Occupation FE Available&          No         &          No         &          No         &         Yes         &         Yes         \\
 Industry FE Available&          No         &          No         &         Yes         &          No         &         Yes         \\
-R-squared           &       0.016         &       0.020         &       0.031         &       0.034         &       0.037         \\
-N                   &       99542         &       99542         &       99542         &       99542         &       99542         \\
+Education FE Available&         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Age Bin FE Available&         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Tenure FE Available &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+R-squared           &       0.017         &       0.021         &       0.031         &       0.033         &       0.036         \\
+N                   &      101315         &      101315         &      101315         &      101315         &      101315         \\
 \hline\hline
 \multicolumn{6}{l}{\footnotesize Standard errors in parentheses}\\
 \multicolumn{6}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\

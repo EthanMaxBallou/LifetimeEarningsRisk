@@ -5,4 +5,5 @@ Working paper looking at the determinants of lifetime earnings risk, extension o
 
 CNEF Investigator Link: https://www.chrr.ohio-state.edu/investigator/pages/home 
 
+cd /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/
 

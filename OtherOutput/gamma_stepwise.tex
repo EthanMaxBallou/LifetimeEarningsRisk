@@ -5,35 +5,32 @@
                     &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}\\
                     &\multicolumn{1}{c}{Gamma (fhwage)}&\multicolumn{1}{c}{Gamma (fhwage)}&\multicolumn{1}{c}{Gamma (fhwage)}&\multicolumn{1}{c}{Gamma (fhwage)}&\multicolumn{1}{c}{Gamma (fhwage)}\\
 \hline
-Age 62-69           &      0.0110\sym{***}&      0.0109\sym{***}&     0.00979\sym{**} &     0.00943\sym{**} &     0.00897\sym{**} \\
-                    &   (0.00319)         &   (0.00320)         &   (0.00320)         &   (0.00320)         &   (0.00320)         \\
+5-year moving average of AEP&                     &                     &                     &     0.00401\sym{*}  &                     \\
+                    &                     &                     &                     &   (0.00198)         &                     \\
 [1em]
-Some College        &       0.295\sym{**} &       0.300\sym{**} &       0.307\sym{**} &       0.282\sym{*}  &       0.281\sym{*}  \\
-                    &     (0.112)         &     (0.113)         &     (0.113)         &     (0.115)         &     (0.116)         \\
-[1em]
-Bachelor's Degree   &       0.338\sym{**} &       0.345\sym{***}&       0.368\sym{***}&       0.277\sym{*}  &       0.276\sym{*}  \\
-                    &     (0.103)         &     (0.104)         &     (0.106)         &     (0.114)         &     (0.114)         \\
-[1em]
-5-year moving average of AEP&                     &                     &                     &     0.00407\sym{*}  &                     \\
-                    &                     &                     &                     &   (0.00203)         &                     \\
-[1em]
-Constant            &      0.0139\sym{***}&      0.0134\sym{***}&     0.00898\sym{***}&     0.00968\sym{**} &      0.0112\sym{**} \\
-                    &  (0.000473)         &   (0.00113)         &   (0.00153)         &   (0.00350)         &   (0.00340)         \\
+Constant            &      0.0139\sym{***}&      0.0129\sym{***}&     0.00789\sym{***}&      0.0131\sym{***}&      0.0146\sym{***}\\
+                    &   (0.00124)         &   (0.00161)         &   (0.00207)         &   (0.00342)         &   (0.00334)         \\
 \hline
-Census Division FE  &                     &  \checkmark         &                     &                     &                     \\
+Census Division FE  &                     &  \checkmark         &  \checkmark         &                     &                     \\
 Year FE             &                     &                     &                     &                     &                     \\
 Race FE             &                     &                     &                     &                     &                     \\
 Cohort FE           &                     &                     &                     &                     &                     \\
 Occupation FE       &                     &                     &                     &  \checkmark         &  \checkmark         \\
 Industry FE         &                     &                     &  \checkmark         &                     &  \checkmark         \\
+Education FE        &  \checkmark         &  \checkmark         &  \checkmark         &                     &                     \\
+Age Bin FE          &  \checkmark         &  \checkmark         &                     &                     &                     \\
+Tenure FE           &                     &                     &                     &                     &                     \\
 \midrule Census Division FE Available&          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Year FE Available   &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Race FE Available   &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Cohort FE Available &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Occupation FE Available&          No         &          No         &          No         &         Yes         &         Yes         \\
 Industry FE Available&          No         &          No         &         Yes         &          No         &         Yes         \\
-R-squared           &       0.000         &       0.001         &       0.002         &       0.003         &       0.004         \\
-N                   &       79633         &       79633         &       79633         &       79633         &       79633         \\
+Education FE Available&         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Age Bin FE Available&         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Tenure FE Available &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+R-squared           &       0.000         &       0.001         &       0.001         &       0.002         &       0.003         \\
+N                   &       82112         &       82112         &       82112         &       82112         &       82112         \\
 \hline\hline
 \multicolumn{6}{l}{\footnotesize Standard errors in parentheses}\\
 \multicolumn{6}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\

@@ -8,29 +8,22 @@
 
 
 
-*** This program creates measures of residual earnings, representing deviations of individuals' wages
-*** from age-earnings profiles and their own long-term trends. These are saved in files called "permVtemp7-..." .
+*** This program implements the first stage on earnings DIFFERENCES rather than levels.
+*** For each horizon z (1-41), the raw z-year change in log earnings, Gz = Fz.y - y, is
+*** regressed by OLS on time-t characteristics: age profiles in 4-year age bins interacted
+*** with newgroup (race/cohort/education) and postgrad, tenure bins, PrRecess, OLF, and
+*** census division / year / occupation / industry fixed effects.
 
-*** The first half of the program creates residuals from the "simpler specification" that includes a 
-*** common age-earnings profile, person-specific random effects (an intercept and in one case an earnings
-*** growth rate), and fixed effects for years and census divisions.
+*** The residuals RGz are the component of z-year earnings growth that could NOT be
+*** predicted from time-t characteristics; they are orthogonal to those characteristics
+*** at every horizon by construction.
 
-*** The second half creates residuals from the "extended specification." The main change is to allow the age-earnings
-*** profile to vary across groups defined by race, education, birth years. The specification also allows census division
-*** fixed effects to vary by year and includes time trends for each level of education.
+*** No person effects are included: person intercepts cancel in the differencing, and
+*** person-specific growth rates are deliberately left in the residuals.
 
-*** Each of those halves concludes by creating variables measuring for each person-year the amount by which 
-*** residual log earnings grew over the next z years, for many different lengths z and saves them
-*** in a different file called "Residuals-..." .
-
-
+*** The gamma and alpha statistics at the end of the file are computed from the RG residuals.
 
 
-local DVLIST "fearn fhwage"
-
-
-
-*** Simpler Specification
 
 
 use "/Users/ethanballou/Documents/Data/LER_Draft2/FullData_CombinedwithTEN.dta", clear
@@ -59,7 +52,7 @@ replace agebin = 4 if currentage>=46 & currentage<=53
 replace agebin = 5 if currentage>=54 & currentage<=61
 replace agebin = 6 if currentage>=62 & currentage<=69
 
-label define agebin_lbl 1 "22-29" 2 "30-37" 3 "38-45" 4 "46-53 (ref)" 5 "54-61" 6 "62-69"
+label define agebin_lbl 1 "22-29" 2 "30-37" 3 "38-45" 4 "46-53 (ref)" 5 "54-61" 6 "62-69", replace
 label values agebin agebin_lbl
 label variable agebin "Age bin (6 groups, 46-53 = reference)"
 
@@ -71,9 +64,19 @@ replace tenurebin = 2 if tenure>=2 & tenure<=5
 replace tenurebin = 3 if tenure>=6 & tenure!=.
 replace tenurebin = 1 if unemp==1
 
-label define tenurebin_lbl 1 "0-1 (ref)" 2 "2-5" 3 "6+"
+label define tenurebin_lbl 1 "0-1 (ref)" 2 "2-5" 3 "6+", replace
 label values tenurebin tenurebin_lbl
 label variable tenurebin "Tenure bin (0-1 = reference; unemployed assigned to 0-1)"
+
+* Fine age bins for the first-stage growth regressions: twelve 4-year bins spanning 22-69
+capture drop agebin4
+gen agebin4 = floor((currentage-22)/4) + 1 if currentage>=22 & currentage<=69
+
+label define agebin4_lbl 1 "22-25" 2 "26-29" 3 "30-33" 4 "34-37" 5 "38-41" 6 "42-45" ///
+    7 "46-49" 8 "50-53" 9 "54-57" 10 "58-61" 11 "62-65" 12 "66-69", replace
+label values agebin4 agebin4_lbl
+label variable agebin4 "Age bin (12 groups of 4 years, first stage)"
+
 
 save "/Users/ethanballou/Documents/Data/LER_Draft2/FullData_CombinedwithTEN.dta", replace
 
@@ -92,188 +95,39 @@ restore
 
 
 
-foreach y in `DVLIST' {
-
-** Random effect has intercept only
-
-mixed `y' EDU1 EDU2 EDU3 EDU4 i.(EDU1 EDU2 EDU3 EDU4)#(c.currentage c.currentagesq c.currentagecube c.currentagefourth) PrRecess OLF tenure i.(censdiv year occ race cohort twoind) i.currentage c.currentagesq c.currentagecube c.currentagefourth || personid: , tech(nr 5 dfp 5 bfgs 5)
-
-	predict `y'_xb0, xb
-	predict `y'D0, fitted
-	predict `y'0, residuals
-		label variable `y'_xb0 "fitted `y' including only fixed parameters"
-		label variable `y'D0 "fitted `y', from initial regression"
-		label variable `y'0 "residual `y' (fixed effects and person RE's removed)"
-	replace `y'_xb0=. if `y'==.
-	replace `y'D0=. if `y'==.
-	gen `y'_xbres0 =`y'-`y'_xb0 if `y' !=.
-		label variable `y'_xbres0 " `y' - `y'_xb0 "
-	sum `y' `y'_xbres0 `y'0
-
-** Random effect has intercept and growth rate
-
-mixed `y' EDU1 EDU2 EDU3 EDU4 i.(EDU1 EDU2 EDU3 EDU4)#(c.currentage c.currentagesq c.currentagecube c.currentagefourth) PrRecess OLF tenure i.(censdiv year occ race cohort twoind) i.currentage c.currentagesq c.currentagecube c.currentagefourth || personid: currentage, cov(uns) tech(nr 5 dfp 5 bfgs 5)
-
-	predict `y'_xb1, xb
-	predict `y'D1, fitted
-	predict `y'1, residuals
-		label variable `y'_xb1 "fitted `y' including only fixed parameters"
-		label variable `y'D1 "fitted `y', from initial regression"
-		label variable `y'1 "residual `y' (fixed effects and person RE's removed)"
-	replace `y'_xb1=. if `y'==.
-	replace `y'D1=. if `y'==.
-	gen `y'_xbres1 =`y'-`y'_xb1 if `y' !=.
-		label variable `y'_xbres1 " `y' - `y'_xb1 "
-	sum `y' `y'_xbres0 `y'0
-	sum `y' `y'_xbres1 `y'1
-}
-	gen temp=fearnD1-fearn_xb1 if fearnD1!=. & fearn_xb1!=.
-		gen tempslope = 0.5*(F2.temp-temp)
-		egen fearn1_P1 = max(tempslope), by(personid year)
-		drop temp tempslope
-	gen temp=fhwageD1-fhwage_xb1 if fhwageD1!=. & fhwage_xb1!=.
-		gen tempslope = 0.5*(F2.temp-temp)
-		egen fhwage1_P1 = max(tempslope), by(personid year)
-		drop temp tempslope
-	label variable fearn1_P1 "estimated indiv. annual earnings growth rate"
-	label variable fhwage1_P1 "estimated indiv. hourly earnings growth rate"
-	move fearn1_P1 fearn1
-	move fhwage1_P1 fhwage1
-
-compress
-
-
-save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_simpleSPEC.dta", replace
-
-
 ***********************************************************************
-**                                                             	     **  
-** CREATE DIFFERENCES                                          	     **
-**                                                             	     **
-***********************************************************************   
+**                                                                   **
+** FIRST-STAGE GROWTH REGRESSIONS                                    **
+** For each horizon z, regress the raw z-year change in log earnings **
+** on time-t characteristics; the residual RG is the part of growth  **
+** that could not be predicted at time t. No person effects: person  **
+** intercepts cancel in the differencing, and person-specific growth **
+** rates are deliberately left in the residuals.                     **
+**                                                                   **
+***********************************************************************
 set matsize 1200
 
+local DVLIST "fearn fhwage"
 
-foreach x in `DVLIST' {
+foreach x of local DVLIST {
 	sort personid year
 
 	forvalues z=1(1)41 {
- 		forvalues y=0/1 {
 
-	 	gen G`z'_`x'`y' = F`z'.`x'`y' - `x'`y' if F`z'.`x'`y' !=. & `x'`y' !=. 
+		gen G`z'_`x' = F`z'.`x' - `x' if F`z'.`x' !=. & `x' !=.
 
-		label variable G`z'_`x'`y' "growth of `x'`y' between years t+1 and t+`=`z'+1' "
+		quietly reg G`z'_`x' i.(group postgrad)##i.agebin4 PrRecess OLF ib1.tenurebin i.(censdiv year occ twoind currentage)
 
-		}
+		predict RG`z'_`x' if e(sample), r
+		label variable RG`z'_`x' "residual growth of `x' between years t+1 and t+`=`z'+1' (1st stage)"
+
+		drop G`z'_`x'
 	}
-	compress
-	save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_simpleSPEC_difference.dta", replace
-
-
+	display "First-stage growth regressions done: `x'"
 }
 
-
-
+compress
 save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_simpleSPEC_difference.dta", replace
-
-
-
-/*
-
-
-*** Extended Specification
-
-
-use "$DATA/permVtemp7", clear
-
-
-
-
-foreach y in `DVLIST' {
-
-** Random effect has intercept only
-
-mixed `y' i.year i.censdiv##c.year i.currentage i.(group postgrad)##(c.currentage c.currentagesq c.currentagecube c.currentagefourth) i.(educwrths postgrad)#c.year  || personid: , tech(nr 5 dfp 5 bfgs 5)
-
-	predict `y'_xb0, xb
-	predict `y'D0, fitted
-	predict `y'0, residuals
-		label variable `y'_xb0 "fitted `y' including only fixed parameters"
-		label variable `y'D0 "fitted `y', from initial regression"
-		label variable `y'0 "residual `y' (fixed effects and person RE's removed)"
-	replace `y'_xb0=. if `y'==.
-	replace `y'D0=. if `y'==.
-	gen `y'_xbres0 =`y'-`y'_xb0 if `y' !=.
-		label variable `y'_xbres0 " `y' - `y'_xb0 "
-	sum `y' `y'_xbres0 `y'0
-
-** Random effect has intercept and growth rate
-
-mixed `y' i.year i.censdiv##c.year i.currentage i.(group postgrad)##(c.currentage c.currentagesq c.currentagecube c.currentagefourth) i.(educwrths postgrad)#c.year  || personid: currentage, cov(uns) tech(nr 5 dfp 5 bfgs 5)
-
-	predict `y'_xb1, xb
-	predict `y'D1, fitted
-	predict `y'1, residuals
-		label variable `y'_xb1 "fitted `y' including only fixed parameters"
-		label variable `y'D1 "fitted `y', from initial regression"
-		label variable `y'1 "residual `y' (fixed effects and person RE's removed)"
-	replace `y'_xb1=. if `y'==.
-	replace `y'D1=. if `y'==.
-	gen `y'_xbres1 =`y'-`y'_xb1 if `y' !=.
-		label variable `y'_xbres1 " `y' - `y'_xb1 "
-	sum `y' `y'_xbres0 `y'0
-	sum `y' `y'_xbres1 `y'1
-}
-	gen temp=fearnD1-fearn_xb1 if fearnD1!=. & fearn_xb1!=.
-		gen tempslope = 0.5*(F2.temp-temp)
-		egen fearn1_P1 = max(tempslope), by(personid year)
-		drop temp tempslope
-	gen temp=fhwageD1-fhwage_xb1 if fhwageD1!=. & fhwage_xb1!=.
-		gen tempslope = 0.5*(F2.temp-temp)
-		egen fhwage1_P1 = max(tempslope), by(personid year)
-		drop temp tempslope
-	label variable fearn1_P1 "estimated indiv. annual earnings growth rate"
-	label variable fhwage1_P1 "estimated indiv. hourly earnings growth rate"
-	move fearn1_P1 fearn1
-	move fhwage1_P1 fhwage1
-
-compress
-
-save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_extendedSPEC.dta", replace
-
-
-***********************************************************************
-**                                                             	     **  
-** CREATE DIFFERENCES                                          	     **
-**                                                             	     **
-***********************************************************************   
-set matsize 1200
-
-
-foreach x in `DVLIST' {
-	sort personid year
-
-	forvalues z=1(1)41 {
- 		forvalues y=0/1 {
-
-	 	gen G`z'_`x'`y' = F`z'.`x'`y' - `x'`y' if F`z'.`x'`y' !=. & `x'`y' !=. 
-
-		label variable G`z'_`x'`y' "growth of `x'`y' between years t+1 and t+`=`z'+1' "
-
-		}
-	}
-	compress
-	save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_extendedSPEC_difference.dta", replace
-
-}
-
-save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_extendedSPEC_difference.dta", replace
-
-
-
-
-*/
-
 
 
 
@@ -283,13 +137,13 @@ save "/Users/ethanballou/Documents/Data/LER_Draft2/gamma_extendedSPEC_difference
 **			 GAMMA			   **
 *****************************************************
 
-   * gam_[VAR]_jjqq     = (1/2)*(G2_[VAR])*(Ljj.G[jj+2+qq]_[VAR])
+   * gam_[VAR]_jjqq     = (1/2)*(RG2_[VAR])*(Ljj.RG[jj+2+qq]_[VAR])
+
+   * Output names keep the legacy "0_A_" suffix so 5_MixedRegConsolidate
+   * and 7_Analysis run unchanged.
 
 
-
-global DVLIST "fearn fhwage"	
-global MAXORDER "1"				
-global MODELLIST "A"	
+global DVLIST "fearn fhwage"
 
 
 
@@ -309,9 +163,7 @@ preserve
     gen JplusQ = .
     gen JJQQ   = .
 	gen gam_fearn0_A_ = .
-	gen gam_fearn1_A_ = .
 	gen gam_fhwage0_A_ = .
-	gen gam_fhwage1_A_ = .
 
 	label variable JplusQ "=J+Q"
 	label variable JJQQ "1st two dig=J, 2nd two dig=Q"
@@ -323,9 +175,7 @@ restore
 
 
 gen gam_fearn0_A_ = .
-gen gam_fearn1_A_ = .
 gen gam_fhwage0_A_ = .
-gen gam_fhwage1_A_ = .
 
 
 
@@ -339,14 +189,9 @@ forvalues j=2(1)32 {
 **NOTE: WE WOULD START J AND Q FROM 3 IF WE WANT TO ALLOW FOR TRANSITORY SHOCKS TO BE MA(2)
 
 		foreach x in $DVLIST {
-			forvalues y=0/$MAXORDER { 
-				foreach model in $MODELLIST {
 
-	
-					replace gam_`x'`y'_`model'_ = (1/2)*(G2_`x'`y')*(L`j'.G`=`j'+2+`q''_`x'`y') 
+			replace gam_`x'0_A_ = (1/2)*(RG2_`x')*(L`j'.RG`=`j'+2+`q''_`x')
 
-				}
-			}
 		}
 
 		preserve
@@ -380,13 +225,11 @@ forvalues j=2(1)32 {
 **			 ALPHA			   **
 *****************************************************
 
-   *  alph_[VAR]_jjqq    = -1*(Gqq_[VAR])*(Ljj.Gjj_[VAR])
+   *  alph_[VAR]_jjqq    = -1*(RGqq_[VAR])*(Ljj.RGjj_[VAR])
 
 
 
-global DVLIST "fearn fhwage"	
-global MAXORDER "1"				
-global MODELLIST "A"	
+global DVLIST "fearn fhwage"
 
 
 
@@ -402,9 +245,7 @@ preserve
     gen JplusQ = .
     gen JJQQ   = .
 	gen alph_fearn0_A_ = .
-	gen alph_fearn1_A_ = .
 	gen alph_fhwage0_A_ = .
-	gen alph_fhwage1_A_ = .
 
 	label variable JplusQ "=J+Q"
 	label variable JJQQ "1st two dig=J, 2nd two dig=Q"
@@ -414,9 +255,7 @@ restore
 
 
 gen alph_fearn0_A_ = .
-gen alph_fearn1_A_ = .
 gen alph_fhwage0_A_ = .
-gen alph_fhwage1_A_ = .
 
 
 
@@ -430,14 +269,9 @@ forvalues j=2(1)32 {
 **NOTE: WE WOULD START J AND Q FROM 3 IF WE WANT TO ALLOW FOR TRANSITORY SHOCKS TO BE MA(2)
 
 		foreach x in $DVLIST {
-			forvalues y=0/$MAXORDER { 
-				foreach model in $MODELLIST {
 
-	
-					replace alph_`x'`y'_`model'_ = -1*(G`q'_`x'`y')*(L`j'.G`j'_`x'`y')
+			replace alph_`x'0_A_ = -1*(RG`q'_`x')*(L`j'.RG`j'_`x')
 
-				}
-			}
 		}
 
 		preserve
@@ -467,12 +301,12 @@ forvalues j=2(1)32 {
 
 preserve
 use `stats_long_gamma', clear
-save "/Users/ethanballou/Documents/Data/Risk/GammaRaw.dta", replace
+save "/Users/ethanballou/Documents/Data/LER_Draft2/GammaRaw.dta", replace
 restore
 
 preserve
 use `stats_long_alpha', clear
-save "/Users/ethanballou/Documents/Data/Risk/AlphaRaw.dta", replace
+save "/Users/ethanballou/Documents/Data/LER_Draft2/AlphaRaw.dta", replace
 restore
 
 
@@ -482,7 +316,7 @@ keep personid year
 
 
 
-merge 1:m personid year using "/Users/ethanballou/Documents/Data/Risk/AlphaRaw.dta"
+merge 1:m personid year using "/Users/ethanballou/Documents/Data/LER_Draft2/AlphaRaw.dta"
 
 drop JplusQ JJQQ
 
@@ -492,7 +326,7 @@ drop _merge
 
 
 
-merge 1:1 personid year J Q using "/Users/ethanballou/Documents/Data/Risk/GammaRaw.dta"
+merge 1:1 personid year J Q using "/Users/ethanballou/Documents/Data/LER_Draft2/GammaRaw.dta"
 
 drop JplusQ JJQQ
 
@@ -506,7 +340,7 @@ label variable JplusQ "=J+Q"
 label variable JJQQ "1st two dig=J, 2nd two dig=Q"
 
 
-save "/Users/ethanballou/Documents/Data/Risk/AlphaGammaRaw.dta", replace
+save "/Users/ethanballou/Documents/Data/LER_Draft2/AlphaGammaRaw.dta", replace
 
 
 

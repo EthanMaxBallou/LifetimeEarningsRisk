@@ -1,0 +1,723 @@
+\documentclass[12pt]{article}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{comment}
+\usepackage{longtable}
+\usepackage{rotating}
+
+
+
+\geometry{margin=1in}
+\bibliographystyle{plain}
+
+\title{Predictors of Earnings Risk with Machine Learning}
+
+\author{Ethan Ballou\thanks{University of Wisconsin - Milwaukee} \and Scott Drewianka$^{*}$}
+
+
+\date{\today}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+
+%\date{\today}
+%\pubMonth{Month}
+%\pubYear{Year}
+%\pubVolume{Vol}
+%\pubIssue{Issue}
+%\JEL{}
+%\Keywords{}
+
+\begin{abstract}
+\begin{singlespace}
+
+
+\noindent 
+
+Pomni abstracted
+
+\end{singlespace}
+\end{abstract}
+
+
+\vspace{1cm}
+
+\noindent
+
+\textbf{Keywords}: machine learning, restricted income profile, earnings instability, risk \\
+\indent \textbf{JEL Codes}: D8, J0, D3\\
+
+
+
+
+
+\clearpage
+\setcounter{page}{1}
+
+
+
+\begin{onehalfspace}
+
+\section{Introduction}
+
+
+
+
+\section{Theoretical Framework}
+
+
+
+
+As mentioned before, the model used is the same model from Drewianka and Oberg (2025) \cite{drewianka2025}. The model is a standard RIP model where people's income are modeled as a function of characteristics, but where there are no individual level effects. Then each individual has a deviation from the expected income process which is modeled as a shock. For example all 22 year old men from the US will have the same expected income process based off of those characteristics. However their actual income will deviate from this expected income process due to shocks. 
+\vspace{-0.75cm} % Adjust the value as needed to reduce spacing
+\begin{align}
+u_{it} 
+&= \pi_{it} + \nu_{it} \\[1ex]
+\pi_{it} 
+&= \rho\,\pi_{i(t-1)} + \eta_{it},
+\end{align}
+
+\vspace{-0.25cm}
+
+$u_{it}$ is the shock or deviation from the expected income process for a given person i in time t. This process of shocks can be decomposed into two types of shocks: persistent and temporary shocks as outlined in equation 1. $\pi_{it}$ is the cumulative effect from the persistent shocks which are further modeled in equation 2 while $\nu_{it}$ are the temporary shocks. The temporary shocks along with $\eta_{it}$ are assumed to be mean zero and independent across individuals and time. The persistent shocks are further modeled as an autoregressive process with $\rho$ being the persistence of the shocks and $\eta_{it}$ being the actual shock.
+
+To get a measure of earnings risk the variance of $\eta_{it}$ across time is calculated. This is capturing the correlation of permanent income shocks across time for each individual. To calculate this the following equation is used:
+
+\vspace{-0.75cm}
+
+\begin{align}
+\Omega_i(t,t+k)
+&\equiv u_{i(t+k)} - u_{it}\\[1ex]
+\Omega_i(t,t+k)
+&= \nu_{i(t+k)} - \nu_{it}
+  + \sum_{j=1}^k \eta_{i(t+j)}.
+\end{align}
+
+\vspace{-0.25cm}
+
+This omega equation differences $u_{it}$ across a window t to t+k. This is then multiplied by another omega function across the window t-j to t+k+q. This will result in the persistent shocks in the interval (t, t+k) showing up twice while the other persistent shocks don't necessarily show up twice. This results in the variance of the shocks across time k as follows:
+
+\vspace{-0.5cm}
+
+\begin{gather}
+E\Bigl[\tfrac{1}{k}\,\Omega_i(t,t+k)\,\Omega_i(t-j,t+k+q)\Bigr]
+= \sigma^2_{\eta_i},\\
+\gamma_{itjq}
+\equiv \tfrac12\,\Omega_i\bigl(t,\,t+2\bigr)\,\Omega_i\bigl(t - j,\,t + 2 + q\bigr).
+\end{gather}
+
+This is then further used to get the following moment condition for the variance of $\eta_{it}$ that is a function of (j+k+q) and j and can be estimated in a regression framework to get a measure of lifetime earnings risk $\gamma_{itjq}$. For more on the derivation see Drewianka and Oberg (2025) \cite{drewianka2025}:
+
+\vspace{-0.75cm}
+
+\begin{align}
+E[\gamma_{itjq}]
+&\approx
+\bigl[\delta^2\,E\pi^2_{i(t-j)}\,(j+k+q)\bigr]
+- \bigl[\delta\,s_i(t-j+1,t)\,j\bigr]
++ \bigl[\sigma^2_{\eta_i(t+1)}
+  - \delta\,\sigma^2_{\eta_i(t+1)}\,(k+q)\bigr] \\[1ex]
+E[\gamma_{itjq}]
+&=
+\sigma^2_{\eta_i(t+1)}
++ \bigl[\delta^2\,E\pi^2_{i(t-j)} - \delta\,\sigma^2_{\eta_i(t+1)}\bigr]\,(j+k+q)
++ \delta\,\bigl[\sigma^2_{\eta_i(t+1)} - s_i(t-j+1,t)\bigr]\,j
+\end{align}
+
+
+
+
+\section{Data}
+
+
+\section{Empirical Strategy}
+
+
+
+
+
+\section{Results}
+
+\section{Conclusion}
+
+
+
+
+
+\begin{table}[H]
+    \centering
+    \caption{Summary Statistics of the Risk Measures}
+    \label{tab:risk_summary}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/risk_summary_stats.tex}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Stratified Means of Gamma and Alpha by Demographic Group}
+    \label{tab:stratified_means_gamma_alpha}
+    \resizebox{0.9\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/stratified_means_gamma_alpha.tex}
+    }
+\end{table}
+
+
+\begin{figure}[H]
+    \centering
+    \caption{Average Annual Earnings by Age, Born 1953-1960 \& Post-1960}
+    \label{fig:avg_realearn_by_age_cohort2_race}
+    \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/avg_realearn_by_age_cohort2_race.png}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \caption{Distribution of Gamma and Alpha}
+    \label{fig:distribution_gamma_alpha_panel}
+    \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/distribution_gamma_alpha_panel.png}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Distribution of Gamma and Alpha Across Age}
+    \label{fig:age_density_gamma_alpha_panel}
+    \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/age_density_gamma_alpha_panel.png}
+\end{figure}
+
+
+
+
+\begin{table}[H]
+    \centering
+    \caption{Gamma and Alpha Regressions: OLS Results (Coefficients x 100)}
+    \label{tab:gamma_alpha_ols}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_alpha_ols.tex}
+    }
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Gamma Regressions: F-Test Results}
+    \label{tab:gamma_ftest}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_ftest.tex}
+    }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: F-Test Results}
+    \label{tab:alpha_ftest}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_ftest.tex}
+    }
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Gamma and Alpha Regressions: Stepwise Selection Results (Coefficients x 100)}
+    \label{tab:gamma_alpha_stepwise}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_alpha_stepwise.tex}
+    }
+\end{table}
+
+
+
+
+
+
+
+\begin{table}[H]
+    \centering
+    \caption{Correlation of ML Predictions, Hourly Earnings}
+    \label{tab:pred_corr}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_alpha_pred_corr.tex}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Correlation of ML Predictions, Annual Earnings}
+    \label{tab:pred_corr_fearn}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_alpha_pred_corr_fearn.tex}
+\end{table}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_occ_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_occ_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_occ_rank_lasso_vs_rf.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_ind_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_ind_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_ind_rank_lasso_vs_rf.pdf}
+    \caption{Gamma SHAP Rank Comparisons Across Methods, Annual Earnings (fearn). Top row: occupation; bottom row: industry.}
+    \label{fig:gamma_fearn_rank_methods}
+\end{figure}
+
+
+
+\begin{table}[H]
+    \centering
+    \caption{Out-of-Sample Test MSE by Method}
+    \label{tab:ml_test_mse}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/ml_test_mse.tex}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Group SHAP Shares of Controls, Gamma (Average |SHAP| per Variable x 100)}
+    \label{tab:gamma_shap_shares}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_shap_shares.tex}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Group SHAP Shares of Controls, Alpha (Average |SHAP| per Variable x 100)}
+    \label{tab:alpha_shap_shares}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_shap_shares.tex}
+\end{table}
+
+
+
+
+
+
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Gamma and Alpha by Demographic Group, Hourly Earnings}
+    \label{tab:gamma_alpha_pred_means}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_alpha_pred_means.tex}
+    }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Gamma and Alpha by Demographic Group, Annual Earnings}
+    \label{tab:gamma_alpha_fearn_pred_means}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_alpha_pred_means_fearn.tex}
+    }
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Gamma by Education and Age Bin, Hourly Earnings}
+    \label{tab:gamma_pred_matrix}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Actual}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_actual.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Neural Network}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_nn.tex}
+        }
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Random Forest}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_rf.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{LASSO}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_pred_matrix_lasso.tex}
+        }
+    \end{minipage}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Gamma by Education and Age Bin, Annual Earnings}
+    \label{tab:gamma_fearn_pred_matrix}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Actual}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_actual.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Neural Network}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_nn.tex}
+        }
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Random Forest}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_rf.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{LASSO}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_pred_matrix_lasso.tex}
+        }
+    \end{minipage}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Alpha by Education and Age Bin, Hourly Earnings}
+    \label{tab:alpha_pred_matrix}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Actual}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_pred_matrix_actual.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Neural Network}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_pred_matrix_nn.tex}
+        }
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Random Forest}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_pred_matrix_rf.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{LASSO}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_pred_matrix_lasso.tex}
+        }
+    \end{minipage}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Alpha by Education and Age Bin, Annual Earnings}
+    \label{tab:alpha_fearn_pred_matrix}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Actual}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_pred_matrix_actual.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Neural Network}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_pred_matrix_nn.tex}
+        }
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Random Forest}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_pred_matrix_rf.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{LASSO}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_pred_matrix_lasso.tex}
+        }
+    \end{minipage}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Characteristics of Top and Bottom Risk Deciles by Age, Gamma (Sorted by Actual Risk; Percent Shares)}
+    \label{tab:gamma_deciles}
+    \textbf{Panel A: Hourly Wage}\\[4pt]
+    \resizebox*{!}{0.41\textheight}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_deciles.tex}
+    }
+
+    \vspace{10pt}
+
+    \textbf{Panel B: Annual Earnings}\\[4pt]
+    \resizebox*{!}{0.41\textheight}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_deciles.tex}
+    }
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Characteristics of Top and Bottom Risk Deciles by Age, Alpha (Sorted by Ensemble-Predicted and Actual Risk; Percent Shares)}
+    \label{tab:alpha_deciles}
+    \textbf{Panel A: Hourly Wage}\\[4pt]
+    \resizebox*{!}{0.41\textheight}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_deciles.tex}
+    }
+
+    \vspace{10pt}
+
+    \textbf{Panel B: Annual Earnings}\\[4pt]
+    \resizebox*{!}{0.41\textheight}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_deciles.tex}
+    }
+\end{table}
+
+
+
+
+
+
+
+
+
+
+\end{onehalfspace}
+
+
+
+
+
+
+
+
+\begin{thebibliography}{99}
+\bibitem{abowd_card1989} Abowd, J.~M. and Card, D. (1989). On the Covariance Structure of Earnings and Hours Changes. \textit{Econometrica}, 57(2), 411--445.
+\bibitem{baker1997} Baker, M. (1997). Growth-Rate Heterogeneity and the Covariance Structure of Life-Cycle Earnings. \textit{Journal of Labor Economics}, 15(2), 338--375.
+\bibitem{cpi2017} Consumer Price Index for All Urban Consumers (2017). Data set, series CUUR0000SA0. Washington, D.C.: U.S. Bureau of Labor Statistics.
+\bibitem{drewianka2010} Drewianka, S. (2010). Cross-Sectional Variation in Individuals’ Earnings Instability. \textit{Review of Income and Wealth}, 56(2), 291--326.
+\bibitem{drewianka2025}Drewianka, Scott and Oberg, Phillip. (2025). Earnings Risk and Heterogeneous Expected Earnings Profiles. Quantitative Economics. Forthcoming.
+\bibitem{drewianka_oberg2019} Drewianka, S. and Oberg, P. (2019). Estimating Heterogeneity in Lifetime Earnings Risk. Unpublished manuscript, University of Wisconsin--Milwaukee and Illinois Wesleyan University. Available at \url{http://dx.doi.org/10.2139/ssrn.3630477}.
+\bibitem{guvenen2009} Guvenen, F. (2009). An Empirical Investigation of Labor Income Processes. \textit{Review of Economic Dynamics}, 12, 58--79.
+\bibitem{guvenen2007} Guvenen, F. (2007). Learning Your Earning: Are Labor Income Shocks Really Very Persistent? \textit{American Economic Review}, 97(3), 687--712.
+\bibitem{hill1992} Hill, M.~S. (1992). \textit{The Panel Study of Income Dynamics: A User’s Guide}, Volume~2. Newbury Park, CA: Sage Publications.
+\bibitem{hryshko2012} Hryshko, D. (2012). Labor Income Profiles Are Not Heterogeneous: Evidence from Income Growth Rates. \textit{Quantitative Economics}, 3, 177--209.
+\bibitem{lundberq} Lundberg, S. M., and Lee, S. I. (2017). A unified approach to interpreting model predictions. Advances in neural information processing systems, 30.
+\bibitem{macurdy1982} MaCurdy, T.~E. (1982). The Use of Time Series Processes to Model the Error Structure of Earnings in a Longitudinal Data Analysis. \textit{Journal of Econometrics}, 18(1), 83--114.
+\bibitem{meghir_pistaferri2004} Meghir, C. and Pistaferri, L. (2004). Income Variance Dynamics and Heterogeneity. \textit{Econometrica}, 72(1), 1--32.
+\bibitem{psid2023} Panel Study of Income Dynamics (2023). Public use dataset. Ann Arbor, MI: Institute for Social Research, Survey Research Center, University of Michigan.
+
+
+
+\end{thebibliography}
+
+
+
+
+\appendix
+
+
+
+\section{Appendix}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Gamma Regressions: Industry Selection Results}
+    \label{tab:gamma_lasso_ind}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_lasso_ind_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_lasso_ind_selection.tex}
+        }
+    \end{minipage}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Gamma Regressions: Occupation Selection Results}
+    \label{tab:gamma_lasso_occ}
+    \renewcommand{\arraystretch}{0.7}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_lasso_occ_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_fearn_lasso_occ_selection.tex}
+        }
+    \end{minipage}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: Industry Selection Results}
+    \label{tab:alpha_lasso_ind}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_lasso_ind_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_lasso_ind_selection.tex}
+        }
+    \end{minipage}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: Occupation Selection Results}
+    \label{tab:alpha_lasso_occ}
+    \renewcommand{\arraystretch}{0.7}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_lasso_occ_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_lasso_occ_selection.tex}
+        }
+    \end{minipage}
+\end{table}
+
+
+\begin{figure}[H]
+    \centering
+    \caption{Average Annual Earnings by Age, Born Pre-1944 \& 1944-1952}
+    \label{fig:avg_realearn_by_age_cohort1_race}
+    \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/avg_realearn_by_age_cohort1_race.png}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Average Annual Earnings by Age, Born 1953-1960 \& Post-1960}
+    \label{fig:avg_realearn_by_age_cohort2_race}
+    \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/avg_realearn_by_age_cohort2_race.png}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Average Hourly Wage by Age, Born Pre-1944 \& 1944-1952}
+    \label{fig:avg_hwage_by_age_cohort1_race}
+    \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/avg_hwage_by_age_cohort1_race.png}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Average Hourly Wage by Age, Born 1953-1960 \& Post-1960}
+    \label{fig:avg_hwage_by_age_cohort2_race}
+    \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/avg_hwage_by_age_cohort2_race.png}
+\end{figure}
+
+
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_occ_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_occ_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_occ_rank_lasso_vs_rf.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_ind_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_ind_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_ind_rank_lasso_vs_rf.pdf}
+    \caption{Gamma SHAP Rank Comparisons Across Methods, Hourly Earnings (fhwage). Top row: occupation; bottom row: industry.}
+    \label{fig:gamma_rank_methods}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_occ_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_occ_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_occ_rank_lasso_vs_rf.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_ind_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_ind_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_ind_rank_lasso_vs_rf.pdf}
+    \caption{Alpha SHAP Rank Comparisons Across Methods, Hourly Earnings (fhwage). Top row: occupation; bottom row: industry.}
+    \label{fig:alpha_rank_methods}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_occ_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_occ_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_occ_rank_lasso_vs_rf.pdf}
+
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_ind_rank_lasso_vs_nn.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_ind_rank_nn_vs_rf.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_ind_rank_lasso_vs_rf.pdf}
+    \caption{Alpha SHAP Rank Comparisons Across Methods, Annual Earnings (fearn). Top row: occupation; bottom row: industry.}
+    \label{fig:alpha_fearn_rank_methods}
+\end{figure}
+
+
+
+
+
+
+\end{document}
+

@@ -1,13 +1,4 @@
 step,action,vars,v1,v2,v3
-1,A,agecat6,     2 , .0012027          1    0.0000 , A agecat6                                                                              
-2,A,EDU1,     3 , .0010958          2    0.0001 , A EDU1                                                                                 
-3,A,EDU3,     4 , .0009985          3    0.0001 , A EDU3                                                                                 
-4,A,EDU2                 agecat3,     8 , .0006882          5    0.0002 , A EDU2                 agecat3                                                         
-5,A,OLF,    12 , .0004744          6    0.0003 , A OLF                                                                                  
-6,A,agecat2,    14 , .0003938          7    0.0003 , A agecat2                                                                              
-7,A,ma5aep,    16 ,  .000327          8    0.0004 , A ma5aep                                                                               
-8,A,agecat5,    19 , .0002473          9    0.0004 , A agecat5                                                                              
-9,A,tenure,    25 , .0001415         10    0.0004 , A tenure                                                                               
-10,A,agecat1,    27 , .0001175         11    0.0004 , A agecat1                                                                              
-11,A,EDU4,    33 , .0000672         12    0.0004 , A EDU4                                                                                 
-12,A,PrRecess,    34 , .0000613         13    0.0004 , A PrRecess                                                                             
+1,A,EDU1                 EDU2                 EDU3,   * 1 , .0000841         11    0.0003 , A EDU1                 EDU2                 EDU3                                       
+2,A,OLF                  ma5aep,     2 , .0000766         13    0.0003 , A OLF                  ma5aep                                                          
+3,A,PrRecess,     4 , .0000636         14    0.0004 , A PrRecess                                                                             

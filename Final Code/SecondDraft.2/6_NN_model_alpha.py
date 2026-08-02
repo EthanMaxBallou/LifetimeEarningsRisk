@@ -1,10 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jan  9 14:36:36 2025
 
-@author: ethanballou
-"""
 
 
 import shap
@@ -34,7 +28,7 @@ from sklearn.linear_model import LassoCV
 
 
 # Load the .dta file
-dta_file_path = "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta"
+dta_file_path = "/Users/ethanballou/Documents/Data/LER_Draft2/Consolidated_AlphaGamma_withDemographics.dta"
 data, meta = pyreadstat.read_dta(dta_file_path)
 
 # Display the first few rows of the dataframe
@@ -47,9 +41,8 @@ print(meta.column_names)
 # Columns to drop from the dataset
 columns_to_keep = [
     'year', 'personid', 'censdiv', 'occ', 'twoind', 'race', 
-    'currentage',
-    'PrRecess', 'OLF', 'tenure', 'currentagesq', 
-    'currentagecube', 'cohort',
+    'agebin',
+    'PrRecess', 'OLF', 'tenure', 'cohort',
     'alphaP_WEIGHTED', 'edyrs'
 ]
 
@@ -61,9 +54,13 @@ data = data[columns_to_keep]
 # Drop rows with missing values in any kept column
 data = data.dropna()
 
+# Person-year keys for merging fitted values back into Stata
+# (same row order as the data/target exports below)
+ids = data[['personid', 'year']].astype('int64').copy()
+
 
 # Create a vector with the names of the columns to convert
-columns_to_convert = ['race', 'occ', 'year', 'censdiv', 'cohort', 'twoind']
+columns_to_convert = ['race', 'occ', 'year', 'censdiv', 'cohort', 'twoind', 'agebin']
 
 # Create dummy variables for all specified columns in one line
 data = pd.get_dummies(data, columns=columns_to_convert, drop_first=False)
@@ -88,16 +85,22 @@ data = data.drop(columns=['personid', 'edyrs'], errors='ignore')
 
 
 # Export the processed data to a CSV file
-processed_data_path = "/Users/ethanballou/Documents/Data/Risk/ALP_data_NN.csv"
+processed_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_data_NN.csv"
 
 data.to_csv(processed_data_path, index=False)
 print(f"Processed data exported to {processed_data_path}")
 
 
 # Save the target variable to a separate CSV file
-target_data_path = "/Users/ethanballou/Documents/Data/Risk/ALP_target_NN.csv"
+target_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_target_NN.csv"
 target.to_csv(target_data_path, index=False)
 print(f"Target data exported to {target_data_path}")
+
+
+# Save the person-year keys alongside (same row order as data/target)
+ids_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_ids_NN.csv"
+ids.to_csv(ids_data_path, index=False)
+print(f"Id data exported to {ids_data_path}")
 
 
 X = data.values  # Features
@@ -142,10 +145,11 @@ num_variables = X_train.shape[1]
 nn1 = Sequential()
 nn1.add(Input((num_variables,)))
 
-nn1.add(Dense(1000, activation="sigmoid"))
-nn1.add(Dropout(0.3))
-nn1.add(Dense(1000, activation="sigmoid"))
-nn1.add(Dense(1000, activation="sigmoid"))
+nn1.add(Dense(500, activation="sigmoid"))
+nn1.add(Dropout(0.5))
+nn1.add(Dense(500, activation="sigmoid"))
+nn1.add(Dense(500, activation="sigmoid"))
+
 
 nn1.add(Dense(1, activation="linear"))
 
@@ -158,8 +162,8 @@ nn1.compile(optimizer="adam", loss="mse", metrics=["mse"])
 
 
 
-early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-Network1 = nn1.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), verbose=1, callbacks=[early_stopping])
+early_stopping = EarlyStopping(monitor='val_loss', patience=6, restore_best_weights=True)
+Network1 = nn1.fit(X_train, y_train, epochs=40, validation_data=(X_val, y_val), verbose=1, callbacks=[early_stopping])
 
 
 
@@ -170,6 +174,17 @@ print(f"Test MSE after training: {test_mse}")
 
 
 nn1.save("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN_Alpha.keras")
+
+
+# Fitted values for ALL observations, converted back to natural units
+X_all = scaler.transform(data.values)
+pred_scaled = nn1.predict(X_all, verbose=0)
+pred = scaler_y.inverse_transform(pred_scaled).ravel()
+
+preds_out = ids.copy()
+preds_out['pred_nn'] = pred
+preds_out.to_csv("/Users/ethanballou/Documents/Data/LER_Draft2/NN_predictions_alpha.csv", index=False)
+print("NN predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/NN_predictions_alpha.csv")
 
 
 
@@ -186,7 +201,7 @@ import tensorflow as tf      # already imported in these files
 tf.keras.backend.clear_session()
 
 # Load the .dta file
-dta_file_path = "/Users/ethanballou/Documents/Data/Risk/Consolidated_AlphaGamma_withDemographics.dta"
+dta_file_path = "/Users/ethanballou/Documents/Data/LER_Draft2/Consolidated_AlphaGamma_withDemographics.dta"
 data, meta = pyreadstat.read_dta(dta_file_path)
 
 # Display the first few rows of the dataframe
@@ -199,9 +214,8 @@ print(meta.column_names)
 # Columns to drop from the dataset
 columns_to_keep = [
     'year', 'personid', 'censdiv', 'occ', 'twoind', 'race', 
-    'currentage',
-    'PrRecess', 'OLF', 'tenure', 'currentagesq', 
-    'currentagecube', 'cohort',
+    'agebin',
+    'PrRecess', 'OLF', 'tenure', 'cohort',
     'alphaP_WEIGHTED_fearn', 'edyrs'
 ]
 
@@ -213,9 +227,13 @@ data = data[columns_to_keep]
 # Drop rows with missing values in any kept column
 data = data.dropna()
 
+# Person-year keys for merging fitted values back into Stata
+# (same row order as the data/target exports below)
+ids = data[['personid', 'year']].astype('int64').copy()
+
 
 # Create a vector with the names of the columns to convert
-columns_to_convert = ['race', 'occ', 'year', 'censdiv', 'cohort', 'twoind']
+columns_to_convert = ['race', 'occ', 'year', 'censdiv', 'cohort', 'twoind', 'agebin']
 
 # Create dummy variables for all specified columns in one line
 data = pd.get_dummies(data, columns=columns_to_convert, drop_first=False)
@@ -240,16 +258,22 @@ data = data.drop(columns=['personid', 'edyrs'], errors='ignore')
 
 
 # Export the processed data to a CSV file
-processed_data_path = "/Users/ethanballou/Documents/Data/Risk/ALP_data_NN_fearn.csv"
+processed_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_data_NN_fearn.csv"
 
 data.to_csv(processed_data_path, index=False)
 print(f"Processed data exported to {processed_data_path}")
 
 
 # Save the target variable to a separate CSV file
-target_data_path = "/Users/ethanballou/Documents/Data/Risk/ALP_target_NN_fearn.csv"
+target_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_target_NN_fearn.csv"
 target.to_csv(target_data_path, index=False)
 print(f"Target data exported to {target_data_path}")
+
+
+# Save the person-year keys alongside (same row order as data/target)
+ids_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_ids_NN_fearn.csv"
+ids.to_csv(ids_data_path, index=False)
+print(f"Id data exported to {ids_data_path}")
 
 
 X = data.values  # Features
@@ -294,10 +318,10 @@ num_variables = X_train.shape[1]
 nn1 = Sequential()
 nn1.add(Input((num_variables,)))
 
-nn1.add(Dense(1000, activation="sigmoid"))
-nn1.add(Dropout(0.3))
-nn1.add(Dense(1000, activation="sigmoid"))
-nn1.add(Dense(1000, activation="sigmoid"))
+nn1.add(Dense(500, activation="sigmoid"))
+nn1.add(Dropout(0.5))
+nn1.add(Dense(500, activation="sigmoid"))
+nn1.add(Dense(500, activation="sigmoid"))
 
 nn1.add(Dense(1, activation="linear"))
 
@@ -310,8 +334,8 @@ nn1.compile(optimizer="adam", loss="mse", metrics=["mse"])
 
 
 
-early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-Network1 = nn1.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val), verbose=1, callbacks=[early_stopping])
+early_stopping = EarlyStopping(monitor='val_loss', patience=6, restore_best_weights=True)
+Network1 = nn1.fit(X_train, y_train, epochs=40, validation_data=(X_val, y_val), verbose=1, callbacks=[early_stopping])
 
 
 
@@ -322,6 +346,17 @@ print(f"Test MSE after training: {test_mse}")
 
 
 nn1.save("/Users/ethanballou/Documents/Github/LifetimeEarningsRisk/Risk_NN_Alpha_fearn.keras")
+
+
+# Fitted values for ALL observations, converted back to natural units
+X_all = scaler.transform(data.values)
+pred_scaled = nn1.predict(X_all, verbose=0)
+pred = scaler_y.inverse_transform(pred_scaled).ravel()
+
+preds_out = ids.copy()
+preds_out['pred_nn'] = pred
+preds_out.to_csv("/Users/ethanballou/Documents/Data/LER_Draft2/NN_predictions_alpha_fearn.csv", index=False)
+print("NN predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/NN_predictions_alpha_fearn.csv")
 
 
 

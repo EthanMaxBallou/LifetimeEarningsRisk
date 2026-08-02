@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Apr 12 18:04:49 2026
-
-@author: ethanballou
-"""
 
 
 import os
@@ -35,12 +28,12 @@ from sklearn.linear_model import LassoCV
 # ALPHA
 
 # Load the CSV file
-data_path = '/Users/ethanballou/Documents/Data/Risk/ALP_data_NN.csv'
+data_path = '/Users/ethanballou/Documents/Data/LER_Draft2/ALP_data_NN.csv'
 data = pd.read_csv(data_path)
 
 
 # Load the target variable
-target_path = '/Users/ethanballou/Documents/Data/Risk/ALP_target_NN.csv'
+target_path = '/Users/ethanballou/Documents/Data/LER_Draft2/ALP_target_NN.csv'
 target = pd.read_csv(target_path)
 
 
@@ -49,13 +42,47 @@ X = data.values  # Features
 y = target.values  # Target variables, dropping personid and year
 
 
-# Fit loose Lasso
-model = Lasso(alpha=0.00001, max_iter=7500)  # very loose, adjust as needed
-model.fit(X, y)
+# Split data into train, validation, and test sets (same split as NN/RF)
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
 
-# Calculate SHAP values
-explainer = shap.LinearExplainer(model, X)
-shap_values = explainer.shap_values(X)
+
+scaler = MinMaxScaler()
+
+
+# Fit the scaler on the training data and transform all sets
+X_train = scaler.fit_transform(X_train)
+X_val = scaler.transform(X_val)
+X_test = scaler.transform(X_test)
+
+
+# Reshape the target arrays to 2D for MinMaxScaler
+y_train = y_train.reshape(-1, 1)
+y_val = y_val.reshape(-1, 1)
+y_test = y_test.reshape(-1, 1)
+
+# Normalize the target
+scaler_y = MinMaxScaler()
+y_train = scaler_y.fit_transform(y_train)
+y_val = scaler_y.transform(y_val)
+y_test = scaler_y.transform(y_test)
+
+
+# Fit loose Lasso on the training sample only
+model = Lasso(alpha=0.00001, max_iter=7500)  # very loose, adjust as needed
+model.fit(X_train, y_train)
+
+
+# Evaluate Lasso on test set
+lasso_predictions = model.predict(X_test)
+lasso_mse = mean_squared_error(y_test, lasso_predictions)
+print(f"Lasso Test MSE: {lasso_mse}")
+
+
+# Calculate SHAP values (scaled units, matching the RF/NN setup)
+X_all = scaler.transform(X)
+explainer = shap.LinearExplainer(model, X_all)
+shap_values = explainer.shap_values(X_all)
 
 
 
@@ -73,6 +100,14 @@ shap_summary_df = pd.DataFrame({
 
 
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_shap_summary_alpha.csv', index=False)
+
+
+# Fitted values for ALL observations, converted back to natural units
+ids = pd.read_csv('/Users/ethanballou/Documents/Data/LER_Draft2/ALP_ids_NN.csv')
+preds_out = ids.copy()
+preds_out['pred_lasso'] = scaler_y.inverse_transform(model.predict(X_all).reshape(-1, 1)).ravel()
+preds_out.to_csv('/Users/ethanballou/Documents/Data/LER_Draft2/Lasso_predictions_alpha.csv', index=False)
+print("Lasso predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/Lasso_predictions_alpha.csv")
 
 
 
@@ -123,12 +158,12 @@ print(f"Industry SHAP values saved to: {industry_output}")
 # GAMMA
 
 # Load the CSV file
-data_path = '/Users/ethanballou/Documents/Data/Risk/GAM_data_NN.csv'
+data_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_data_NN.csv'
 data = pd.read_csv(data_path)
 
 
 # Load the target variable
-target_path = '/Users/ethanballou/Documents/Data/Risk/GAM_target_NN.csv'
+target_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_target_NN.csv'
 target = pd.read_csv(target_path)
 
 
@@ -137,13 +172,47 @@ X = data.values  # Features
 y = target.values  # Target variables, dropping personid and year
 
 
-# Fit loose Lasso
-model = Lasso(alpha=0.00001, max_iter=7500)  # very loose, adjust as needed
-model.fit(X, y)
+# Split data into train, validation, and test sets (same split as NN/RF)
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
 
-# Calculate SHAP values
-explainer = shap.LinearExplainer(model, X)
-shap_values = explainer.shap_values(X)
+
+scaler = MinMaxScaler()
+
+
+# Fit the scaler on the training data and transform all sets
+X_train = scaler.fit_transform(X_train)
+X_val = scaler.transform(X_val)
+X_test = scaler.transform(X_test)
+
+
+# Reshape the target arrays to 2D for MinMaxScaler
+y_train = y_train.reshape(-1, 1)
+y_val = y_val.reshape(-1, 1)
+y_test = y_test.reshape(-1, 1)
+
+# Normalize the target
+scaler_y = MinMaxScaler()
+y_train = scaler_y.fit_transform(y_train)
+y_val = scaler_y.transform(y_val)
+y_test = scaler_y.transform(y_test)
+
+
+# Fit loose Lasso on the training sample only
+model = Lasso(alpha=0.00001, max_iter=7500)  # very loose, adjust as needed
+model.fit(X_train, y_train)
+
+
+# Evaluate Lasso on test set
+lasso_predictions = model.predict(X_test)
+lasso_mse = mean_squared_error(y_test, lasso_predictions)
+print(f"Lasso Test MSE: {lasso_mse}")
+
+
+# Calculate SHAP values (scaled units, matching the RF/NN setup)
+X_all = scaler.transform(X)
+explainer = shap.LinearExplainer(model, X_all)
+shap_values = explainer.shap_values(X_all)
 
 
 
@@ -161,6 +230,14 @@ shap_summary_df = pd.DataFrame({
 
 
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_shap_summary_gamma.csv', index=False)
+
+
+# Fitted values for ALL observations, converted back to natural units
+ids = pd.read_csv('/Users/ethanballou/Documents/Data/LER_Draft2/GAM_ids_NN.csv')
+preds_out = ids.copy()
+preds_out['pred_lasso'] = scaler_y.inverse_transform(model.predict(X_all).reshape(-1, 1)).ravel()
+preds_out.to_csv('/Users/ethanballou/Documents/Data/LER_Draft2/Lasso_predictions_gamma.csv', index=False)
+print("Lasso predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/Lasso_predictions_gamma.csv")
 
 
 
@@ -223,12 +300,12 @@ tf.keras.backend.clear_session()
 # ALPHA
 
 # Load the CSV file
-data_path = '/Users/ethanballou/Documents/Data/Risk/ALP_data_NN_fearn.csv'
+data_path = '/Users/ethanballou/Documents/Data/LER_Draft2/ALP_data_NN_fearn.csv'
 data = pd.read_csv(data_path)
 
 
 # Load the target variable
-target_path = '/Users/ethanballou/Documents/Data/Risk/ALP_target_NN_fearn.csv'
+target_path = '/Users/ethanballou/Documents/Data/LER_Draft2/ALP_target_NN_fearn.csv'
 target = pd.read_csv(target_path)
 
 
@@ -237,13 +314,47 @@ X = data.values  # Features
 y = target.values  # Target variables, dropping personid and year
 
 
-# Fit loose Lasso
-model = Lasso(alpha=0.00001, max_iter=7500)  # very loose, adjust as needed
-model.fit(X, y)
+# Split data into train, validation, and test sets (same split as NN/RF)
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
 
-# Calculate SHAP values
-explainer = shap.LinearExplainer(model, X)
-shap_values = explainer.shap_values(X)
+
+scaler = MinMaxScaler()
+
+
+# Fit the scaler on the training data and transform all sets
+X_train = scaler.fit_transform(X_train)
+X_val = scaler.transform(X_val)
+X_test = scaler.transform(X_test)
+
+
+# Reshape the target arrays to 2D for MinMaxScaler
+y_train = y_train.reshape(-1, 1)
+y_val = y_val.reshape(-1, 1)
+y_test = y_test.reshape(-1, 1)
+
+# Normalize the target
+scaler_y = MinMaxScaler()
+y_train = scaler_y.fit_transform(y_train)
+y_val = scaler_y.transform(y_val)
+y_test = scaler_y.transform(y_test)
+
+
+# Fit loose Lasso on the training sample only
+model = Lasso(alpha=0.00001, max_iter=7500)  # very loose, adjust as needed
+model.fit(X_train, y_train)
+
+
+# Evaluate Lasso on test set
+lasso_predictions = model.predict(X_test)
+lasso_mse = mean_squared_error(y_test, lasso_predictions)
+print(f"Lasso Test MSE: {lasso_mse}")
+
+
+# Calculate SHAP values (scaled units, matching the RF/NN setup)
+X_all = scaler.transform(X)
+explainer = shap.LinearExplainer(model, X_all)
+shap_values = explainer.shap_values(X_all)
 
 
 
@@ -261,6 +372,14 @@ shap_summary_df = pd.DataFrame({
 
 
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_shap_summary_alpha_fearn.csv', index=False)
+
+
+# Fitted values for ALL observations, converted back to natural units
+ids = pd.read_csv('/Users/ethanballou/Documents/Data/LER_Draft2/ALP_ids_NN_fearn.csv')
+preds_out = ids.copy()
+preds_out['pred_lasso'] = scaler_y.inverse_transform(model.predict(X_all).reshape(-1, 1)).ravel()
+preds_out.to_csv('/Users/ethanballou/Documents/Data/LER_Draft2/Lasso_predictions_alpha_fearn.csv', index=False)
+print("Lasso predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/Lasso_predictions_alpha_fearn.csv")
 
 
 
@@ -311,12 +430,12 @@ print(f"Industry SHAP values saved to: {industry_output}")
 # GAMMA
 
 # Load the CSV file
-data_path = '/Users/ethanballou/Documents/Data/Risk/GAM_data_NN_fearn.csv'
+data_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_data_NN_fearn.csv'
 data = pd.read_csv(data_path)
 
 
 # Load the target variable
-target_path = '/Users/ethanballou/Documents/Data/Risk/GAM_target_NN_fearn.csv'
+target_path = '/Users/ethanballou/Documents/Data/LER_Draft2/GAM_target_NN_fearn.csv'
 target = pd.read_csv(target_path)
 
 
@@ -325,13 +444,47 @@ X = data.values  # Features
 y = target.values  # Target variables, dropping personid and year
 
 
-# Fit loose Lasso
-model = Lasso(alpha=0.00001, max_iter=7500)  # very loose, adjust as needed
-model.fit(X, y)
+# Split data into train, validation, and test sets (same split as NN/RF)
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
 
-# Calculate SHAP values
-explainer = shap.LinearExplainer(model, X)
-shap_values = explainer.shap_values(X)
+
+scaler = MinMaxScaler()
+
+
+# Fit the scaler on the training data and transform all sets
+X_train = scaler.fit_transform(X_train)
+X_val = scaler.transform(X_val)
+X_test = scaler.transform(X_test)
+
+
+# Reshape the target arrays to 2D for MinMaxScaler
+y_train = y_train.reshape(-1, 1)
+y_val = y_val.reshape(-1, 1)
+y_test = y_test.reshape(-1, 1)
+
+# Normalize the target
+scaler_y = MinMaxScaler()
+y_train = scaler_y.fit_transform(y_train)
+y_val = scaler_y.transform(y_val)
+y_test = scaler_y.transform(y_test)
+
+
+# Fit loose Lasso on the training sample only
+model = Lasso(alpha=0.00001, max_iter=7500)  # very loose, adjust as needed
+model.fit(X_train, y_train)
+
+
+# Evaluate Lasso on test set
+lasso_predictions = model.predict(X_test)
+lasso_mse = mean_squared_error(y_test, lasso_predictions)
+print(f"Lasso Test MSE: {lasso_mse}")
+
+
+# Calculate SHAP values (scaled units, matching the RF/NN setup)
+X_all = scaler.transform(X)
+explainer = shap.LinearExplainer(model, X_all)
+shap_values = explainer.shap_values(X_all)
 
 
 
@@ -349,6 +502,14 @@ shap_summary_df = pd.DataFrame({
 
 
 shap_summary_df.to_csv('/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Lasso_shap_summary_gamma_fearn.csv', index=False)
+
+
+# Fitted values for ALL observations, converted back to natural units
+ids = pd.read_csv('/Users/ethanballou/Documents/Data/LER_Draft2/GAM_ids_NN_fearn.csv')
+preds_out = ids.copy()
+preds_out['pred_lasso'] = scaler_y.inverse_transform(model.predict(X_all).reshape(-1, 1)).ravel()
+preds_out.to_csv('/Users/ethanballou/Documents/Data/LER_Draft2/Lasso_predictions_gamma_fearn.csv', index=False)
+print("Lasso predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/Lasso_predictions_gamma_fearn.csv")
 
 
 

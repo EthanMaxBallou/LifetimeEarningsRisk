@@ -12,6 +12,7 @@
 \usepackage{amsmath}
 \usepackage{comment}
 \usepackage{longtable}
+\usepackage{rotating}
 
 
 
@@ -125,26 +126,6 @@
 \end{table}
 
 
-\begin{table}[H]
-    \centering
-    \caption{Gamma Regressions: Industry Selection Results}
-    \label{tab:gamma_lasso_ind}
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Hourly Earnings (fhwage)}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex}
-        }
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Annual Earnings (fearn)}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_lasso_ind_selection.tex}
-        }
-    \end{minipage}
-\end{table}
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_rank_lasso_vs_nn.pdf}\hfill
@@ -163,22 +144,6 @@
     \label{fig:gamma_fearn_ind_rank_scatter}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_lasso_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_lasso_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_lasso_fhwage_vs_rf_fearn.pdf}
-
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_nn_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_nn_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_nn_fhwage_vs_rf_fearn.pdf}
-
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_rf_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_rf_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_ind_xrank_rf_fhwage_vs_rf_fearn.pdf}
-    \caption{Gamma Industry SHAP Rank: fhwage (rows: LASSO, NN, RF) vs.\ fearn (columns: LASSO, NN, RF)}
-    \label{fig:gamma_ind_xrank_3x3}
-\end{figure}
 
 
 
@@ -186,28 +151,6 @@
 
 
 
-
-
-\begin{table}[H]
-    \centering
-    \caption{Gamma Regressions: Occupation Selection Results}
-    \label{tab:gamma_lasso_occ}
-    \renewcommand{\arraystretch}{0.7}
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Hourly Earnings (fhwage)}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex}
-        }
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Annual Earnings (fearn)}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_lasso_occ_selection.tex}
-        }
-    \end{minipage}
-\end{table}
 
 \begin{figure}[H]
     \centering
@@ -225,23 +168,6 @@
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_occ_rank_lasso_vs_rf.pdf}
     \caption{Gamma Occupation SHAP Rank Comparisons (Annual Earnings, fearn)}
     \label{fig:gamma_fearn_occ_rank_scatter}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_lasso_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_lasso_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_lasso_fhwage_vs_rf_fearn.pdf}
-
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_nn_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_nn_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_nn_fhwage_vs_rf_fearn.pdf}
-
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_rf_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_rf_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_occ_xrank_rf_fhwage_vs_rf_fearn.pdf}
-    \caption{Gamma Occupation SHAP Rank: fhwage (rows: LASSO, NN, RF) vs.\ fearn (columns: LASSO, NN, RF)}
-    \label{fig:gamma_occ_xrank_3x3}
 \end{figure}
 
 
@@ -265,14 +191,6 @@
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_regressions.tex}
     }
 \end{table}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_year_fe.pdf}\hfill
-    \includegraphics[width=0.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_year_fe.pdf}
-    \caption{Year Fixed Effects on Gamma (All-Controls Model, 95\% CI): Hourly earnings (fhwage, left) and Annual earnings (fearn, right)}
-    \label{fig:gamma_year_fe}
-\end{figure}
 
 
 
@@ -321,22 +239,101 @@
 
 
 
+
+
+
+
 \begin{table}[H]
     \centering
-    \caption{Gamma Regressions: Lasso Selection Results, Hourly Earnings (fhwage)}
-    \label{tab:gamma_lasso}
-    \resizebox{\textwidth}{!}{%
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_selection.tex}
+    \caption{Mean Predicted Gamma by Demographic Group, Hourly Earnings (fhwage)}
+    \label{tab:gamma_pred_means}
+    \resizebox{0.9\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_pred_means.tex}
     }
 \end{table}
 
 \begin{table}[H]
     \centering
-    \caption{Gamma Regressions: Lasso Selection Results, Annual Earnings (fearn)}
-    \label{tab:gamma_fearn_lasso}
-    \resizebox{\textwidth}{!}{%
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_lasso_selection.tex}
+    \caption{Mean Predicted Gamma by Demographic Group, Annual Earnings (fearn)}
+    \label{tab:gamma_fearn_pred_means}
+    \resizebox{0.9\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_pred_means.tex}
     }
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Gamma by Education and Age Bin, Hourly Earnings (fhwage)}
+    \label{tab:gamma_pred_matrix}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Actual}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_pred_matrix_actual.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Neural Network}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_pred_matrix_nn.tex}
+        }
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Random Forest}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_pred_matrix_rf.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{LASSO}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_pred_matrix_lasso.tex}
+        }
+    \end{minipage}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Gamma by Education and Age Bin, Annual Earnings (fearn)}
+    \label{tab:gamma_fearn_pred_matrix}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Actual}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_pred_matrix_actual.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Neural Network}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_pred_matrix_nn.tex}
+        }
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Random Forest}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_pred_matrix_rf.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{LASSO}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_pred_matrix_lasso.tex}
+        }
+    \end{minipage}
 \end{table}
 
 
@@ -391,26 +388,6 @@
     }
 \end{table}
 
-\begin{table}[H]
-    \centering
-    \caption{Alpha Regressions: Lasso Industry Selection Results}
-    \label{tab:alpha_lasso_ind}
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Hourly Earnings (fhwage)}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex}
-        }
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Annual Earnings (fearn)}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_lasso_ind_selection.tex}
-        }
-    \end{minipage}
-\end{table}
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_rank_lasso_vs_nn.pdf}\hfill
@@ -429,44 +406,7 @@
     \label{fig:alpha_fearn_ind_rank_scatter}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_lasso_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_lasso_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_lasso_fhwage_vs_rf_fearn.pdf}
 
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_nn_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_nn_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_nn_fhwage_vs_rf_fearn.pdf}
-
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_rf_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_rf_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_ind_xrank_rf_fhwage_vs_rf_fearn.pdf}
-    \caption{Alpha Industry SHAP Rank: fhwage (rows: LASSO, NN, RF) vs.\ fearn (columns: LASSO, NN, RF)}
-    \label{fig:alpha_ind_xrank_3x3}
-\end{figure}
-
-
-\begin{table}[H]
-    \centering
-    \caption{Alpha Regressions: Lasso Occupation Selection Results}
-    \label{tab:alpha_lasso_occ}
-    \renewcommand{\arraystretch}{0.7}
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Hourly Earnings (fhwage)}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex}
-        }
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{Annual Earnings (fearn)}\\[4pt]
-        \resizebox{\linewidth}{!}{%
-            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_lasso_occ_selection.tex}
-        }
-    \end{minipage}
-\end{table}
 
 \begin{figure}[H]
     \centering
@@ -484,23 +424,6 @@
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_occ_rank_lasso_vs_rf.pdf}
     \caption{Alpha Occupation SHAP Rank Comparisons (Annual Earnings, fearn)}
     \label{fig:alpha_fearn_occ_rank_scatter}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_lasso_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_lasso_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_lasso_fhwage_vs_rf_fearn.pdf}
-
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_nn_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_nn_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_nn_fhwage_vs_rf_fearn.pdf}
-
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_rf_fhwage_vs_lasso_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_rf_fhwage_vs_nn_fearn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_occ_xrank_rf_fhwage_vs_rf_fearn.pdf}
-    \caption{Alpha Occupation SHAP Rank: fhwage (rows: LASSO, NN, RF) vs.\ fearn (columns: LASSO, NN, RF)}
-    \label{fig:alpha_occ_xrank_3x3}
 \end{figure}
 
 
@@ -523,13 +446,6 @@
     }
 \end{table}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_year_fe.pdf}\hfill
-    \includegraphics[width=0.48\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_year_fe.pdf}
-    \caption{Year Fixed Effects on Alpha (All-Controls Model, 95\% CI): Hourly earnings (fhwage, left) and Annual earnings (fearn, right)}
-    \label{fig:alpha_year_fe}
-\end{figure}
 
 
 
@@ -574,22 +490,98 @@
 
 
 
-\begin{table}[htbp]
+
+\begin{table}[H]
     \centering
-    \caption{Alpha Regressions: Lasso Selection Results, Hourly Earnings (fhwage)}
-    \label{tab:alpha_lasso}
-    \resizebox{\textwidth}{!}{%
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_selection.tex}
+    \caption{Mean Predicted Alpha by Demographic Group, Hourly Earnings (fhwage)}
+    \label{tab:alpha_pred_means}
+    \resizebox{0.9\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_pred_means.tex}
     }
 \end{table}
 
 \begin{table}[H]
     \centering
-    \caption{Alpha Regressions: Lasso Selection Results, Annual Earnings (fearn)}
-    \label{tab:alpha_fearn_lasso}
-    \resizebox{\textwidth}{!}{%
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_lasso_selection.tex}
+    \caption{Mean Predicted Alpha by Demographic Group, Annual Earnings (fearn)}
+    \label{tab:alpha_fearn_pred_means}
+    \resizebox{0.9\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_pred_means.tex}
     }
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Alpha by Education and Age Bin, Hourly Earnings (fhwage)}
+    \label{tab:alpha_pred_matrix}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Actual}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_pred_matrix_actual.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Neural Network}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_pred_matrix_nn.tex}
+        }
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Random Forest}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_pred_matrix_rf.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{LASSO}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_pred_matrix_lasso.tex}
+        }
+    \end{minipage}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Mean Predicted Alpha by Education and Age Bin, Annual Earnings (fearn)}
+    \label{tab:alpha_fearn_pred_matrix}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Actual}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_pred_matrix_actual.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Neural Network}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_pred_matrix_nn.tex}
+        }
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Random Forest}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_pred_matrix_rf.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{LASSO}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_pred_matrix_lasso.tex}
+        }
+    \end{minipage}
 \end{table}
 
 
@@ -642,6 +634,100 @@
 
 
 \section{Appendix}
+
+
+\begin{sidewaysfigure}
+    \centering
+    \includegraphics[width=0.95\textheight, height=0.9\textwidth, keepaspectratio]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Plots/avg_fearn_by_age_group.png}
+    \caption{Mean Log Annual Earnings (fearn) by Age, by Group. Each panel is one group cell, where group = white/non-white (1st digit) $\times$ birth cohort (2nd digit) $\times$ education (3rd digit).}
+    \label{fig:avg_fearn_by_age_group}
+\end{sidewaysfigure}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Gamma Regressions: Industry Selection Results}
+    \label{tab:gamma_lasso_ind}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings (fhwage)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_ind_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings (fearn)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_lasso_ind_selection.tex}
+        }
+    \end{minipage}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Gamma Regressions: Occupation Selection Results}
+    \label{tab:gamma_lasso_occ}
+    \renewcommand{\arraystretch}{0.7}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings (fhwage)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_lasso_occ_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings (fearn)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/gamma_fearn_lasso_occ_selection.tex}
+        }
+    \end{minipage}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: Lasso Industry Selection Results}
+    \label{tab:alpha_lasso_ind}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings (fhwage)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_ind_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings (fearn)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_lasso_ind_selection.tex}
+        }
+    \end{minipage}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Alpha Regressions: Lasso Occupation Selection Results}
+    \label{tab:alpha_lasso_occ}
+    \renewcommand{\arraystretch}{0.7}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Hourly Earnings (fhwage)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_lasso_occ_selection.tex}
+        }
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Annual Earnings (fearn)}\\[4pt]
+        \resizebox{\linewidth}{!}{%
+            \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/alpha_fearn_lasso_occ_selection.tex}
+        }
+    \end{minipage}
+\end{table}
 
 
 
