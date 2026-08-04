@@ -15,7 +15,6 @@
 \usepackage{rotating}
 
 
-
 \geometry{margin=1in}
 \bibliographystyle{plain}
 
@@ -43,9 +42,9 @@
 \begin{singlespace}
 
 
-\noindent 
+\noindent
 
-Pomni abstracted
+We ask which individuals bear the most earnings risk, separating exposure to persistent shocks from exposure to transitory shocks. Using individual-level risk measures derived from the moment conditions in Drewianka and Oberg (2025), constructed from PSID data on both real annual earnings and an annualized hourly wage measure, we estimate each measure on observable characteristics using OLS, stepwise selection, and three machine learning methods. We find a sharp asymmetry. Transitory risk is predictable from observables: all three methods improve on a predict-the-mean benchmark out of sample, persistent risk is not. No method beats that benchmark on either earnings measure for persistent. Within transitory risk, tenure is the strongest predictor by a wide margin, risk is U-shaped over the career, and much of the apparent effect of education is accounted for by occupation and industry. The flexible methods also recover a monotone decline in transitory risk across tenure that the linear models do not deliver cleanly. The results are descriptive rather than causal, and suggest patterns in exposure to transitory shock risk.
 
 \end{singlespace}
 \end{abstract}
@@ -59,24 +58,26 @@ Pomni abstracted
 \indent \textbf{JEL Codes}: D8, J0, D3\\
 
 
-
-
-
 \clearpage
 \setcounter{page}{1}
-
 
 
 \begin{onehalfspace}
 
 \section{Introduction}
 
+The motivation for this paper is to characterize which people are at an elevated level of risk to their earnings. We do this in two different dimensions: the risk associated with persistent earnings shocks and the risk associated with transitory earnings shocks. Earnings risk matters because people are generally taken to be risk averse rather than risk neutral, so the dispersion of shocks around an expected earnings path affects intertemporal decisions such as saving, and structural life-cycle models have to take a stand on what that dispersion looks like. Most of that literature treats risk as something that varies across broad groups, if it varies at all. The question here is narrower and more descriptive: given a measure of risk defined at the level of the individual, what kinds of people carry more of it?
 
+The analysis builds on the work of Drewianka and Oberg in their two papers, where they derive moment conditions for these two measures of risk \cite{drewianka2025,drewianka_oberg2019}. Their framework is a Restricted Income Profile model, in which people with the same observed characteristics are taken to share the same expected earnings path and deviations from it are treated as shocks \cite{abowd_card1989,meghir_pistaferri2004}. What their moment conditions provide, and what makes this exercise possible, is a statistic for each person in each year rather than a single variance for the population. Gamma measures the risk from persistent shocks and alpha the risk from transitory shocks, and we construct both on log real hourly wages and on log real annual earnings, giving four measures in total.
+
+This paper's contribution is in identifying the covariates of these risk measures. We use three machine learning methods a neural network, a random forest, and LASSO to try to identify patterns in these measures, so that we can characterize what type of individual is more prone to one kind of risk or the other. The methods are used alongside OLS and stepwise selection rather than in place of them, and SHAP values are used to make the results comparable across methods \cite{lundberq}. Using flexible methods is not incidental here: the earnings profiles from which the risk measures are constructed are themselves allowed to vary in the same characteristics used in the later analysis, so a method that can capture interdependencies among those characteristics is better suited to recovering whatever variation is left.
+
+The main finding is an asymmetry. Transitory risk is predictable from observable characteristics, at least somewhat, while persistent risk is not: out of sample, none of the three methods is able to beat simply predicting the training mean for gamma, on either earnings measure, while all three beat it for alpha. Within transitory risk, tenure is the most important predictor by a wide margin, risk follows a U-shape over the career with elevated levels early and a sharp rise approaching retirement, and much of what looks like an education effect turns out to be occupation and industry. Race matters for transitory risk and not for persistent risk. The flexible methods also recover a monotone decline in transitory risk across tenure that the linear models do not deliver cleanly, which is the clearest case in the paper for using them.
+
+The rest of the paper is structured as follows. Section 2 lays out the theoretical framework and the construction of the risk measures, Section 3 describes the data, Section 4 discusses the empirical strategy, Section 5 presents the results, and Section 6 concludes.
 
 
 \section{Theoretical Framework}
-
-
 
 
 As mentioned before, the model used is the same model from Drewianka and Oberg (2025) \cite{drewianka2025}. The model is a standard RIP model where people's income are modeled as a function of characteristics, but where there are no individual level effects. Then each individual has a deviation from the expected income process which is modeled as a shock. For example all 22 year old men from the US will have the same expected income process based off of those characteristics. However their actual income will deviate from this expected income process due to shocks. 
@@ -92,7 +93,7 @@ u_{it}
 
 $u_{it}$ is the shock or deviation from the expected income process for a given person i in time t. This process of shocks can be decomposed into two types of shocks: persistent and temporary shocks as outlined in equation 1. $\pi_{it}$ is the cumulative effect from the persistent shocks which are further modeled in equation 2 while $\nu_{it}$ are the temporary shocks. The temporary shocks along with $\eta_{it}$ are assumed to be mean zero and independent across individuals and time. The persistent shocks are further modeled as an autoregressive process with $\rho$ being the persistence of the shocks and $\eta_{it}$ being the actual shock.
 
-To get a measure of earnings risk the variance of $\eta_{it}$ across time is calculated. This is capturing the correlation of permanent income shocks across time for each individual. To calculate this the following equation is used:
+To get a measure of earnings risk the variance of $\eta_{it}$ across time is calculated. This is capturing the variance of persistent income shocks across time for each individual. To calculate this the following equation is used:
 
 \vspace{-0.75cm}
 
@@ -117,6 +118,8 @@ E\Bigl[\tfrac{1}{k}\,\Omega_i(t,t+k)\,\Omega_i(t-j,t+k+q)\Bigr]
 \equiv \tfrac12\,\Omega_i\bigl(t,\,t+2\bigr)\,\Omega_i\bigl(t - j,\,t + 2 + q\bigr).
 \end{gather}
 
+Note that the short window is fixed at two years in the definition of $\gamma_{itjq}$, so $k = 2$ throughout everything that follows; only $j$ and $q$ vary across the statistics computed for a given person-year. Both $j$ and $q$ are taken to start at 2, which imposes the assumption that the transitory shocks follow an MA(1) process; starting them at 3 would instead allow for MA(2).
+
 This is then further used to get the following moment condition for the variance of $\eta_{it}$ that is a function of (j+k+q) and j and can be estimated in a regression framework to get a measure of lifetime earnings risk $\gamma_{itjq}$. For more on the derivation see Drewianka and Oberg (2025) \cite{drewianka2025}:
 
 \vspace{-0.75cm}
@@ -135,24 +138,37 @@ E[\gamma_{itjq}]
 + \delta\,\bigl[\sigma^2_{\eta_i(t+1)} - s_i(t-j+1,t)\bigr]\,j
 \end{align}
 
+Two terms in this expression need a word. The parameter $\delta$ measures how quickly the persistent component decays, defined by $\rho \equiv e^{-\delta}$, so that $\delta \approx 1 - \rho$ when the process is close to a unit root and $\delta = 0$ in the limiting case where persistent shocks never fade. The term $s_i(t-j+1,t)$ is a weighted average of the shock variances $\sigma^2_{\eta_i \tau}$ over the periods immediately preceding the short window, which appears because the variance is not assumed constant within a person's panel. Both are developed in full in Drewianka and Oberg (2025) \cite{drewianka2025}.
 
+Alpha is the transitory counterpart to gamma and is derived in the same way in Drewianka and Oberg (2025) \cite{drewianka2025}. It is built from two adjacent windows meeting at time $t$ rather than two overlapping ones, which is what leaves the transitory component rather than the persistent one. It is worth noting that they show the slope coefficient in the alpha moment condition equals the sum of the two slope coefficients in the gamma condition, so alpha does not provide additional leverage for identifying the parameters of the gamma process. Here it is used as a second outcome in its own right rather than as an aid to estimating the first:
+
+\vspace{-0.75cm}
+
+\begin{align}
+\alpha_{itjq}
+&\equiv -\,\Omega_i\bigl(t-j,\,t\bigr)\,\Omega_i\bigl(t,\,t+q\bigr) \\[1ex]
+E[\alpha_{itjq}]
+&\approx
+\sigma^2_{\nu_{it}}
++ \bigl[\delta^2\,E\pi^2_{i(t-j)} - \delta\,s_i(t-j+1,t)\bigr]\,(-jq)
+\end{align}
+
+
+
+Taking these moment conditions to the data starts with a regression of the earnings profile on just about all of the variables used later, except for the earnings-based ones --- the annual earnings percentile, for instance, is not used in the construction of the age-earnings profiles. These profiles can vary in all of the other variables: census division, tenure, cohort, race, education, probability of recession, and whether the person is in the labor force, all of which are described in the next section. It is worth noting that unemployed people are assigned a tenure of zero, so people in the 0--1 tenure bin can be unemployed. This first stage is run on earnings differences rather than levels, at each horizon, so what comes out are residuals of earnings growth --- the part of growth that could not have been predicted from what was observable at the time. Those residuals are the empirical counterpart of the $\Omega$ differences above, and the gamma and alpha statistics are then formed as the products of them described in equations (6) and (9). No person effects are included at this stage: person-specific intercepts cancel in the differencing, and person-specific growth rates are deliberately left in the residuals, since that variation is what the risk measures are meant to capture.
+
+One point worth making about the first stage is that the age-earnings profile is allowed to vary in all of the variables we go on to use --- race, occupation, cohort, industry, education, age, tenure. That is part of the reason we want to use machine learning methods here. We do not want to misspecify the age-earnings profile in a way that leaves variation uncaptured at that stage, only for it to show up later and be attributed to some people having more risk than others when by construction that variation was left out because those variables were not allowed to enter the profile in the first place.
 
 
 \section{Data}
 
+The data comes from the Panel Study of Income Dynamics \cite{psid2023} and spans 1970 through 2023, annually through 1997 and biennially thereafter, following the PSID's own change in survey frequency. We use two sources and harmonize them together. The Cross-National Equivalent File (CNEF) is itself built from the PSID, but it has been cleaned and harmonized across years, which makes it the natural starting point; it covers 1970 through 2009. It only runs up to that point, however, and we want richer data than that, so for 2011 through 2023 we pull directly from the PSID and harmonize the two together.
 
-\section{Empirical Strategy}
+The sample is men between the ages of 22 and 69, with students excluded. As far as extra data, we use CPI data to put all dollar values in 2024 dollars before doing any of the analysis \cite{cpi2017}. The main variables used outside of that are a tenure variable that has been harmonized across years, age, a probability of recession variable, an indicator for being out of the labor force, and a five-year moving average of the individual's annual earnings percentile, which is used in some of the later analysis. Race, cohort, education, census division, occupation, and two-digit industry are also carried throughout.
 
+For earnings we have two variables. The first is annual earnings, which we take as reported. The second is an hourly wage measure, which we annualize by taking the stated hourly wage times the number of hours worked across the year. We construct our risk measures for both. Gamma is the risk associated with persistent income shocks and alpha is the risk associated with transitory shocks, and we construct both of them using hourly wage income as well as annual earnings income, separately. As you might expect, the two give a slightly different case: the distribution of jobs behind an hourly measure is not the same as the distribution behind an annual measure, so you are going to have different variation in each. All of the analysis that follows is done in both hourly and annual earnings to give some robustness to the results.
 
-
-
-
-\section{Results}
-
-\section{Conclusion}
-
-
-
+Table \ref{tab:risk_summary} reports summary statistics for the four measures. Alpha tends to take a higher value than gamma, with an annual mean of 0.1286 and an hourly mean of 0.0902, whereas gamma sits at 0.0160 hourly and 0.0248 annual. Both are positive on average, which is what would be expected in this case. The standard deviations are worth mentioning as well, since alpha has a much larger one than gamma on both measures: 0.2761 against 0.1119 on the hourly side and 0.4815 against 0.1630 on the annual side. This can be seen further down in the distributions of gamma and alpha, where alpha goes pretty far out in the positive direction with some outliers while gamma stays relatively centered around zero. For each measure there are at least 9,000 distinct people, and for each person we have multiple observations over their lifetime, so the sample is relatively large.
 
 
 \begin{table}[H]
@@ -162,6 +178,8 @@ E[\gamma_{itjq}]
     \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/risk_summary_stats.tex}
 \end{table}
 
+
+The stratified means in Table \ref{tab:stratified_means_gamma_alpha} help give an idea of what this data looks like in general. Looking at the last column with the number of observations, we have a pretty good range. Across age there are still about 8,000 observations in the second-to-last age bin, and the last age bin of 62--69 does get noticeably fewer at 1,252; as we will see later there is a decent amount of variability there, and we break that out toward the end when discussing which individuals have the most risk. For race, there are 54,361 observations for white and 20,207 for black, and then a mixture across the other categories. This imbalance across races is what leads us to just do white versus non-white in the construction of the risk measures and in the age-earnings profiles, since breaking out some of these smaller groups --- Asian or Pacific Islander, for instance, has only 752 --- would lead to issues in and of itself. Education is a more important one, and there we do have quite a few observations across each of the education bins, which is good, because that is a piece of variation we pay attention to later. The same is true of the three tenure bins, though it is worth mentioning here that people who are unemployed are assigned to the first tenure bin of 0--1, which is part of why that bin is so large. Across the earnings quintiles there is also a decent number of observations, on both the annual earnings and hourly wage distributions.
 
 \begin{table}[H]
     \centering
@@ -173,6 +191,14 @@ E[\gamma_{itjq}]
 \end{table}
 
 
+A few things in that table are worth pointing out directly. Starting with education, the hourly and annual versions of gamma do not tell the same story. On the hourly side, gamma rises from high school graduate (0.0148) through some college (0.0176) to a bachelor's degree (0.0182), and bachelors+ (0.0165) still bears more risk than a high school graduate does. High school graduate is the least risky group by a decent margin relative to the higher education levels. On the annual side, though, bachelor's degree (0.0239) and bachelors+ (0.0236) actually bear less risk than a high school graduate (0.0240). Some college still bears the most risk as a whole (0.0272), but the lowest point of risk for annual gamma across education is bachelors+, barely beating out high school graduate. This furthers the idea that the mechanisms at play here are somewhat different across annual versus hourly, as the typical jobs that fit in one are not the typical jobs that fit in the other. There is some crossover, but many jobs are really only going to land in one of these categories, and so you are going to get slightly different behavior.
+
+The alpha values across education are much larger in magnitude than gamma on both measures, so there is a clear distinction between the two objects. There is a similar distinction between hourly and annual within alpha: the annual values are strictly larger than the hourly values at every education level, and the same is true for gamma. This can partly be attributed to the fact that, as in Table \ref{tab:risk_summary}, the annual risk measures simply have a higher mean --- annual gamma averages about 55 percent above hourly gamma, and annual alpha is well above hourly alpha --- and that shows up in the stratified means as well. For alpha itself, less than high school is the highest risk point (0.1000 hourly, 0.1660 annual), and for the most part there is a downward sloping trend where more education lowers the alpha risk measure, with a slight uptick at bachelors+.
+
+The other thing to look at is age. As mentioned, the final age bin has a relatively low sample size, so that one can be taken with a grain of salt relative to the others, most of which have six times or more observations. But the trend across age is consistent across all four measures: risk is higher in the first two age bins and drops somewhat from 22--37, then holds relatively steady, and then rises again in the later 50s and into the 60s. This is saying that for both persistent and transitory shocks you have somewhat higher risk early in the labor force, then relatively steady levels of risk throughout, and then more variability late in life as retirement approaches. The last point on the stratified means is tenure: in the raw means, risk is strictly decreasing across the tenure bins in all four measures, so a longer tenure tends to translate to a lower amount of risk from both persistent and transitory income shocks, which is relatively intuitive.
+
+Figure \ref{fig:avg_realearn_by_age_cohort2_race} shows the average annual earnings profiles by age. As mentioned in the construction, all of this is done by taking deviations from the earnings profile, and this figure gives an idea of what those profiles look like. There are four versions here, white versus non-white and across the last two cohorts, and each line is an earnings profile across age for a different level of education. As you would expect in data like this, the line at the top is college graduate, then below that the dotted line is some college, then high school graduate, with high school dropout coming in last. This figure is for average annual earnings; the average hourly earnings and the other two cohorts are in the appendix. It is worth noting that this data only covers people who are in the labor force, so if you do not have any income but are in the labor force, maybe unemployed, you are still in here. You will also see that these profiles start in the mid-20s. That is not because people younger than that are excluded outright, but because the people showing up in this data are people who have earnings data that goes back far enough, given the construction of gamma and alpha and the windows used to create them, which restricts the sample to a set starting point.
+
 \begin{figure}[H]
     \centering
     \caption{Average Annual Earnings by Age, Born 1953-1960 \& Post-1960}
@@ -180,6 +206,8 @@ E[\gamma_{itjq}]
     \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/avg_realearn_by_age_cohort2_race.png}
 \end{figure}
 
+
+Figures \ref{fig:distribution_gamma_alpha_panel} and \ref{fig:age_density_gamma_alpha_panel} show the distributions. The first makes the point about the standard deviations concrete: alpha has a long positive tail with some outliers while gamma is relatively centered around zero. The second shows the age trend that came out of the stratified means. There is a lot of variability in the first two age bins from 22 to 29, that decreases, and once you get to around the 30--33 level you stay relatively steady. Then in the last two bins, once you are into the late 50s and 60s, you have a large amount of variability. Again, that final age bin has a relatively low number of observations, so it is one to take with a grain of salt.
 
 \begin{figure}[H]
     \centering
@@ -196,7 +224,28 @@ E[\gamma_{itjq}]
 \end{figure}
 
 
+\section{Empirical Strategy}
 
+The empirical strategy has two parts. The first consolidates the raw gamma and alpha statistics into a single value for each person-year, and the second estimates those values on observable characteristics to look for patterns in who bears the most risk.
+
+The statistics described above are computed for every combination of $j$ and $q$ available to a person-year, so what the data contains at this stage is a value for each person, year, $j$, and $q$, and we want to get it down to just person-years. That is done with a mixed regression clustered at the person level. We first winsorize at the 1st and 99th percentiles, to keep extreme outliers from biasing the sample, and then run the mixed regression to consolidate across $j$ and $q$.
+
+The form of that regression follows from the moment conditions. For gamma, the expected value of $\gamma_{itjq}$ is equal to the variance of the shocks plus two extra terms, one in terms of $(j+k+q)$ and another in terms of $j$, so we remove the variation in $(j+k+q)$ and the variation in $j$ in the mixed regression. For alpha the same thing is done, except that the alpha moment condition converges to the variance plus an extra term in terms of $j$ and $q$. In both cases there is a random intercept and a random slope: for gamma the random slope is on the sum of $j$, $k$, and $q$, and for alpha it is on $j \times q$. To get each person-year's value, we take the fixed intercept from the main model and add the random intercept for that person-year. The mixed regression has an intercept for everyone and then a random intercept for each person-year, and the sum of the two gives that person's value of gamma or alpha. This whole workflow is done for both annual earnings and hourly earnings that have been annualized, which is what produces the four measures.
+
+For the second part we use three methods. The first is a neural network with three hidden layers of 500 nodes each. It uses a sigmoid activation function in all of them to maintain a smooth gradient, rather than a ReLU, since much of this should be continuous and we are predicting on a small, tight distribution; the sigmoid performed better across the board. A 50 percent dropout was applied after the first layer to make the training more robust, since much of this would only run a few epochs. The model uses MSE loss and trains up to 40 epochs with an early stopping patience of six and a restore to the best weights. The second is a random forest with a fairly standard setup of 175 trees, a max depth of 16, and a minimum of 5 samples per leaf. The strength of these two methods, compared to OLS and frankly compared even to LASSO, is their ability to capture interdependencies between the variables. The third is LASSO. The penalty here is deliberately light, so in practice the model behaves much like OLS on the full dummy-expanded set of regressors: it shrinks coefficients and drives some categories to zero, but it does not perform aggressive variable selection, and the fitted model should not be read as a selected specification. It is included as a penalized linear benchmark, so that the two flexible methods can be compared against something built on the same features but without their ability to capture interactions.
+
+For all three of these the data is split 70/15/15 into training, validation, and test data, and the variables used are the same variables used in the OLS models that have all the controls, so occupation and industry are allowed in all of them. From there the mean absolute SHAP value is taken for each variable \cite{lundberq}. When these are aggregated up to a set of controls, the sum is divided by the number of variables in the set, so that a set does not dominate simply by containing more variables. This is the analog of what an F test does when it divides by the number of restrictions, and it is what makes the group shares comparable across sets of very different sizes. Performance is benchmarked out of sample against the test MSE from simply predicting the training mean.
+
+
+\section{Results}
+
+The results come in two parts. The first asks what is correlated with gamma and alpha, working from the linear models through the machine learning methods and the SHAP decomposition. The second asks who actually bears the most risk, moving from predicted means by demographic group to the characteristics of the individuals in the top and bottom risk deciles.
+
+\subsection{What Is Correlated with Gamma and Alpha}
+
+This section works through the linear evidence first and then the machine learning results. The OLS and F test tables ask which characteristics are associated with gamma and alpha, and which sets of controls carry that association; the stepwise results ask what survives when the model is allowed to discard things. The machine learning results then take up three further questions: whether the methods agree with each other about who is at risk, whether they can predict risk out of sample at all, and which sets of controls they lean on when they do.
+
+Table \ref{tab:gamma_alpha_ols} reports the OLS results. There are two models for each of the four measures, one that does not include occupation and industry controls and one that does. There is some difference between them, and throughout this it seems that the occupation and industry controls play a role, so removing them and adding them can uncover some patterns. It is worth saying up front that the sign and magnitude of these coefficients do not matter as much as the significance; the significance is really the story to focus on here.
 
 \begin{table}[H]
     \centering
@@ -207,6 +256,12 @@ E[\gamma_{itjq}]
     }
 \end{table}
 
+
+On the gamma side, the important thing to take away is how much college matters. Some college and bachelor's degree are significant across all four gamma specifications, with bachelor's degree reaching $p<0.01$ in both hourly columns. Bachelors+ is significant only in the annual earnings versions of gamma, which should not be that surprising, as much of the work that requires education beyond a bachelor's degree is much more often going to be salaried. Moving to the age bins, the pattern is again one where significance shows up at the ends. The last age bin is significant in the hourly model without occupation and industry controls, though not once they are added, and the earliest age bins are very significant in the hourly wage models. On the annual earnings side, only the 30--37 range is significant, and only slightly. This gets back to the trend seen in the distributions: the middle-age bucket, 46--53, is the reference category, and significance is jumping in at the ends of the age distribution, early and very late, while the middle stays relatively flat. Notably, the first age bin is significant for hourly wage gamma, and that tells a story of its own. Many people with an hourly job are people who are not going to college and so are jumping into a job earlier in life, so it stands to reason that those would be the years that are significant. On the annual earnings side you would not expect as consistent a story about someone in a salaried job at the age of 22 or 23, since that situation can be quite variable, whereas you would expect many 22- to 25-year-olds to be on an hourly job and maybe into their early 30s before moving on. Other than that, there is not much that is that interesting for gamma; tenure in particular does not play a significant role.
+
+Moving to alpha, the story is more interesting. For the hourly wage, all of the education variables are significant. For annual earnings, without occupation and industry controls it is the bachelor's degree and bachelors+ levels that matter, which is again consistent with the idea that the annual earnings construction is skewed toward jobs that require a higher level of education. For age, the last age bin matters, but you only see mild significance in the very first bin of 22--29, which is interesting. Again the reference category here is 46--53, and for the first age category you are seeing a negative coefficient across all four alpha columns, meaning that mean alpha there is significantly less than at middle age. That cannot really be said for anything else other than the final age bin, which has positive values, such that the older group bears more transitory shock risk relative to middle age. The other variables matter quite consistently for alpha. A person's place in the earnings distribution matters, and the coefficient is positive, so risk is increasing the higher up on the earnings distribution you are. Being out of the labor force is highly significant for alpha, which is not surprising in the slightest: when you are talking about transitory income shocks rather than persistent ones, much of what you are thinking about is brief spells of unemployment and things like that. Tenure tells a similar story. The longer you have been with a job, the lower your risk of being unemployed, and that is what shows up here --- relative to the 0--1 tenure bin, risk is lower for both 2--5 years and 6 or more years. Conditional on the full set of controls, however, it is not a monotonically decreasing amount of risk: in three of the four alpha columns the 2--5 year bin actually carries less risk than the 6-or-more bin, even though the raw means decline monotonically. So what the OLS models establish is that having been on the job at all lowers transitory risk relative to being in your first year or unemployed, but not that risk keeps falling as tenure accumulates.
+
+The F test results in Tables \ref{tab:gamma_ftest} and \ref{tab:alpha_ftest} are where we really want to ask which sets of controls are important, and what type of information matters. Starting with gamma, the sets that matter in all cases are education, age, cohort, and for the most part census division, and occupation and industry play a very significant role as well when they are allowed in. The most interesting piece here, and the reason we have these two models instead of one, is that the education significance drops from the first model to the second in both hourly and annual, and especially for annual earnings, where it almost becomes insignificant once occupation and industry controls are added ($p = 0.074$). Much of the variation attributed to education is explained by occupation and industry, to the point that there is relatively little left over once those controls are included. Tenure is not playing much of a role in any of the gamma columns, which is somewhat interesting. The year fixed effects play a clear role in annual but not hourly, which is also interesting. That might invite a discussion around recessions and booms having an effect on someone switching to a higher-paying or lower-paying job in a way that primarily affects their trajectory. Since this is the persistent income shock, though, it is a little interesting that the year effects are only relevant on the annual earnings side. Race is not important in any of them, which is notable.
 
 \begin{table}[H]
     \centering
@@ -227,6 +282,10 @@ E[\gamma_{itjq}]
 \end{table}
 
 
+Moving to alpha, every single set of controls is significant. The interesting thing across the two models is that you see a very similar pattern to before with the occupation and industry controls explaining much of the variation that education was explaining: in both hourly and annual, education is very significant without those controls, and once they are added the education significance drops by a large amount, though it remains quite significant. Age is significant in both cases, as is tenure. One piece that runs the other way is the year fixed effects, which become more significant once the occupation and industry controls are included --- they were already significant, but they get considerably more so. Cohort matters somewhat and is the least significant of all of them. But for transitory shocks, just about everything is significant.
+
+Table \ref{tab:gamma_alpha_stepwise} reports the stepwise results. It is worth mentioning that this model can only select an entire set of controls at a time, and there are again two models for each of the four versions of the risk measure, with no occupation or industry controls allowed in the first and all controls allowed in the second. Looking at the check marks to see which sets get selected, there are some interesting patterns. Starting with gamma and education, for the hourly wage the education controls were selected in both models. For the annual earnings version of gamma, education was selected in the first model, but once occupation and industry controls were added, education was not selected even though it was available. Similar to the F test table, the year fixed effects matter for annual earnings gamma but not for hourly gamma, and cohort is also selected for annual gamma. In both models where occupation and industry could be selected, they were. The age controls were selected in the hourly gamma model only in the version without occupation and industry controls, which is interesting, and again tells a story of how much of the education and age variation occupation and industry really explain, and how much overlap there is. As for the continuous variables, the annual earnings version of gamma selected all three that were available to it --- probability of recession, the annual earnings percentile, and out of labor force --- while hourly wage gamma did not pick up any of them.
+
 \begin{table}[H]
     \centering
     \caption{Gamma and Alpha Regressions: Stepwise Selection Results (Coefficients x 100)}
@@ -237,10 +296,13 @@ E[\gamma_{itjq}]
 \end{table}
 
 
+For the alpha side, the stepwise model selects all of the continuous variables and pretty much every single set of controls in every model that it can, with the one exception that it does not select cohort in the annual earnings model without occupation and industry controls.
 
+It is worth mentioning at this point that, going back to the OLS table, the $R^2$ values are quite low. Across the gamma models they run from 0.001 to 0.006, so only a very small amount of variation is being explained. For alpha there is slightly more --- 0.022 and 0.037 on the hourly side and 0.040 and 0.052 on the annual side --- and while that is still relatively low, there is more variance being explained. For gamma, this roughly thin amount of variation is the answer you get from these variables.
 
+Now we move to the machine learning methods. We have covered what standard linear models can say about which sets of controls are important; now we look at what these methods say. The first point to make is that instead of a coefficient table, which for something like a random forest or a neural network is not really feasible, the comparisons have to be done in ways that are comparable across methods.
 
-
+Starting with the correlations of the predictions in Tables \ref{tab:pred_corr} and \ref{tab:pred_corr_fearn}, the key thing to take away is that there really is not much correlation between the predicted values of these methods on the gamma side. They do not agree very much on what the predicted value of gamma should be. The neural network and LASSO happen to agree somewhat, at 0.724 hourly and 0.737 annual, but random forest against either of the other two sits anywhere from about 0.28 to 0.39. On the alpha side there is quite a bit more agreement. For hourly earnings the correlations are around 0.60 and 0.66 for the pairs involving random forest, and the neural network and LASSO correlate at 0.934, which is quite high and says that those two agree very well on the predicted values of alpha. For annual earnings you see a similar story, around 0.64 to 0.70 for the random forest pairs and 0.837 between the neural network and LASSO. So across all three methods there is a decent amount of agreement for alpha, whereas with gamma, outside of the neural network and LASSO, nothing is anywhere near even being half correlated. For gamma this is the same story as with the OLS and stepwise results: the $R^2$ is quite low and there is not much variation that can be explained by these variables. That is a thread that will run throughout.
 
 \begin{table}[H]
     \centering
@@ -257,6 +319,7 @@ E[\gamma_{itjq}]
 \end{table}
 
 
+Figure \ref{fig:gamma_fearn_rank_methods} takes the same question to occupations and industries: do the methods agree on which are the riskiest and least risky? Each point is an occupation or industry, ranked by each of two methods, and if the methods agreed the points would fall along the 45-degree line. For gamma there might be some mild centering around that line in the occupation plots, but it is only mild. For industry there is quite a bit of dispersion, and it is not particularly clear that it is centered around the 45-degree line at all. Which is to say that for gamma there is not much explanatory power in these rankings.
 
 \begin{figure}[H]
     \centering
@@ -272,6 +335,7 @@ E[\gamma_{itjq}]
 \end{figure}
 
 
+The out-of-sample test MSE in Table \ref{tab:ml_test_mse} is where this really comes through. These methods are trained on the training data and then evaluated on the test data, so they are seeing observations they did not see in training. The comparison is against what you would get by simply predicting the mean gamma or mean alpha from the training data --- essentially, how much better are these methods doing on new data than if they just guessed the mean every time? For gamma, all three methods are right on par with predicting the training mean. The neural network and LASSO both land at 0.01250 against a baseline of 0.01250 on the hourly side, and on the annual side all three come in at or just above the baseline of 0.02574. They are not able to get a mean squared error lower than just predicting the training mean, on either measure. Relative to predicting the mean, they are not able to improve at all.
 
 \begin{table}[H]
     \centering
@@ -281,6 +345,9 @@ E[\gamma_{itjq}]
 \end{table}
 
 
+For alpha the story is different. All three methods do drop the mean squared error below the baseline. On the hourly side the baseline is 0.08041 and LASSO gets to 0.07850, and on the annual side the baseline is 0.23912 and the neural network gets to 0.23037. These are obviously small numbers, but in percentage terms it is a real drop, on the order of 2 to 4 percent. So there is some explanatory power, and this is consistent with what was shown earlier in the stepwise and OLS tables, where the $R^2$ for alpha is low but approaching a reasonable value, in the range of 0.04 or 0.05, which is quite different from the $R^2$ values on the gamma side of the OLS table, which were between 0.001 and 0.006. There is some variation in alpha that can be explained, and much less so for gamma.
+
+Table \ref{tab:alpha_shap_shares} asks which controls these methods actually found useful. These are the mean absolute SHAP values averaged across a set of controls and divided by the number of variables in that set, so that a set of controls does not dominate simply by having more variables in it. It is the average SHAP value per variable within each control set --- how much information each variable within a set is doing --- in the hope of normalizing and seeing which set of controls is contributing the most.
 
 \begin{table}[H]
     \centering
@@ -290,10 +357,14 @@ E[\gamma_{itjq}]
 \end{table}
 
 
+Tenure plays by far the largest role in all three models and on both measures. It is the largest single entry in every column, and for the random forest it is not close: 0.5417 hourly and 0.4900 annual, against nothing else above 0.035. After tenure there is some separation across hourly wage and annual earnings. On the hourly side, census division, race, and age play a modest role, with industry and cohort behind them. On the annual side there is some disagreement about which controls play the largest role. Age plays a role across all three methods. Education is large for the neural network (0.0760) and for LASSO (0.1156) but only modest for the random forest (0.0219). Industry plays a modest role across all three, and cohort plays a modest role except for LASSO. Race plays a large role across all three. Which is to say that across both measures, census division, industry, age, and race all seem to be important, along with tenure, which is the most important variable across both versions of alpha. Occupation is the smallest entry in every column on both measures, which is worth noting given how strongly it showed up in the F tests.
 
 
+\subsection{Who Has the Most Risk}
 
+Having established what is correlated with the risk measures, this section turns to characterizing the individuals themselves. It starts by comparing predicted against actual risk across demographic groups, then breaks those predictions out by education and age together, and finishes by looking directly at who lands in the top and bottom deciles of risk.
 
+Table \ref{tab:gamma_alpha_pred_means} reports mean predicted gamma and alpha by demographic group for hourly earnings, and Table \ref{tab:gamma_alpha_fearn_pred_means} does the same for annual earnings. Education is the more interesting story here. On the hourly side, aside from the bachelors+ category, all three methods predict decreasing alpha with more education, matching the actual values. They also all project that the bachelors+ category rises relative to bachelor's degree, which is a consistent pattern across the actual average value of alpha as well: risk is highest at less than high school, decreasing until bachelors+, where there is a slight increase, though it is still below some college. That claim is true across the actual values and across all three methods.
 
 \begin{table}[H]
     \centering
@@ -314,6 +385,13 @@ E[\gamma_{itjq}]
 \end{table}
 
 
+For the gamma side you really start to see the lack of ability to predict much of the variation. For the actual values there is a slight decrease from less than high school (0.0150) to high school graduate (0.0148), then a rise through to bachelor's degree (0.0182), and then a drop for bachelors+ (0.0165). The neural network does not capture this at all --- it predicts 0.0186 across every value of education, and in fact across essentially every row of the table, which really demonstrates how little variation is out there to be described in gamma with these variables. The random forest and LASSO do track the education and age patterns more closely, but this is a fitted value on the full sample rather than an out-of-sample prediction, and Table \ref{tab:ml_test_mse} has already established that none of these methods beats the mean out of sample for gamma. Where the fit breaks down is instructive: for tenure, both the random forest and LASSO have gamma slightly increasing across the tenure bins when the actual values are decreasing.
+
+Going back to the alpha side and looking at the age bins, there is quite a bit of agreement across all three methods with the actual pattern. From 22--29 you have a relatively high value, then a drop, staying between about 0.086 and 0.087 for the next three bins, and then at 54--61 all of the methods show a jump, and at 62--69 all of them show a large jump again, which is consistent with the pattern alpha has in general.
+
+Moving to tenure for alpha, this is the one that shows up as most important in the group SHAP shares, and even going back to the F test results the test statistic was exceptionally high for tenure across alpha. It is consistent here: in the actual values alpha drops off with tenure, and you see that pattern show up in all three methods. This is an important point to notice, because it is something that OLS was not quite able to do once the full set of controls was included. The OLS models understood that, relative to the first tenure bin of 0--1, the next two bins of 2--5 and 6 or more carried lower amounts of transitory shock risk. But there was not agreement that transitory shock risk was decreasing in tenure, since in most of the specifications the 2--5 year bin actually showed less risk than the 6-or-more bin. In the data that downward sloping trend is there, and all three of these methods capitalized on it, whereas standard OLS was not really able to highlight that trend cleanly. Moving to annual earnings, the same is true of tenure --- in the actual data you have the downward trend and all three methods capture it --- and the age bins and education tell a similar story on the annual side, tying a pretty consistent story together. And again on the gamma side of the annual earnings table, you cannot really see very many patterns that these methods pick up on that are consistent with the actual data.
+
+Tables \ref{tab:alpha_pred_matrix} and \ref{tab:alpha_fearn_pred_matrix} break the same predictions out by education and age bin together, which is really where you see who has the highest risk across levels of education over their lifetime. This is done for alpha, since for gamma there is not much explanatory power there; those tables are in the appendix, but there are not really many trends that these methods are able to pick up on.
 
 \begin{table}[H]
     \centering
@@ -352,6 +430,8 @@ E[\gamma_{itjq}]
     \end{minipage}
 \end{table}
 
+Starting with hourly earnings, for most of these trends, across the actual values and across the three methods, you see a relatively common pattern of starting at some value in the 22--29 age bin, then the value drops and remains relatively steady from 30 to 53, and then you see a rise in the 54--61 and 62--69 age groups. The vast majority of the methods agree relatively well on this. The interesting thing is when the larger spike at the end of a career comes about. In the actual alpha values, the large end-of-career spike happens at the 62--69 age bin for less than high school, high school graduate, and bachelor's degree. It is only for some college and bachelors+ that you see the spike show up earlier, in the 54--61 bin, where some college rises to 0.1144 and bachelors+ to 0.1077 from the 46--53 values of 0.0896 and 0.0855. Most of the methods capture this.
+
 \begin{table}[H]
     \centering
     \caption{Mean Predicted Alpha by Education and Age Bin, Annual Earnings}
@@ -389,6 +469,9 @@ E[\gamma_{itjq}]
     \end{minipage}
 \end{table}
 
+Looking at the annual earnings versions of these tables for alpha, you see a similar pattern for the lower education groups, with a drop in risk at the beginning and then a jump toward the end of life. However, for bachelor's degree and bachelors+, the actual values show almost a steady rise in transitory shock risk across the whole life cycle --- bachelor's degree goes from 0.0826 at 22--29 to 0.2112 at 62--69 without ever really falling. Most of the methods disagree with this. Most of them think you have higher risk at the first age bin, then a drop in transitory shock risk, and then a spike toward the end of life. Compared to the mean actual values, you do not see that trend for bachelor's degree or bachelors+. But for the most part, other than that, you see relatively similar patterns across all three methods and the actual values.
+
+Finally we reach the last two tables, Tables \ref{tab:gamma_deciles} and \ref{tab:alpha_deciles}, with the characteristics of the top and bottom risk deciles grouped by age. Starting with gamma, this table only has the actual gamma statistic rather than the predicted values, since as we have seen there is not much that these methods can do to explain the variation in gamma using these variables. So when trying to characterize who has the most risk for gamma, we will mostly be looking at averages of just the gamma statistic itself. For alpha, in the next table, we look at the predictions as well, and those are the mean predictions across the three methods.
 
 \begin{table}[H]
     \centering
@@ -407,6 +490,13 @@ E[\gamma_{itjq}]
     }
 \end{table}
 
+The tables split the sample into three age groups: 22--33, 34--57, and 58--69. This is to get at the trend we have been seeing across all of these measures, where you have some interaction happening at the beginning of a person's career, then a relatively steady level mid-career, and then, once you get closer to retirement, a lot more going on in the last two age bins. Within each group we look at the top and bottom 10 percent by risk and ask what shares of them have which characteristics. Deciles and the "All" benchmark are computed within each age group, since otherwise the dispersion late in life would make both tails largely a proxy for age.
+
+The age group we are probably most interested in is the middle one. The reason the other two are broken out is really so that we can get a clean look at that middle group, where there is more going on. The group at the end of their career probably has a lot to do with things like preferences around retirement, and the first age group is a lot more variable, where the characteristics that matter may be things like a person's high school experience, whether they are a parent, or the education level of their parents. There is also selection in some sense, in that someone who is in college may not have a job and is not in this data yet. But that middle-aged group is really where you have just about everyone in the population, and where most of people's careers go on.
+
+Starting with gamma on the hourly wage side, for education in the middle age group there are not very many trends, the one notable thing being that people with less than a high school education have a larger share in the bottom 10 percent (23.3 percent, against 18.2 percent of the age group as a whole). An interesting piece is the tenure bins. In this center age group you see relatively high shares of people in the lowest tenure bin in both tails. Of the people in the bottom 10 percent, 57.1 percent are in the 0--1 tenure bin, and of the people in the top 10 percent, 51.7 percent are, relative to the whole sample in that age group where only 45.0 percent are. Which is quite interesting: there does not seem to be much correlation between a person's risk from persistent income shocks and their tenure, since both tails look the same way. Across much of the other variables you cannot tell much of a story either. Moving to annual earnings, there is a similar pattern in that it is not clear that the people in the bottom 10 percent or the top 10 percent clearly have different characteristics. The characteristics seem to be on par with much of the rest of the sample.
+
+For alpha, in Table \ref{tab:alpha_deciles}, we have the predictions included, so there is a column for the entire sample, then the predicted and actual for the bottom 10 percent and the predicted and actual for the top 10 percent. The idea is whether there are any patterns we can pick up on here, with alpha being the measure that can be better explained.
 
 \begin{table}[H]
     \centering
@@ -425,22 +515,33 @@ E[\gamma_{itjq}]
     }
 \end{table}
 
+For hourly wage alpha, looking at the center age group across education, these models predict that the top 10 percent riskiest contains a decent amount of less than high school and high school graduates and relatively few people with at least some college. And for the bottom 10 percent, the people least exposed to transitory income shock risk, it attributes a much higher predicted share of people with some college, a bachelor's degree, or bachelors+ than actually appear there. This trend is not the clearest when it comes to the actual values computed as means. In the top 10 percent, a lot of the people, based on their actual alpha value, are just high school graduates, but it still puts 14.1 percent of those people as having a bachelor's degree, whereas the models predict that 7.5 percent of the people in the top 10 percent should have one. The actual value for bachelors+ in the top 10 percent is 7.5 percent, whereas the predicted measure says it should be 3.9 percent. So the models are predicting that the top 10 percent riskiest should be heavily skewed toward lower education, and that the bottom 10 percent least risky should be heavily skewed toward higher education, and the actual values show that trend but much less sharply.
+
+For tenure you see a somewhat similar story, and one that again is not fully consistent with the actual data. Looking at the top 10 percent riskiest for transitory shocks, the predicted values say that 72.8 percent of those people should have tenure between 0 and 1, and that it should be relatively low for the other two tenure bins, at 11.4 percent for 2--5 years. So the top 10 percent riskiest should be heavily dominated by that 0--1 bin. For the least risky people in the bottom 10 percent, it says that should be heavily dominated by people with six or more years of tenure or two to five years, with only 11.1 percent having zero to one year of tenure. This is a clear pattern in the predictions, and it is not fully consistent with the actual values, though it is somewhat consistent. In the actual values, 59.3 percent of the top 10 percent riskiest are in the 0--1 bin, so the largest tenure bin for the top 10 percent riskiest is indeed dominated by people in that bin, but it is not as severe as the models predict, which is more like 73 percent. And when you get to the bottom 10 percent, based on the actual calculated alpha values, only 31.5 percent of those people are in the six-or-more tenure bin, against a predicted 67.5 percent, and 48.0 percent of them are still in the 0--1 bin.
+
+If we move to the annual earnings side, the same pattern shows up. For the center age group, among the top 10 percent riskiest you still have 24.0 percent with less than high school in the actual values, and in the bottom 10 percent 17.1 percent have less than a high school education, whereas the model predicts only 7.6 percent should. So while the model clearly wants to say that higher education leads to less risk, the calculated alpha values, or at least the plain group means, do not quite tell that story. But that is kind of the value of these methods: it is trying to pick up on a pattern, and it is at least hinting that even though the raw data shows what it shows, it may be skewed in some way that these models are picking up on, which wants to say that higher education leads to less risk, at least for these transitory shocks. And for tenure you see a similar story as before. For the top 10 percent riskiest the model predicts 80.3 percent should be in the 0--1 tenure bin, 10.2 percent in the 2--5 bin, and 9.5 percent in the six-or-more bin. For the bottom 10 percent least risky it predicts that 73.5 percent of them should be in the six-or-more bin, with 18.1 percent and 8.4 percent in the 2--5 and 0--1 bins. So for tenure it is saying that longer tenure should skew heavily toward being less risky.
 
 
+\section{Conclusion}
 
+This paper has gone through the construction of the gamma and alpha statistics as measures of persistent and transitory earnings risk, and then asked what predicts them. After that analysis a few things can be said. The main one is that transitory risk is predictable from observables, at least somewhat, while persistent risk is not. Alpha can be predicted by all three of these methods, even if the $R^2$ is still relatively low. Persistent risk is not predictable in the same way, and the clearest evidence for that is the machine learning methods not being able to beat the training data mean out of sample. Even these fairly powerful methods are not able to pick up on many patterns in persistent risk.
 
+That shows up further in the predicted values by demographic group. On the gamma side the methods are almost just guessing, picking slight variations around the mean rather than tracking any real pattern. The neural network in particular almost gives up and predicts 0.0186 for essentially everybody.
 
+Within transitory risk, though, there are some patterns that arose. The most specific one is tenure. All three methods agreed that tenure mattered quite a bit for transitory risk, and in many cases it was the most important variable --- it carries the largest $F$ statistic and the largest per-variable SHAP share in every alpha specification. The pattern is a decreasing one, where risk falls as tenure rises. OLS did not quite support this 100 percent, and the consensus from the machine learning methods is really what pushed it. The raw means decline monotonically across the three bins, but conditional on the full set of controls it remains ambiguous whether risk is truly decreasing across the whole range, since it is not clear whether the 2--5 year bin carries more or less risk than the six-or-more bin. What is clear either way is that both of them are far lower in risk than the 0--1 bin.
 
+Also within transitory risk you get the U-shaped pattern across the life cycle, shown in just about all of the methods. There is elevated risk early, a relatively flat mid-career, and then a sharp rise later in life as retirement approaches.
 
+Education was the other interesting one, in that education and occupation and industry seem to share much of the same variation. Education is strongly significant on its own, and once occupation and industry are allowed in, its significance drops sharply in every specification --- in the annual gamma models it stops being selected at all. Education looks to be standing in for where people end up working. It is also worth noting that occupation behaves differently depending on how it is measured: it is jointly significant as a block in every F test, but it carries the smallest average SHAP value per variable of any control set, which is to say that it matters in aggregate while no single occupation category does much on its own. Race also seems to matter for the transitory shocks, and notably not for the persistent ones.
+
+As far as methods, the contribution of this paper is really in using these methods to try to recover patterns in the data that OLS cannot see. In that sense the methods were able to agree with each other quite well when it came to the transitory shocks. They found very similar patterns and had a good deal of agreement, as discussed in the correlations of the predicted values, where the predicted values for alpha were highly correlated across the three methods on both the hourly and the annual measures. This could be taken both ways, and it is definitely not to make any causal claim here, as this is still strictly a correlational study. But it is to point out that these methods, by allowing for the kind of interdependencies that they do, were able to go beyond what the regular linear models could pick up on, and we were able to show some of those patterns throughout the analysis.
+
+One tradeoff with a research project like this is that our construction of these measures has an effect on the later analysis. How well we constructed the earnings profiles initially, in order to construct the risk measures, is going to have some effect on everything downstream. One can make the argument that we have overfitted the earnings profiles in the initial construction, and are therefore leaving out variation that should have been predictable, or should have been useful in predicting, later on. Someone could also make the argument that we have underfitted, and that a lot of the results in the analysis section are really just the result of underfitting the earnings profile construction. Our choice to use the exact same variables in the construction and in the later analysis was really meant to address this: there is no extra information available in the later analysis that was not already available in the earnings profiles.
+
+A further point of research in this field would be breaking down this persistent income risk. What this analysis establishes is that it is not well explained by the observable characteristics we have, which leaves open whether it is genuinely idiosyncratic or whether it is being measured too noisily here to be predicted.
 
 
 \end{onehalfspace}
-
-
-
-
-
-
 
 
 \begin{thebibliography}{99}
@@ -460,14 +561,10 @@ E[\gamma_{itjq}]
 \bibitem{psid2023} Panel Study of Income Dynamics (2023). Public use dataset. Ann Arbor, MI: Institute for Social Research, Survey Research Center, University of Michigan.
 
 
-
 \end{thebibliography}
 
 
-
-
 \appendix
-
 
 
 \section{Appendix}
@@ -566,12 +663,6 @@ E[\gamma_{itjq}]
     \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/avg_realearn_by_age_cohort1_race.png}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \caption{Average Annual Earnings by Age, Born 1953-1960 \& Post-1960}
-    \label{fig:avg_realearn_by_age_cohort2_race}
-    \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/avg_realearn_by_age_cohort2_race.png}
-\end{figure}
 
 \begin{figure}[H]
     \centering
@@ -588,10 +679,6 @@ E[\gamma_{itjq}]
 \end{figure}
 
 
-
-
-
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_occ_rank_lasso_vs_nn.pdf}\hfill
@@ -604,7 +691,6 @@ E[\gamma_{itjq}]
     \caption{Gamma SHAP Rank Comparisons Across Methods, Hourly Earnings (fhwage). Top row: occupation; bottom row: industry.}
     \label{fig:gamma_rank_methods}
 \end{figure}
-
 
 
 \begin{figure}[H]
@@ -635,19 +721,12 @@ E[\gamma_{itjq}]
 \end{figure}
 
 
-
-
-
-
 \begin{table}[H]
     \centering
     \caption{Group SHAP Shares of Controls, Gamma (Average |SHAP| per Variable x 100)}
     \label{tab:gamma_shap_shares}
     \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/gamma_shap_shares.tex}
 \end{table}
-
-
-
 
 
 \begin{table}[H]
@@ -723,8 +802,6 @@ E[\gamma_{itjq}]
         }
     \end{minipage}
 \end{table}
-
-
 
 
 \end{document}

@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1785635404.78221 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2.2/EARNINGSRISK.tex" "EARNINGSRISK.pdf" "EARNINGSRISK" 1785635407.34247 0
+["pdflatex"] 1785646748.75321 "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2.2/EARNINGSRISK.tex" "EARNINGSRISK.pdf" "EARNINGSRISK" 1785646751.48418 0
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/age_density_gamma_alpha_panel.png" 1785405406.28276 140027 f3c78b0e3b9e0641f89ff0437da1cd0d ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_deciles.tex" 1785405447.51937 3174 ff2ba93605364068b1dd49340ac59c56 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/alpha_fearn_deciles.tex" 1785405448.11986 3161 8c74438981f5fd70927017b46306be3e ""
@@ -71,7 +71,7 @@
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/ml_test_mse.tex" 1785401486.81918 441 a2d1c6bef50379affbcf5ae71c005a34 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/risk_summary_stats.tex" 1785405549.11276 384 e3a7137bc93192db87e5468a1537d054 ""
   "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/SecondDraft2/stratified_means_gamma_alpha.tex" 1785405386.00406 2220 b9a6b2b4267877615440d5e129a2aed4 ""
-  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2.2/EARNINGSRISK.tex" 1785635401.21093 27467 baa67791dcb4519f1eb849d14e2b9979 ""
+  "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/Paper/Draft2.2/EARNINGSRISK.tex" 1785646747.74921 83784 534375e26dbdc8b4fb374ea4abdadab8 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map" 1750043332.02054 81088 29d6fa367ac022d1b69251d68c0742e6 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0700.pk" 1740782457.2477 8268 ba405594e7d9975df0afaa5cd4f38a6e ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk" 1740352020.30047 11548 00b1f0567d483e9610dd30d5a4bb7d75 ""
@@ -182,9 +182,9 @@
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/longtable.sty" 1740345468.68945 15900 3cb191e576c7a313634d2813c55d4bf1 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/multicol.sty" 1740345468.67927 32879 f4cfa2226c995da5b04a89ee47abf182 ""
   "/Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url/url.sty" 1740345494.98424 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "EARNINGSRISK.aux" 1785635407.11049 12088 0ec4ff87d81761d3304341a665d0e575 "pdflatex"
-  "EARNINGSRISK.out" 1785635407.11198 708 d89ce868966482bf53a9b96de2a5925b "pdflatex"
-  "EARNINGSRISK.tex" 1785635401.21093 27467 baa67791dcb4519f1eb849d14e2b9979 ""
+  "EARNINGSRISK.aux" 1785646751.27871 12302 1ddc894b836e5576ead0b120e9f7deca "pdflatex"
+  "EARNINGSRISK.out" 1785646751.28007 1152 bf8074fbbfa2642936cb76d4e79e20b3 "pdflatex"
+  "EARNINGSRISK.tex" 1785646747.74921 83784 534375e26dbdc8b4fb374ea4abdadab8 ""
   (generated)
   "EARNINGSRISK.aux"
   "EARNINGSRISK.log"
