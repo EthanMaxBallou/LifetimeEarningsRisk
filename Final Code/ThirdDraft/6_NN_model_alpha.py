@@ -1,0 +1,379 @@
+
+
+
+import os
+import shap
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import pyreadstat
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Input, Dense, Dropout, Activation
+from tensorflow.keras.callbacks import EarlyStopping
+
+
+from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+from sklearn.linear_model import LassoCV
+
+# ---------------------------------------------------------------------------
+# OUTPUT PATHS
+# Nothing is written to the repo root: tables/figures go to OUTDIR, SHAP CSVs
+# to SHAPDIR, trained models to MODELDIR. Data intermediates stay in
+# Documents/Data/LER_Draft2 (outside the repo) and are unaffected.
+# ---------------------------------------------------------------------------
+REPODIR  = '/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk'
+OUTDIR   = os.path.join(REPODIR, 'OtherOutput', 'ThirdDraft')
+SHAPDIR  = os.path.join(OUTDIR, 'shap')
+MODELDIR = os.path.join(OUTDIR, 'models')
+os.makedirs(SHAPDIR,  exist_ok=True)
+os.makedirs(MODELDIR, exist_ok=True)
+
+
+
+
+
+# FHWAGE ANALYSIS
+
+
+# Load the .dta file
+dta_file_path = "/Users/ethanballou/Documents/Data/LER_Draft2/Consolidated_AlphaGamma_withDemographics.dta"
+data, meta = pyreadstat.read_dta(dta_file_path)
+
+# Display the first few rows of the dataframe
+print(data.head())
+
+# Optionally, inspect metadata
+print(meta.column_names)
+
+
+# Columns to drop from the dataset
+columns_to_keep = [
+    'year', 'personid', 'censdiv', 'occ', 'twoind', 'race', 
+    'agebin',
+    'PrRecess', 'OLF', 'tenure', 'cohort',
+    'alphaP_WEIGHTED', 'edyrs'
+]
+
+
+# Drop columns not in columns_to_keep
+data = data[columns_to_keep]
+
+
+# Drop rows with missing values in any kept column
+data = data.dropna()
+
+# Person-year keys for merging fitted values back into Stata
+# (same row order as the data/target exports below)
+ids = data[['personid', 'year']].astype('int64').copy()
+
+
+# Create a vector with the names of the columns to convert
+columns_to_convert = ['race', 'occ', 'year', 'censdiv', 'cohort', 'twoind', 'agebin']
+
+# Create dummy variables for all specified columns in one line
+data = pd.get_dummies(data, columns=columns_to_convert, drop_first=False)
+
+# Generate education level indicators
+
+data['EDU1'] = ((data['edyrs'] >= 12) & (data['edyrs'] < 14)).astype(int)
+data['EDU2'] = ((data['edyrs'] >= 14) & (data['edyrs'] < 16)).astype(int)
+data['EDU3'] = ((data['edyrs'] == 16)).astype(int)
+data['EDU4'] = ((data['edyrs'] > 16)).astype(int)
+
+
+# Separate the target variable from the data
+target = data[['alphaP_WEIGHTED']]  # Extract the target column
+data = data.drop(columns=['alphaP_WEIGHTED'])  # Remove the target column from the data
+
+
+# Drop 'personid' column from the dataset
+data = data.drop(columns=['personid', 'edyrs'], errors='ignore')
+
+
+
+
+# Export the processed data to a CSV file
+processed_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_data_NN.csv"
+
+data.to_csv(processed_data_path, index=False)
+print(f"Processed data exported to {processed_data_path}")
+
+
+# Save the target variable to a separate CSV file
+target_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_target_NN.csv"
+target.to_csv(target_data_path, index=False)
+print(f"Target data exported to {target_data_path}")
+
+
+# Save the person-year keys alongside (same row order as data/target)
+ids_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_ids_NN.csv"
+ids.to_csv(ids_data_path, index=False)
+print(f"Id data exported to {ids_data_path}")
+
+
+X = data.values  # Features
+y = target.values  # Target variables, dropping personid and year
+
+
+# Split data into train, validation, and test sets
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+
+
+
+
+
+scaler = MinMaxScaler()
+
+
+# Fit the scaler on the training data and transform all sets
+X_train = scaler.fit_transform(X_train)
+X_val = scaler.transform(X_val)
+X_test = scaler.transform(X_test)
+
+
+# Reshape the target arrays to 2D for MinMaxScaler
+y_train = y_train.reshape(-1, 1)
+y_val = y_val.reshape(-1, 1)
+y_test = y_test.reshape(-1, 1)
+
+# Normalize the target
+scaler_y = MinMaxScaler()
+y_train = scaler_y.fit_transform(y_train)
+y_val = scaler_y.transform(y_val)
+y_test = scaler_y.transform(y_test)
+
+
+num_variables = X_train.shape[1]
+
+
+# 1000 or 2000, 2-3 layers?, sigmoid
+
+nn1 = Sequential()
+nn1.add(Input((num_variables,)))
+
+nn1.add(Dense(500, activation="sigmoid"))
+nn1.add(Dropout(0.5))
+nn1.add(Dense(500, activation="sigmoid"))
+nn1.add(Dense(500, activation="sigmoid"))
+
+
+nn1.add(Dense(1, activation="linear"))
+
+
+# Print model summary
+nn1.summary()
+
+nn1.compile(optimizer="adam", loss="mse", metrics=["mse"])
+
+
+
+
+early_stopping = EarlyStopping(monitor='val_loss', patience=6, restore_best_weights=True)
+Network1 = nn1.fit(X_train, y_train, epochs=40, validation_data=(X_val, y_val), verbose=1, callbacks=[early_stopping])
+
+
+
+test_loss, test_mse = nn1.evaluate(X_test, y_test, verbose=0)
+print(f"Test MSE after training: {test_mse}")
+
+
+
+
+nn1.save(os.path.join(MODELDIR, "Risk_NN_Alpha.keras"))
+
+
+# Fitted values for ALL observations, converted back to natural units
+X_all = scaler.transform(data.values)
+pred_scaled = nn1.predict(X_all, verbose=0)
+pred = scaler_y.inverse_transform(pred_scaled).ravel()
+
+preds_out = ids.copy()
+preds_out['pred_nn'] = pred
+preds_out.to_csv("/Users/ethanballou/Documents/Data/LER_Draft2/NN_predictions_alpha.csv", index=False)
+print("NN predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/NN_predictions_alpha.csv")
+
+
+
+
+
+
+
+
+
+# FEARN ANALYSIS
+
+
+import tensorflow as tf      # already imported in these files
+tf.keras.backend.clear_session()
+
+# Load the .dta file
+dta_file_path = "/Users/ethanballou/Documents/Data/LER_Draft2/Consolidated_AlphaGamma_withDemographics.dta"
+data, meta = pyreadstat.read_dta(dta_file_path)
+
+# Display the first few rows of the dataframe
+print(data.head())
+
+# Optionally, inspect metadata
+print(meta.column_names)
+
+
+# Columns to drop from the dataset
+columns_to_keep = [
+    'year', 'personid', 'censdiv', 'occ', 'twoind', 'race', 
+    'agebin',
+    'PrRecess', 'OLF', 'tenure', 'cohort',
+    'alphaP_WEIGHTED_fearn', 'edyrs'
+]
+
+
+# Drop columns not in columns_to_keep
+data = data[columns_to_keep]
+
+
+# Drop rows with missing values in any kept column
+data = data.dropna()
+
+# Person-year keys for merging fitted values back into Stata
+# (same row order as the data/target exports below)
+ids = data[['personid', 'year']].astype('int64').copy()
+
+
+# Create a vector with the names of the columns to convert
+columns_to_convert = ['race', 'occ', 'year', 'censdiv', 'cohort', 'twoind', 'agebin']
+
+# Create dummy variables for all specified columns in one line
+data = pd.get_dummies(data, columns=columns_to_convert, drop_first=False)
+
+# Generate education level indicators
+
+data['EDU1'] = ((data['edyrs'] >= 12) & (data['edyrs'] < 14)).astype(int)
+data['EDU2'] = ((data['edyrs'] >= 14) & (data['edyrs'] < 16)).astype(int)
+data['EDU3'] = ((data['edyrs'] == 16)).astype(int)
+data['EDU4'] = ((data['edyrs'] > 16)).astype(int)
+
+
+# Separate the target variable from the data
+target = data[['alphaP_WEIGHTED_fearn']]  # Extract the target column
+data = data.drop(columns=['alphaP_WEIGHTED_fearn'], errors='ignore')  # Remove the target column from the data
+
+
+# Drop 'personid' column from the dataset
+data = data.drop(columns=['personid', 'edyrs'], errors='ignore')
+
+
+
+
+# Export the processed data to a CSV file
+processed_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_data_NN_fearn.csv"
+
+data.to_csv(processed_data_path, index=False)
+print(f"Processed data exported to {processed_data_path}")
+
+
+# Save the target variable to a separate CSV file
+target_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_target_NN_fearn.csv"
+target.to_csv(target_data_path, index=False)
+print(f"Target data exported to {target_data_path}")
+
+
+# Save the person-year keys alongside (same row order as data/target)
+ids_data_path = "/Users/ethanballou/Documents/Data/LER_Draft2/ALP_ids_NN_fearn.csv"
+ids.to_csv(ids_data_path, index=False)
+print(f"Id data exported to {ids_data_path}")
+
+
+X = data.values  # Features
+y = target.values  # Target variables, dropping personid and year
+
+
+# Split data into train, validation, and test sets
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+
+
+
+
+
+scaler = MinMaxScaler()
+
+
+# Fit the scaler on the training data and transform all sets
+X_train = scaler.fit_transform(X_train)
+X_val = scaler.transform(X_val)
+X_test = scaler.transform(X_test)
+
+
+# Reshape the target arrays to 2D for MinMaxScaler
+y_train = y_train.reshape(-1, 1)
+y_val = y_val.reshape(-1, 1)
+y_test = y_test.reshape(-1, 1)
+
+# Normalize the target
+scaler_y = MinMaxScaler()
+y_train = scaler_y.fit_transform(y_train)
+y_val = scaler_y.transform(y_val)
+y_test = scaler_y.transform(y_test)
+
+
+num_variables = X_train.shape[1]
+
+
+# 1000 or 2000, 2-3 layers?, sigmoid
+
+nn1 = Sequential()
+nn1.add(Input((num_variables,)))
+
+nn1.add(Dense(500, activation="sigmoid"))
+nn1.add(Dropout(0.5))
+nn1.add(Dense(500, activation="sigmoid"))
+nn1.add(Dense(500, activation="sigmoid"))
+
+nn1.add(Dense(1, activation="linear"))
+
+
+# Print model summary
+nn1.summary()
+
+nn1.compile(optimizer="adam", loss="mse", metrics=["mse"])
+
+
+
+
+early_stopping = EarlyStopping(monitor='val_loss', patience=6, restore_best_weights=True)
+Network1 = nn1.fit(X_train, y_train, epochs=40, validation_data=(X_val, y_val), verbose=1, callbacks=[early_stopping])
+
+
+
+test_loss, test_mse = nn1.evaluate(X_test, y_test, verbose=0)
+print(f"Test MSE after training: {test_mse}")
+
+
+
+
+nn1.save(os.path.join(MODELDIR, "Risk_NN_Alpha_fearn.keras"))
+
+
+# Fitted values for ALL observations, converted back to natural units
+X_all = scaler.transform(data.values)
+pred_scaled = nn1.predict(X_all, verbose=0)
+pred = scaler_y.inverse_transform(pred_scaled).ravel()
+
+preds_out = ids.copy()
+preds_out['pred_nn'] = pred
+preds_out.to_csv("/Users/ethanballou/Documents/Data/LER_Draft2/NN_predictions_alpha_fearn.csv", index=False)
+print("NN predictions exported to /Users/ethanballou/Documents/Data/LER_Draft2/NN_predictions_alpha_fearn.csv")
+
+
+
+
+
+
