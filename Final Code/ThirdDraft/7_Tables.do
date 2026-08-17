@@ -298,7 +298,20 @@ foreach bvar in educat race cohort agebin tenurebin earnbin wagebin {
 
 use `stacked', clear
 order block category gam_wage alph_wage gam_earn alph_earn n
-format gam_wage alph_wage gam_earn alph_earn %9.4f
+
+* risk measures reported x 100 (the paper caption notes the scaling)
+foreach v in gam_wage alph_wage gam_earn alph_earn {
+    replace `v' = 100 * `v'
+}
+
+* group title printed once, on the first row of each block (compare against
+* an untouched copy: replace runs top-down, so block[_n-1] would already be
+* blanked and every other row would keep its title)
+gen str30 blockfull = block
+replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
+drop blockfull
+
+format gam_wage alph_wage gam_earn alph_earn %9.2f
 format n %12.0fc
 
 label var block     "Group"
@@ -421,10 +434,22 @@ restore
 
 preserve
 
-histogram gam_wage,  title("Gamma (Hourly)", size(medium))  xtitle("Gamma") name(g_hist_gam_wage, replace)
-histogram alph_wage, title("Alpha (Hourly)", size(medium))  xtitle("Alpha") name(g_hist_alph_wage, replace)
-histogram gam_earn,  title("Gamma (Annual)", size(medium))  xtitle("Gamma") name(g_hist_gam_earn, replace)
-histogram alph_earn, title("Alpha (Annual)", size(medium))  xtitle("Alpha") name(g_hist_alph_earn, replace)
+* Plot-only copies with extreme values set to missing so the tails don't
+* stretch the axes: gamma outside [-0.3, 0.3], alpha outside [-0.3, 0.75].
+* Used for these histograms only, then dropped.
+gen gammaDIST = gam_wage  if inrange(gam_wage,  -0.3, 0.3)
+gen alphaDIST = alph_wage if inrange(alph_wage, -0.3, 0.75)
+
+histogram gammaDIST, title("Gamma (Hourly)", size(medium))  xtitle("Gamma") name(g_hist_gam_wage, replace)
+histogram alphaDIST, title("Alpha (Hourly)", size(medium))  xtitle("Alpha") name(g_hist_alph_wage, replace)
+
+replace gammaDIST = cond(inrange(gam_earn,  -0.3, 0.3),  gam_earn,  .)
+replace alphaDIST = cond(inrange(alph_earn, -0.3, 0.75), alph_earn, .)
+
+histogram gammaDIST, title("Gamma (Annual)", size(medium))  xtitle("Gamma") name(g_hist_gam_earn, replace)
+histogram alphaDIST, title("Alpha (Annual)", size(medium))  xtitle("Alpha") name(g_hist_alph_earn, replace)
+
+drop gammaDIST alphaDIST
 
 graph combine g_hist_gam_wage g_hist_alph_wage g_hist_gam_earn g_hist_alph_earn, ///
     cols(2) name(g_hist_panel, replace) ysize(6) xsize(8)
@@ -443,7 +468,10 @@ restore
 * into the existing 4-year agebin4 categories. Each panel has its own title;
 * the combined 2x2 image has no overall title. Box and whiskers only:
 * outside values are not plotted (nooutsides; note("") suppresses the
-* automatic "excludes outside values" caption), y-axis left to autoscale.
+* automatic "excludes outside values" caption). The last two age bins
+* (62-65, 66-69) are not shown: plot-only copies blank them out, and over()
+* drops categories with no nonmissing values. Y-axes are set manually:
+* gamma -0.15 to 0.2, alpha -0.3 to 0.4.
 * ===========================================================================
 
 preserve
@@ -453,11 +481,30 @@ local lbl_alph_wage "Alpha (Hourly)"
 local lbl_gam_earn  "Gamma (Annual)"
 local lbl_alph_earn "Alpha (Annual)"
 
-foreach v in gam_wage alph_wage gam_earn alph_earn {
-    graph box `v', over(agebin4, label(angle(45) labsize(vsmall))) ///
-        nooutsides note("") ///
-        title("`lbl_`v''", size(medium)) ytitle("`lbl_`v''") ///
-        name(g_box_`v', replace)
+local yopt_gam  yscale(range(-0.15 0.2)) ylabel(-0.15(0.05)0.2)
+local yopt_alph yscale(range(-0.3 0.4)) ylabel(-0.3(0.1)0.4)
+
+foreach meas in wage earn {
+
+    gen gammaAGEDIST = gam_`meas'  if !inlist(agebin4, 11, 12)
+    gen alphaAGEDIST = alph_`meas' if !inlist(agebin4, 11, 12)
+
+    * the if restriction removes the empty 62-65 / 66-69 slots from the
+    * category axis (over() keeps a labeled slot for any group that has
+    * observations, even when the plotted variable is all missing there)
+    graph box gammaAGEDIST if !inlist(agebin4, 11, 12), ///
+        over(agebin4, label(angle(45) labsize(vsmall))) ///
+        nooutsides note("") `yopt_gam' ///
+        title("`lbl_gam_`meas''", size(medium)) ytitle("`lbl_gam_`meas''") ///
+        name(g_box_gam_`meas', replace)
+
+    graph box alphaAGEDIST if !inlist(agebin4, 11, 12), ///
+        over(agebin4, label(angle(45) labsize(vsmall))) ///
+        nooutsides note("") `yopt_alph' ///
+        title("`lbl_alph_`meas''", size(medium)) ytitle("`lbl_alph_`meas''") ///
+        name(g_box_alph_`meas', replace)
+
+    drop gammaAGEDIST alphaAGEDIST
 }
 
 graph combine g_box_gam_wage g_box_alph_wage g_box_gam_earn g_box_alph_earn, ///
@@ -957,8 +1004,22 @@ foreach meas in wage earn {
 
         order block category pred_actual_g pred_nn_g pred_rf_g pred_lasso_g n_g ///
               pred_actual_a pred_nn_a pred_rf_a pred_lasso_a n_a
+
+        * risk measures reported x 100 (the paper caption notes the scaling)
+        foreach v in pred_actual_g pred_nn_g pred_rf_g pred_lasso_g ///
+                     pred_actual_a pred_nn_a pred_rf_a pred_lasso_a {
+            replace `v' = 100 * `v'
+        }
+
+        * group title printed once, on the first row of each block (compare
+        * against an untouched copy: replace runs top-down, so block[_n-1]
+        * would already be blanked and every other row would keep its title)
+        gen str30 blockfull = block
+        replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
+        drop blockfull
+
         format pred_actual_g pred_nn_g pred_rf_g pred_lasso_g ///
-               pred_actual_a pred_nn_a pred_rf_a pred_lasso_a %9.4f
+               pred_actual_a pred_nn_a pred_rf_a pred_lasso_a %9.2f
         format n_g n_a %12.0fc
 
         listtex block category pred_actual_g pred_nn_g pred_rf_g pred_lasso_g n_g ///
@@ -1020,7 +1081,12 @@ foreach meas in wage earn {
                 decode educat, gen(category)
                 order category v1 v2 v3 v4 v5 v6
                 drop educat
-                format v1 v2 v3 v4 v5 v6 %9.4f
+
+                * risk measures reported x 100 (the paper captions note the scaling)
+                foreach v of varlist v1-v6 {
+                    replace `v' = 100 * `v'
+                }
+                format v1 v2 v3 v4 v5 v6 %9.2f
 
                 listtex category v1 v2 v3 v4 v5 v6 using "$OUTDIR/`outname'`sfx'_pred_matrix_`m'.tex", ///
                     replace ///
@@ -1077,31 +1143,66 @@ capture drop educat_dum*
 tabulate educat, generate(educat_dum)
 
 
+* --- Earnings quintile dummies (mirroring the stratified-means table) ---
+* Hourly panels report the hourly wage quintile, annual panels the annual
+* earnings quintile.
+
+capture drop earnbin wagebin
+xtile earnbin = realearn, nquantiles(5)
+xtile wagebin = hwage, nquantiles(5)
+label define earnbin_lbl 1 "1st Quintile" 2 "2nd Quintile" ///
+    3 "3rd Quintile" 4 "4th Quintile" 5 "5th Quintile", replace
+label values earnbin earnbin_lbl
+label define wagebin_lbl 1 "1st Quintile" 2 "2nd Quintile" ///
+    3 "3rd Quintile" 4 "4th Quintile" 5 "5th Quintile", replace
+label values wagebin wagebin_lbl
+
+capture drop earnbin_dum*
+capture drop wagebin_dum*
+tabulate earnbin, generate(earnbin_dum)
+tabulate wagebin, generate(wagebin_dum)
+
+
 * --- Row scaffold: table rows in order, with block titles and labels ---
 * Dummy k of each set corresponds to the k-th lowest value of the source
 * variable, so walking levelsof in order lines the labels up with the dummies.
+* Two variants, differing only in the final quintile block: hourly panels
+* (hr) end with the hourly wage quintile, annual panels (an) with the annual
+* earnings quintile.
 
-local rowvars educat_dum1 educat_dum2 educat_dum3 educat_dum4 educat_dum5 ///
+local rowvars_common educat_dum1 educat_dum2 educat_dum3 educat_dum4 educat_dum5 ///
     race_dum1 race_dum2 race_dum3 race_dum4 race_dum5 race_dum6 ///
     cohort_dum1 cohort_dum2 cohort_dum3 cohort_dum4 ///
     ten_dum1 ten_dum2 ten_dum3 ///
     censdiv_dum1 censdiv_dum2 censdiv_dum3 censdiv_dum4 censdiv_dum5 ///
     censdiv_dum6 censdiv_dum7 censdiv_dum8 censdiv_dum9 censdiv_dum10
 
-local nrow = 0
-foreach bvar in educat race cohort tenurebin censdiv {
+local rowvars_hr `rowvars_common' wagebin_dum1 wagebin_dum2 wagebin_dum3 ///
+    wagebin_dum4 wagebin_dum5
+local rowvars_an `rowvars_common' earnbin_dum1 earnbin_dum2 earnbin_dum3 ///
+    earnbin_dum4 earnbin_dum5
 
-    if "`bvar'" == "educat"    local btitle "Education"
-    if "`bvar'" == "race"      local btitle "Race"
-    if "`bvar'" == "cohort"    local btitle "Cohort"
-    if "`bvar'" == "tenurebin" local btitle "Tenure Bin"
-    if "`bvar'" == "censdiv"   local btitle "Census Division"
+foreach mm in hr an {
 
-    levelsof `bvar', local(levels)
-    foreach v of local levels {
-        local ++nrow
-        local block`nrow' "`btitle'"
-        local cat`nrow' : label (`bvar') `v'
+    local qvar = cond("`mm'" == "hr", "wagebin", "earnbin")
+
+    local nrow_`mm' = 0
+    foreach bvar in educat race cohort tenurebin censdiv `qvar' {
+
+        if "`bvar'" == "educat"    local btitle "Education"
+        if "`bvar'" == "race"      local btitle "Race"
+        if "`bvar'" == "cohort"    local btitle "Cohort"
+        if "`bvar'" == "tenurebin" local btitle "Tenure Bin"
+        if "`bvar'" == "censdiv"   local btitle "Census Division"
+        if "`bvar'" == "wagebin"   local btitle "Hourly Wage Quintile"
+        if "`bvar'" == "earnbin"   local btitle "Annual Earnings Quintile"
+
+        levelsof `bvar', local(levels)
+        foreach v of local levels {
+            local ++nrow_`mm'
+            local block_`mm'`nrow_`mm'' "`btitle'"
+            local cat_`mm'`nrow_`mm'' : label (`bvar') `v'
+        }
     }
 }
 
@@ -1113,12 +1214,12 @@ foreach bvar in educat race cohort tenurebin censdiv {
 preserve
     keep if !missing(gam_wage)
     keep personid agebin3 gam_wage educat_dum* race_dum* cohort_dum* ///
-         ten_dum* censdiv_dum*
+         ten_dum* censdiv_dum* wagebin_dum*
     drop if missing(agebin3)
 
     * one observation per person per age bin
     collapse (mean) gam_wage educat_dum* race_dum* cohort_dum* ten_dum* ///
-             censdiv_dum*, by(personid agebin3)
+             censdiv_dum* wagebin_dum*, by(personid agebin3)
 
     * within-bin decile flags on actual risk
     egen p10_act = pctile(gam_wage), p(10) by(agebin3)
@@ -1127,7 +1228,7 @@ preserve
     gen top_act = gam_wage >= p90_act
 
     * fill the cell matrix: rows = categories, columns = bin x (All/Bot/Top)
-    matrix R = J(`nrow', 9, .)
+    matrix R = J(`nrow_hr', 9, .)
     local col = 0
     forvalues b = 1/3 {
         foreach part in all bot top {
@@ -1138,7 +1239,7 @@ preserve
 
             local ++col
             local row = 0
-            foreach v of local rowvars {
+            foreach v of local rowvars_hr {
                 local ++row
                 quietly summarize `v' if `cond'
                 matrix R[`row', `col'] = 100 * r(mean)
@@ -1149,13 +1250,21 @@ preserve
     * build the table dataset and export
     clear
     svmat R, names(c)
-    gen str20 block = ""
+    gen str30 block = ""
     gen str45 category = ""
-    forvalues i = 1/`nrow' {
-        replace block = "`block`i''" in `i'
-        replace category = "`cat`i''" in `i'
+    forvalues i = 1/`nrow_hr' {
+        replace block = "`block_hr`i''" in `i'
+        replace category = "`cat_hr`i''" in `i'
     }
     order block category
+
+    * group title printed once, on the first row of each block (compare
+    * against an untouched copy: replace runs top-down, so block[_n-1]
+    * would already be blanked and every other row would keep its title)
+    gen str30 blockfull = block
+    replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
+    drop blockfull
+
     format c1-c9 %9.1f
 
     listtex block category c1 c2 c3 c4 c5 c6 c7 c8 c9 ///
@@ -1179,18 +1288,18 @@ restore
 preserve
     keep if !missing(gam_earn)
     keep personid agebin3 gam_earn educat_dum* race_dum* cohort_dum* ///
-         ten_dum* censdiv_dum*
+         ten_dum* censdiv_dum* earnbin_dum*
     drop if missing(agebin3)
 
     collapse (mean) gam_earn educat_dum* race_dum* cohort_dum* ten_dum* ///
-             censdiv_dum*, by(personid agebin3)
+             censdiv_dum* earnbin_dum*, by(personid agebin3)
 
     egen p10_act = pctile(gam_earn), p(10) by(agebin3)
     egen p90_act = pctile(gam_earn), p(90) by(agebin3)
     gen bot_act = gam_earn <= p10_act
     gen top_act = gam_earn >= p90_act
 
-    matrix R = J(`nrow', 9, .)
+    matrix R = J(`nrow_an', 9, .)
     local col = 0
     forvalues b = 1/3 {
         foreach part in all bot top {
@@ -1201,7 +1310,7 @@ preserve
 
             local ++col
             local row = 0
-            foreach v of local rowvars {
+            foreach v of local rowvars_an {
                 local ++row
                 quietly summarize `v' if `cond'
                 matrix R[`row', `col'] = 100 * r(mean)
@@ -1211,13 +1320,21 @@ preserve
 
     clear
     svmat R, names(c)
-    gen str20 block = ""
+    gen str30 block = ""
     gen str45 category = ""
-    forvalues i = 1/`nrow' {
-        replace block = "`block`i''" in `i'
-        replace category = "`cat`i''" in `i'
+    forvalues i = 1/`nrow_an' {
+        replace block = "`block_an`i''" in `i'
+        replace category = "`cat_an`i''" in `i'
     }
     order block category
+
+    * group title printed once, on the first row of each block (compare
+    * against an untouched copy: replace runs top-down, so block[_n-1]
+    * would already be blanked and every other row would keep its title)
+    gen str30 blockfull = block
+    replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
+    drop blockfull
+
     format c1-c9 %9.1f
 
     listtex block category c1 c2 c3 c4 c5 c6 c7 c8 c9 ///
@@ -1243,12 +1360,12 @@ preserve
     keep if !missing(pred_nn_alph_wage)
     keep personid agebin3 alph_wage pred_nn_alph_wage pred_rf_alph_wage ///
          pred_lasso_alph_wage educat_dum* race_dum* cohort_dum* ten_dum* ///
-         censdiv_dum*
+         censdiv_dum* wagebin_dum*
     drop if missing(agebin3)
 
     collapse (mean) alph_wage pred_nn_alph_wage pred_rf_alph_wage ///
              pred_lasso_alph_wage educat_dum* race_dum* cohort_dum* ///
-             ten_dum* censdiv_dum*, by(personid agebin3)
+             ten_dum* censdiv_dum* wagebin_dum*, by(personid agebin3)
 
     * ensemble prediction: mean of the three within-bin percentile ranks
     egen rank_nn    = rank(pred_nn_alph_wage),    by(agebin3)
@@ -1268,7 +1385,7 @@ preserve
     gen top_act = alph_wage >= p90_act
 
     * columns per bin: All, Bottom (Pred, Act), Top (Pred, Act)
-    matrix R = J(`nrow', 15, .)
+    matrix R = J(`nrow_hr', 15, .)
     local col = 0
     forvalues b = 1/3 {
         foreach part in all botp bota topp topa {
@@ -1281,7 +1398,7 @@ preserve
 
             local ++col
             local row = 0
-            foreach v of local rowvars {
+            foreach v of local rowvars_hr {
                 local ++row
                 quietly summarize `v' if `cond'
                 matrix R[`row', `col'] = 100 * r(mean)
@@ -1291,13 +1408,21 @@ preserve
 
     clear
     svmat R, names(c)
-    gen str20 block = ""
+    gen str30 block = ""
     gen str45 category = ""
-    forvalues i = 1/`nrow' {
-        replace block = "`block`i''" in `i'
-        replace category = "`cat`i''" in `i'
+    forvalues i = 1/`nrow_hr' {
+        replace block = "`block_hr`i''" in `i'
+        replace category = "`cat_hr`i''" in `i'
     }
     order block category
+
+    * group title printed once, on the first row of each block (compare
+    * against an untouched copy: replace runs top-down, so block[_n-1]
+    * would already be blanked and every other row would keep its title)
+    gen str30 blockfull = block
+    replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
+    drop blockfull
+
     format c1-c15 %9.1f
 
     listtex block category c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13 c14 c15 ///
@@ -1323,12 +1448,12 @@ preserve
     keep if !missing(pred_nn_alph_earn)
     keep personid agebin3 alph_earn pred_nn_alph_earn pred_rf_alph_earn ///
          pred_lasso_alph_earn educat_dum* race_dum* cohort_dum* ten_dum* ///
-         censdiv_dum*
+         censdiv_dum* earnbin_dum*
     drop if missing(agebin3)
 
     collapse (mean) alph_earn pred_nn_alph_earn pred_rf_alph_earn ///
              pred_lasso_alph_earn educat_dum* race_dum* cohort_dum* ///
-             ten_dum* censdiv_dum*, by(personid agebin3)
+             ten_dum* censdiv_dum* earnbin_dum*, by(personid agebin3)
 
     egen rank_nn    = rank(pred_nn_alph_earn),    by(agebin3)
     egen rank_rf    = rank(pred_rf_alph_earn),    by(agebin3)
@@ -1345,7 +1470,7 @@ preserve
     gen bot_act = alph_earn <= p10_act
     gen top_act = alph_earn >= p90_act
 
-    matrix R = J(`nrow', 15, .)
+    matrix R = J(`nrow_an', 15, .)
     local col = 0
     forvalues b = 1/3 {
         foreach part in all botp bota topp topa {
@@ -1358,7 +1483,7 @@ preserve
 
             local ++col
             local row = 0
-            foreach v of local rowvars {
+            foreach v of local rowvars_an {
                 local ++row
                 quietly summarize `v' if `cond'
                 matrix R[`row', `col'] = 100 * r(mean)
@@ -1368,13 +1493,21 @@ preserve
 
     clear
     svmat R, names(c)
-    gen str20 block = ""
+    gen str30 block = ""
     gen str45 category = ""
-    forvalues i = 1/`nrow' {
-        replace block = "`block`i''" in `i'
-        replace category = "`cat`i''" in `i'
+    forvalues i = 1/`nrow_an' {
+        replace block = "`block_an`i''" in `i'
+        replace category = "`cat_an`i''" in `i'
     }
     order block category
+
+    * group title printed once, on the first row of each block (compare
+    * against an untouched copy: replace runs top-down, so block[_n-1]
+    * would already be blanked and every other row would keep its title)
+    gen str30 blockfull = block
+    replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
+    drop blockfull
+
     format c1-c15 %9.1f
 
     listtex block category c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13 c14 c15 ///

@@ -184,6 +184,8 @@ print(f"  NN {alph_an_nn:.5f}  RF {alph_an_rf:.5f}  LASSO {alph_an_lasso:.5f}  t
 
 # BUILD AND EXPORT THE LATEX TABLE
 # Columns: Gamma hourly, Gamma annual | Alpha hourly, Alpha annual
+# MSE cells reported x 100 (the paper caption notes the scaling); the
+# N (test) row is left unscaled.
 
 
 table = ""
@@ -192,10 +194,10 @@ table += "\\hline\\hline\n"
 table += " & \\multicolumn{2}{c|}{Gamma} & \\multicolumn{2}{c}{Alpha} \\\\\n"
 table += " & Hourly & Annual & Hourly & Annual \\\\\n"
 table += "\\hline\n"
-table += f"NN & {gam_hr_nn:.5f} & {gam_an_nn:.5f} & {alph_hr_nn:.5f} & {alph_an_nn:.5f} \\\\\n"
-table += f"Random Forest & {gam_hr_rf:.5f} & {gam_an_rf:.5f} & {alph_hr_rf:.5f} & {alph_an_rf:.5f} \\\\\n"
-table += f"LASSO & {gam_hr_lasso:.5f} & {gam_an_lasso:.5f} & {alph_hr_lasso:.5f} & {alph_an_lasso:.5f} \\\\\n"
-table += f"Predict Train Mean & {gam_hr_base:.5f} & {gam_an_base:.5f} & {alph_hr_base:.5f} & {alph_an_base:.5f} \\\\\n"
+table += f"NN & {100*gam_hr_nn:.3f} & {100*gam_an_nn:.3f} & {100*alph_hr_nn:.3f} & {100*alph_an_nn:.3f} \\\\\n"
+table += f"Random Forest & {100*gam_hr_rf:.3f} & {100*gam_an_rf:.3f} & {100*alph_hr_rf:.3f} & {100*alph_an_rf:.3f} \\\\\n"
+table += f"LASSO & {100*gam_hr_lasso:.3f} & {100*gam_an_lasso:.3f} & {100*alph_hr_lasso:.3f} & {100*alph_an_lasso:.3f} \\\\\n"
+table += f"Predict Train Mean & {100*gam_hr_base:.3f} & {100*gam_an_base:.3f} & {100*alph_hr_base:.3f} & {100*alph_an_base:.3f} \\\\\n"
 table += "\\hline\n"
 table += f"N (test) & {gam_hr_n:,} & {gam_an_n:,} & {alph_hr_n:,} & {alph_an_n:,} \\\\\n"
 table += "\\hline\\hline\n"
