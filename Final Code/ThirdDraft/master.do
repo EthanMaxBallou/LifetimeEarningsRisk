@@ -10,6 +10,8 @@ do "${Code}1_DataLoading.do"
 do "${Code}2_DataLabeling.do"
 do "${Code}3_DataCleaning.do"
 do "${Code}3.1_TenureOccInd.do"
+do "${Code}3.2_EarningsSelection.do"
+
 
 do "${Code}4_GamAlphaCalc.do"
 do "${Code}5_MixedRegConsolidate.do"

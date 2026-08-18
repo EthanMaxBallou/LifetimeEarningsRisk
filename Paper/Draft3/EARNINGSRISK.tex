@@ -207,6 +207,46 @@ Figure \ref{fig:avg_realearn_by_age_cohort2_race} shows the average annual earni
 \end{figure}
 
 
+\begin{table}[H]
+    \centering
+    \caption{Stepwise Selection of Growth-Regression Controls by Horizon Bin}
+    \label{tab:growth_sel_stepwise}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_stepwise_selection.tex}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{LASSO Selection of Growth-Regression Controls by Horizon Bin}
+    \label{tab:growth_sel_lasso}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_lasso_selection.tex}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{F-Tests of Growth-Regression Control Sets by Horizon Bin}
+    \label{tab:growth_sel_ftest}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_ftest.tex}
+    }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{LASSO Selection for Raw-Difference Gamma and Alpha}
+    \label{tab:gamalpha_sel_lasso}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_gamalpha_lasso_selection.tex}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{F-Tests of Control Sets for Raw-Difference Gamma and Alpha}
+    \label{tab:gamalpha_sel_ftest}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_gamalpha_ftest.tex}
+    }
+\end{table}
+
+
 Figures \ref{fig:distribution_gamma_alpha_panel} and \ref{fig:age_density_gamma_alpha_panel} show the distributions. The first makes the point about the standard deviations concrete: alpha has a long positive tail with some outliers while gamma is relatively centered around zero. The second shows the age trend that came out of the stratified means. There is a lot of variability in the first two age bins from 22 to 29, that decreases, and once you get to around the 30--33 level you stay relatively steady. Then in the last two bins, once you are into the late 50s and 60s, you have a large amount of variability. Again, that final age bin has a relatively low number of observations, so it is one to take with a grain of salt.
 
 \begin{figure}[H]
