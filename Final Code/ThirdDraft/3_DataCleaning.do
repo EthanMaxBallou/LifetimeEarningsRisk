@@ -1764,7 +1764,7 @@ preserve
 
 ** Importing annual Consumer Price Index for Urban Consumers (series CUUR0000SA0)
 
-import delimited "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/AnnualCpi.csv", clear
+import delimited "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/MacroData/AnnualCpi.csv", clear
 
 
 keep year annual
@@ -1789,7 +1789,7 @@ restore
 preserve
 
 
-import delimited "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/PrRecess_VAR.csv", clear
+import delimited "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/MacroData/PrRecess_VAR.csv", clear
 
 
 
@@ -1814,7 +1814,7 @@ restore
 preserve
 
 
-import delimited "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/rGDP_VAR.csv", clear
+import delimited "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/MacroData/rGDP_VAR.csv", clear
 
 
 gen year = real(substr(observation_date, 1, 4))

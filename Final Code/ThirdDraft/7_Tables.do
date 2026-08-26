@@ -103,12 +103,12 @@ label define tenurebin_lbl 1 "0-1" 2 "2-5" 3 "6+", replace
 
 
 * --- (2) Merge the person-year fitted values from the Python ML scripts ---
-* 12 CSVs: {NN,RF,Lasso}_predictions_{gamma,alpha}{,_fearn}.csv. Every CSV
+* 16 CSVs: {NN,RF,Lasso,OLS}_predictions_{gamma,alpha}{,_fearn}.csv. Every CSV
 * stores its prediction under a generic column name (pred_nn / pred_rf /
-* pred_lasso), so each is renamed to a distinct pred_<model>_<risk>_<meas>
-* before merging: pred_nn_gam_wage ... pred_lasso_alph_earn.
+* pred_lasso / pred_ols), so each is renamed to a distinct
+* pred_<model>_<risk>_<meas> before merging: pred_nn_gam_wage ... pred_ols_alph_earn.
 
-foreach meth in NN RF Lasso {
+foreach meth in NN RF Lasso OLS {
     local m = lower("`meth'")
     foreach outn in gamma alpha {
         local o = cond("`outn'"=="gamma","gam","alph")
@@ -426,6 +426,49 @@ restore
 
 
 * ===========================================================================
+* MEAN GAMMA/ALPHA BY AGE ACROSS COHORTS (4 separate plots)
+*
+* For each risk measure (gamma/alpha x hourly/annual), plot the mean of the
+* raw measure by 4-year age bin (agebin4, bins 1-10 = ages 22-61; the first
+* stage drops currentage > 61), one line per birth cohort. Same B&W styling
+* as the age-earnings profiles above (black lines distinguished by pattern,
+* no legend); the pattern-to-cohort mapping lives in the paper's figure
+* caption. Fixed y-ranges so panels compare within measure: 0-0.04 for
+* gamma, 0-0.2 for alpha. Exported as four separate PNGs; the paper
+* combines them into one 2x2 float (fig:mean_risk_by_age_cohort). Rare thin
+* cohort x bin edge cells are dropped.
+* ===========================================================================
+
+foreach v in gam_wage alph_wage gam_earn alph_earn {
+
+    * fixed, comparable y-ranges: gamma 0-0.04, alpha 0-0.2
+    if strpos("`v'", "gam") local yl "ylabel(0(.01).04, labsize(medsmall) angle(0))"
+    else                    local yl "ylabel(0(.05).2, labsize(medsmall) angle(0))"
+
+    preserve
+        collapse (mean) m=`v' (count) n=`v', by(agebin4 cohort)
+        drop if missing(cohort) | missing(agebin4)
+        keep if agebin4 <= 10
+        drop if n < 25
+
+        * cohort is coded 10/20/30/40, so separate yields m10/m20/m30/m40
+        separate m, by(cohort) veryshortlabel
+
+        twoway line m10 m20 m30 m40 agebin4, sort legend(off) ///
+            lcolor(black black black black) ///
+            lpattern(solid dash dot dash_dot) ///
+            xtitle("Age Bin") ytitle("") ///
+            xlabel(1(1)10, valuelabel angle(45) labsize(medsmall)) ///
+            `yl'
+
+        graph export "$OUTDIR/mean_`v'_by_age_cohort.png", replace width(2000)
+    restore
+}
+
+
+
+
+* ===========================================================================
 * DISTRIBUTION OF GAMMA/ALPHA (histograms, 2x2 panel)
 *
 * One histogram per risk measure (gamma/alpha x hourly/annual), each with its
@@ -557,8 +600,8 @@ esttab ols_gam_wage_no ols_gam_wage_all ols_gam_earn_no ols_gam_earn_all ///
     using "$OUTDIR/gamma_alpha_ols.tex", ///
     replace se r2 label ///
     prehead("{" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\begin{tabular}{l*{4}{c}|*{4}{c}}" "\hline\hline") ///
-    keep(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin 6.agebin PrRecess ma5aep OLF 2.tenurebin 3.tenurebin) ///
-    order(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin 6.agebin PrRecess ma5aep OLF 2.tenurebin 3.tenurebin) ///
+    keep(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin PrRecess ma5aep OLF 2.tenurebin 3.tenurebin) ///
+    order(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin PrRecess ma5aep OLF 2.tenurebin 3.tenurebin) ///
     mgroups("Gamma, Hourly Wage" "Gamma, Annual Earnings" "Alpha, Hourly Wage" "Alpha, Annual Earnings", ///
             pattern(1 0 1 0 1 0 1 0) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
     mtitles("No Occ/Ind" "All Controls" "No Occ/Ind" "All Controls" "No Occ/Ind" "All Controls" "No Occ/Ind" "All Controls") ///
@@ -567,6 +610,69 @@ esttab ols_gam_wage_no ols_gam_wage_all ols_gam_earn_no ols_gam_earn_all ///
           labels("Census Division FE" "Year FE" "Race FE" "Cohort FE" "Occupation FE" "Industry FE" "R-squared" "N") ///
           fmt(%9s %9s %9s %9s %9s %9s %9.3f %9.0g)) ///
     star(* 0.10 ** 0.05 *** 0.01)
+
+
+
+
+* ===========================================================================
+* DESCRIPTIVE STATS OF THE OLS PREDICTIONS
+*
+* Distribution of the full-sample OLS fitted values (pred_ols_*, merged in
+* the early data prep), x 100 like the other risk tables; \% Negative is a
+* percent of that column's estimation sample (rendered with a \% sign and
+* set off by a rule after the SD row). Columns: Annual (Gamma, Alpha) |
+* Hourly (Gamma, Alpha). Sits after the OLS regression table in the paper
+* (tab:ols_pred_summary_stats).
+* ===========================================================================
+
+preserve
+    matrix OS = J(5, 4, .)
+    local c = 0
+    foreach v in pred_ols_gam_earn pred_ols_alph_earn pred_ols_gam_wage pred_ols_alph_wage {
+        local ++c
+        quietly summarize `v', detail
+        matrix OS[1,`c'] = 100*r(mean)
+        matrix OS[2,`c'] = 100*r(p50)
+        matrix OS[3,`c'] = 100*r(sd)
+        matrix OS[5,`c'] = r(N)
+        local nn = r(N)
+        quietly count if `v' < 0
+        matrix OS[4,`c'] = 100*r(N)/`nn'
+    }
+
+    clear
+    set obs 5
+    gen str30 stat = ""
+    replace stat = "Mean"   in 1
+    replace stat = "Median" in 2
+    replace stat = "SD"     in 3
+    * the \hline prefix draws a divider between the SD and % Negative rows
+    replace stat = "\hline \% Negative" in 4
+    replace stat = "N"      in 5
+
+    forvalues c = 1/4 {
+        gen str20 c`c' = ""
+        forvalues r = 1/3 {
+            local x : display %9.2f OS[`r',`c']
+            quietly replace c`c' = strtrim("`x'") in `r'
+        }
+        local x : display %9.2f OS[4,`c']
+        quietly replace c`c' = strtrim("`x'") + "\%" in 4
+        local n : display %12.0fc OS[5,`c']
+        quietly replace c`c' = strtrim("`n'") in 5
+    }
+
+    listtex stat c1 c2 c3 c4 using "$OUTDIR/ols_pred_summary_stats.tex", ///
+        replace ///
+        head("\begin{tabular}{lcc|cc}" ///
+             "\hline\hline" ///
+             " & \multicolumn{2}{c|}{Annual Earnings} & \multicolumn{2}{c}{Hourly Wage} \\" ///
+             "Statistic & Gamma & Alpha & Gamma & Alpha \\" ///
+             "\hline") ///
+        foot("\hline\hline" ///
+             "\end{tabular}") ///
+        rstyle(tabular)
+restore
 
 
 
@@ -697,12 +803,14 @@ foreach o in gam alph {
 *
 * FE sets whose dummies have no omitted reference use wildcards (robust to
 * category-count changes); edu/agebin/ten keep explicit lists so the
-* reference category stays out. If a Stata version rejects wildcards inside
-* stepwise terms, pre-expand with -unab- (e.g. unab occlist : occ_dum*).
+* reference category stays out. agebin_dum6 (62-69) no longer exists: the
+* pipeline drops currentage > 61, so tabulate creates only 5 agebin dummies.
+* If a Stata version rejects wildcards inside stepwise terms, pre-expand
+* with -unab- (e.g. unab occlist : occ_dum*).
 * ===========================================================================
 
-local sw_no  "PrRecess ma5aep OLF (edu_dum1 edu_dum2 edu_dum3 edu_dum4) (agebin_dum1 agebin_dum2 agebin_dum3 agebin_dum5 agebin_dum6) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (race_dum*) (cohort_dum*)"
-local sw_all "PrRecess ma5aep OLF (edu_dum1 edu_dum2 edu_dum3 edu_dum4) (agebin_dum1 agebin_dum2 agebin_dum3 agebin_dum5 agebin_dum6) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (occ_dum*) (race_dum*) (cohort_dum*) (twoind_dum*)"
+local sw_no  "PrRecess ma5aep OLF (edu_dum1 edu_dum2 edu_dum3 edu_dum4) (agebin_dum1 agebin_dum2 agebin_dum3 agebin_dum5) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (race_dum*) (cohort_dum*)"
+local sw_all "PrRecess ma5aep OLF (edu_dum1 edu_dum2 edu_dum3 edu_dum4) (agebin_dum1 agebin_dum2 agebin_dum3 agebin_dum5) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (occ_dum*) (race_dum*) (cohort_dum*) (twoind_dum*)"
 
 eststo clear
 
@@ -926,8 +1034,8 @@ foreach outn in gamma alpha {
 * columns to the generic names the table code uses.
 *
 * One table per earnings measure: rows = demographic categories in blocks
-* (education, race, cohort, age bin, tenure bin); columns = Actual | NN |
-* RF | LASSO | N for Gamma (left) and Alpha (right) with a vertical
+* (education, race, cohort, age bin, tenure bin); columns = Raw | OLS |
+* LASSO | NN | RF | N for Gamma (left) and Alpha (right) with a vertical
 * divider. Each side keeps its own N: the two outcomes have different
 * estimation samples.
 * ===========================================================================
@@ -941,12 +1049,13 @@ foreach meas in wage earn {
 
         preserve
             keep personid year `o'_`meas' pred_nn_`o'_`meas' pred_rf_`o'_`meas' ///
-                 pred_lasso_`o'_`meas' educat race cohort agebin tenurebin
+                 pred_lasso_`o'_`meas' pred_ols_`o'_`meas' educat race cohort agebin tenurebin
 
-            * The three models share one estimation sample per outcome
+            * The four models share one estimation sample per outcome
             keep if !missing(pred_nn_`o'_`meas')
 
             rename `o'_`meas'            pred_actual
+            rename pred_ols_`o'_`meas'   pred_ols
             rename pred_nn_`o'_`meas'    pred_nn
             rename pred_rf_`o'_`meas'    pred_rf
             rename pred_lasso_`o'_`meas' pred_lasso
@@ -965,7 +1074,7 @@ foreach meas in wage earn {
                 if "`bvar'" == "tenurebin" local btitle "Tenure Bin"
 
                 use `mrg', clear
-                collapse (mean) pred_actual pred_nn pred_rf pred_lasso (count) n=pred_actual, by(`bvar')
+                collapse (mean) pred_actual pred_ols pred_lasso pred_nn pred_rf (count) n=pred_actual, by(`bvar')
                 drop if missing(`bvar')
 
                 gen str30 block = "`btitle'"
@@ -987,14 +1096,14 @@ foreach meas in wage earn {
 
     preserve
         use `stk_alph', clear
-        rename (pred_actual pred_nn pred_rf pred_lasso n) ///
-               (pred_actual_a pred_nn_a pred_rf_a pred_lasso_a n_a)
+        rename (pred_actual pred_ols pred_lasso pred_nn pred_rf n) ///
+               (pred_actual_a pred_ols_a pred_lasso_a pred_nn_a pred_rf_a n_a)
         tempfile alph_wide
         save `alph_wide', replace
 
         use `stk_gam', clear
-        rename (pred_actual pred_nn pred_rf pred_lasso n) ///
-               (pred_actual_g pred_nn_g pred_rf_g pred_lasso_g n_g)
+        rename (pred_actual pred_ols pred_lasso pred_nn pred_rf n) ///
+               (pred_actual_g pred_ols_g pred_lasso_g pred_nn_g pred_rf_g n_g)
 
         * preserve the stacked block/category row order through the merge
         gen roworder = _n
@@ -1002,12 +1111,12 @@ foreach meas in wage earn {
         sort roworder
         drop roworder
 
-        order block category pred_actual_g pred_nn_g pred_rf_g pred_lasso_g n_g ///
-              pred_actual_a pred_nn_a pred_rf_a pred_lasso_a n_a
+        order block category pred_actual_g pred_ols_g pred_lasso_g pred_nn_g pred_rf_g n_g ///
+              pred_actual_a pred_ols_a pred_lasso_a pred_nn_a pred_rf_a n_a
 
         * risk measures reported x 100 (the paper caption notes the scaling)
-        foreach v in pred_actual_g pred_nn_g pred_rf_g pred_lasso_g ///
-                     pred_actual_a pred_nn_a pred_rf_a pred_lasso_a {
+        foreach v in pred_actual_g pred_ols_g pred_lasso_g pred_nn_g pred_rf_g ///
+                     pred_actual_a pred_ols_a pred_lasso_a pred_nn_a pred_rf_a {
             replace `v' = 100 * `v'
         }
 
@@ -1018,18 +1127,18 @@ foreach meas in wage earn {
         replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
         drop blockfull
 
-        format pred_actual_g pred_nn_g pred_rf_g pred_lasso_g ///
-               pred_actual_a pred_nn_a pred_rf_a pred_lasso_a %9.2f
+        format pred_actual_g pred_ols_g pred_lasso_g pred_nn_g pred_rf_g ///
+               pred_actual_a pred_ols_a pred_lasso_a pred_nn_a pred_rf_a %9.2f
         format n_g n_a %12.0fc
 
-        listtex block category pred_actual_g pred_nn_g pred_rf_g pred_lasso_g n_g ///
-                pred_actual_a pred_nn_a pred_rf_a pred_lasso_a n_a ///
+        listtex block category pred_actual_g pred_ols_g pred_lasso_g pred_nn_g pred_rf_g n_g ///
+                pred_actual_a pred_ols_a pred_lasso_a pred_nn_a pred_rf_a n_a ///
             using "$OUTDIR/gamma_alpha_pred_means`sfx'.tex", ///
             replace ///
-            head("\begin{tabular}{llccccc|ccccc}" ///
+            head("\begin{tabular}{llcccccc|cccccc}" ///
                  "\hline\hline" ///
-                 " &  & \multicolumn{5}{c|}{Gamma} & \multicolumn{5}{c}{Alpha} \\" ///
-                 "Group & Category & Actual & NN & RF & LASSO & N & Actual & NN & RF & LASSO & N \\" ///
+                 " &  & \multicolumn{6}{c|}{Gamma} & \multicolumn{6}{c}{Alpha} \\" ///
+                 "Group & Category & Raw & OLS & LASSO & NN & RF & N & Raw & OLS & LASSO & NN & RF & N \\" ///
                  "\hline") ///
             foot("\hline\hline" ///
                  "\end{tabular}") ///
@@ -1045,8 +1154,9 @@ foreach meas in wage earn {
 *
 * Mean predicted value by education category (rows) and age bin (columns),
 * one table per outcome x earnings measure x method (Actual, NN, RF, LASSO).
-* All six age bins are populated in both estimation samples; if one ever
-* empties, the listtex below fails loudly on the missing column.
+* Five age bins (22-61; the pipeline drops currentage > 61, so 62-69 is
+* empty) are populated in both estimation samples; if one ever empties,
+* the listtex below fails loudly on the missing column.
 * ===========================================================================
 
 foreach meas in wage earn {
@@ -1079,21 +1189,21 @@ foreach meas in wage earn {
 
                 sort educat
                 decode educat, gen(category)
-                order category v1 v2 v3 v4 v5 v6
+                order category v1 v2 v3 v4 v5
                 drop educat
 
                 * risk measures reported x 100 (the paper captions note the scaling)
-                foreach v of varlist v1-v6 {
+                foreach v of varlist v1-v5 {
                     replace `v' = 100 * `v'
                 }
-                format v1 v2 v3 v4 v5 v6 %9.2f
+                format v1 v2 v3 v4 v5 %9.2f
 
-                listtex category v1 v2 v3 v4 v5 v6 using "$OUTDIR/`outname'`sfx'_pred_matrix_`m'.tex", ///
+                listtex category v1 v2 v3 v4 v5 using "$OUTDIR/`outname'`sfx'_pred_matrix_`m'.tex", ///
                     replace ///
-                    head("\begin{tabular}{lcccccc}" ///
+                    head("\begin{tabular}{lccccc}" ///
                          "\hline\hline" ///
-                         " & \multicolumn{6}{c}{Age Bin} \\" ///
-                         "Education & 22-29 & 30-37 & 38-45 & 46-53 & 54-61 & 62-69 \\" ///
+                         " & \multicolumn{5}{c}{Age Bin} \\" ///
+                         "Education & 22-29 & 30-37 & 38-45 & 46-53 & 54-61 \\" ///
                          "\hline") ///
                     foot("\hline\hline" ///
                          "\end{tabular}") ///
@@ -1110,7 +1220,7 @@ foreach meas in wage earn {
 * CHARACTERISTICS OF TOP AND BOTTOM RISK DECILES BY AGE
 *
 * Who has really high and really low risk? Within three broad age bins
-* (22-33, 34-57, 58-69), the share of each demographic category among the
+* (22-33, 34-57, 58-61 with the current age-61 cap), the share of each demographic category among the
 * top 10% and bottom 10% of risk, next to the within-bin average share.
 *
 * Individuals are first collapsed to one observation per person per age
@@ -1272,7 +1382,7 @@ preserve
         replace ///
         head("\begin{tabular}{llccc|ccc|ccc}" ///
              "\hline\hline" ///
-             " & & \multicolumn{3}{c|}{Ages 22-33} & \multicolumn{3}{c|}{Ages 34-57} & \multicolumn{3}{c}{Ages 58-69} \\" ///
+             " & & \multicolumn{3}{c|}{Ages 22-33} & \multicolumn{3}{c|}{Ages 34-57} & \multicolumn{3}{c}{Ages 58-61} \\" ///
              " & & All & Bottom 10\% & Top 10\% & All & Bottom 10\% & Top 10\% & All & Bottom 10\% & Top 10\% \\" ///
              "\hline") ///
         foot("\hline\hline" ///
@@ -1342,7 +1452,7 @@ preserve
         replace ///
         head("\begin{tabular}{llccc|ccc|ccc}" ///
              "\hline\hline" ///
-             " & & \multicolumn{3}{c|}{Ages 22-33} & \multicolumn{3}{c|}{Ages 34-57} & \multicolumn{3}{c}{Ages 58-69} \\" ///
+             " & & \multicolumn{3}{c|}{Ages 22-33} & \multicolumn{3}{c|}{Ages 34-57} & \multicolumn{3}{c}{Ages 58-61} \\" ///
              " & & All & Bottom 10\% & Top 10\% & All & Bottom 10\% & Top 10\% & All & Bottom 10\% & Top 10\% \\" ///
              "\hline") ///
         foot("\hline\hline" ///
@@ -1430,9 +1540,9 @@ preserve
         replace ///
         head("\begin{tabular}{llccccc|ccccc|ccccc}" ///
              "\hline\hline" ///
-             " & & \multicolumn{5}{c|}{Ages 22-33} & \multicolumn{5}{c|}{Ages 34-57} & \multicolumn{5}{c}{Ages 58-69} \\" ///
+             " & & \multicolumn{5}{c|}{Ages 22-33} & \multicolumn{5}{c|}{Ages 34-57} & \multicolumn{5}{c}{Ages 58-61} \\" ///
              " & & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c|}{Top 10\%} & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c|}{Top 10\%} & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c}{Top 10\%} \\" ///
-             " & & & Pred & Act & Pred & Act & & Pred & Act & Pred & Act & & Pred & Act & Pred & Act \\" ///
+             " & & & Pred & Raw & Pred & Raw & & Pred & Raw & Pred & Raw & & Pred & Raw & Pred & Raw \\" ///
              "\hline") ///
         foot("\hline\hline" ///
              "\end{tabular}") ///
@@ -1515,9 +1625,9 @@ preserve
         replace ///
         head("\begin{tabular}{llccccc|ccccc|ccccc}" ///
              "\hline\hline" ///
-             " & & \multicolumn{5}{c|}{Ages 22-33} & \multicolumn{5}{c|}{Ages 34-57} & \multicolumn{5}{c}{Ages 58-69} \\" ///
+             " & & \multicolumn{5}{c|}{Ages 22-33} & \multicolumn{5}{c|}{Ages 34-57} & \multicolumn{5}{c}{Ages 58-61} \\" ///
              " & & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c|}{Top 10\%} & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c|}{Top 10\%} & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c}{Top 10\%} \\" ///
-             " & & & Pred & Act & Pred & Act & & Pred & Act & Pred & Act & & Pred & Act & Pred & Act \\" ///
+             " & & & Pred & Raw & Pred & Raw & & Pred & Raw & Pred & Raw & & Pred & Raw & Pred & Raw \\" ///
              "\hline") ///
         foot("\hline\hline" ///
              "\end{tabular}") ///

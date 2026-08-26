@@ -147,16 +147,50 @@ tabulate censdiv,   generate(censdiv_dum)
 tabulate year,      generate(year_dum)
 tabulate agebin4,   generate(agebin4_dum)
 
+* Interaction dummies for the lasso/F-tests (NOT stepwise): occ x tenure
+* and agebin4 x tenure, matching the interactions the file-4 first stage
+* imposes. Pure products of the main-effect dummies; tenure 0-1 stays the
+* reference (only ten_dum2/ten_dum3 enter, as with the main effects).
+* Prefixes are chosen so the occ_dum*/twoind_dum*/censdiv_dum*/year_dum*
+* wildcards in the fraction-counting loops cannot swallow them. All-zero
+* (empty cell) columns are dropped, so the fraction denominators below are
+* counted from what survives rather than hard-coded.
+unab OCCDUMS : occ_dum*
+foreach od of local OCCDUMS {
+	local i = substr("`od'", 8, .)
+	forvalues k = 2/3 {
+		gen byte occten_d`i'_`k' = `od' * ten_dum`k'
+	}
+}
+forvalues i = 1/12 {
+	capture confirm variable agebin4_dum`i'
+	if !_rc {
+		forvalues k = 2/3 {
+			gen byte ageten_d`i'_`k' = agebin4_dum`i' * ten_dum`k'
+		}
+	}
+}
+foreach v of varlist occten_d* ageten_d* {
+	quietly summarize `v', meanonly
+	if r(max) == 0 drop `v'
+}
+unab OCCTENLIST : occten_d*
+unab AGETENLIST : ageten_d*
+local NOCCTEN_A : word count `OCCTENLIST'
+local NAGETEN_A : word count `AGETENLIST'
+
 * Candidate terms shared by every regression. z dummies are prepended
 * inside the loop (they differ by bin) and locked in via lockterm1.
+* No interaction dummies here: stepwise keeps its original candidate sets.
 local CANDIDATES "(educ_dum*) postgrad (race_dum*) OLF unemp student (occ_dum*) (twoind_dum*) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (agebin4_dum1 agebin4_dum2 agebin4_dum3 agebin4_dum4 agebin4_dum5 agebin4_dum6 agebin4_dum8 agebin4_dum9 agebin4_dum10 agebin4_dum11 agebin4_dum12)"
 
 * Same list, unparenthesized, for lasso: in lasso syntax parentheses mean
 * ALWAYS INCLUDE (only the z dummies get that), and lasso selects
-* individual dummies rather than whole sets.
-local LASSOCANDS "educ_dum* postgrad race_dum* OLF unemp student occ_dum* twoind_dum* ten_dum2 ten_dum3 censdiv_dum* year_dum* agebin4_dum1 agebin4_dum2 agebin4_dum3 agebin4_dum4 agebin4_dum5 agebin4_dum6 agebin4_dum8 agebin4_dum9 agebin4_dum10 agebin4_dum11 agebin4_dum12"
+* individual dummies rather than whole sets. The interaction dummies are
+* lasso candidates too.
+local LASSOCANDS "educ_dum* postgrad race_dum* OLF unemp student occ_dum* twoind_dum* ten_dum2 ten_dum3 censdiv_dum* year_dum* agebin4_dum1 agebin4_dum2 agebin4_dum3 agebin4_dum4 agebin4_dum5 agebin4_dum6 agebin4_dum8 agebin4_dum9 agebin4_dum10 agebin4_dum11 agebin4_dum12 occten_d* ageten_d*"
 
-* testparm argument for each of the 12 F-test table rows. The F-test
+* testparm argument for each of the 14 F-test table rows. The F-test
 * model uses the same sets of controls but in i.() factor notation, so
 * each set carries a proper reference category and the joint F per set
 * is well-defined (the joint F is invariant to which level is the base).
@@ -172,11 +206,13 @@ local TP9  "i.tenurebin"
 local TP10 "i.censdiv"
 local TP11 "i.year"
 local TP12 "i.agebin4"
+local TP13 "i.occ#i.tenurebin"
+local TP14 "i.agebin4#i.tenurebin"
 
 * F-statistics and p-values per set x run; columns 1-3 = fearn bins 1-3,
 * columns 4-6 = fhwage bins 1-3 (same mapping as the summary tables)
-matrix FT  = J(12, 6, .)
-matrix FTP = J(12, 6, .)
+matrix FT  = J(14, 6, .)
+matrix FTP = J(14, 6, .)
 
 
 ***********************************************************************
@@ -224,9 +260,9 @@ forvalues b = 1/3 {
 
 		quietly regress G_`x' z_dum* i.educwrths postgrad i.race OLF ///
 			unemp student i.occ i.twoind i.tenurebin i.censdiv ///
-			i.year i.agebin4
+			i.year i.agebin4 i.occ#i.tenurebin i.agebin4#i.tenurebin
 
-		forvalues s = 1/12 {
+		forvalues s = 1/14 {
 			quietly testparm `TP`s''
 			matrix FT[`s', `col']  = r(F)
 			matrix FTP[`s', `col'] = r(p)
@@ -362,7 +398,7 @@ foreach k in 1 2 3 4 5 6 8 9 10 11 12 {
 local NIND = `r'
 
 clear
-set obs `=`NIND'+4'
+set obs `=`NIND'+6'
 gen str40 varlabel = ""
 forvalues c = 1/6 {
 	gen str12 c`c' = ""
@@ -375,6 +411,8 @@ quietly replace varlabel = "Census Division (of 10)" in `=`NIND'+1'
 quietly replace varlabel = "Occupation (of 79)"      in `=`NIND'+2'
 quietly replace varlabel = "Industry (of 34)"        in `=`NIND'+3'
 quietly replace varlabel = "Year (of 37)"            in `=`NIND'+4'
+quietly replace varlabel = "Occupation x Tenure (of `NOCCTEN_A')" in `=`NIND'+5'
+quietly replace varlabel = "Age Bin x Tenure (of `NAGETEN_A')"    in `=`NIND'+6'
 
 local c = 0
 foreach x in fearn fhwage {
@@ -391,16 +429,22 @@ foreach x in fearn fhwage {
 		local nocc = 0
 		local nind = 0
 		local nyr  = 0
+		local noct = 0
+		local nagt = 0
 		foreach v of local sel {
 			if strmatch("`v'", "censdiv_dum*") local ++ncd
 			if strmatch("`v'", "occ_dum*")     local ++nocc
 			if strmatch("`v'", "twoind_dum*")  local ++nind
 			if strmatch("`v'", "year_dum*")    local ++nyr
+			if strmatch("`v'", "occten_d*")    local ++noct
+			if strmatch("`v'", "ageten_d*")    local ++nagt
 		}
 		quietly replace c`c' = "`ncd'/10"  in `=`NIND'+1'
 		quietly replace c`c' = "`nocc'/79" in `=`NIND'+2'
 		quietly replace c`c' = "`nind'/34" in `=`NIND'+3'
 		quietly replace c`c' = "`nyr'/37"  in `=`NIND'+4'
+		quietly replace c`c' = "`noct'/`NOCCTEN_A'" in `=`NIND'+5'
+		quietly replace c`c' = "`nagt'/`NAGETEN_A'" in `=`NIND'+6'
 	}
 }
 
@@ -422,15 +466,15 @@ listtex varlabel c1 c2 c3 c4 c5 c6 using "`OUT'/3.2_lasso_selection.tex", ///
 * Same cell format as the 7_Tables.do F-test tables: "F*** (p)".
 
 clear
-set obs 12
+set obs 14
 gen str40 varlabel = ""
 forvalues c = 1/6 {
 	gen str40 c`c' = ""
 }
 
-local SETLABELS `""Education" "Postgrad" "Race" "OLF" "Unemployed" "Student" "Occupation" "Industry" "Tenure" "Census Division" "Year" "Age Bin""'
+local SETLABELS `""Education" "Postgrad" "Race" "OLF" "Unemployed" "Student" "Occupation" "Industry" "Tenure" "Census Division" "Year" "Age Bin" "Occ x Tenure" "Age Bin x Tenure""'
 
-forvalues i = 1/12 {
+forvalues i = 1/14 {
 	local lab : word `i' of `SETLABELS'
 	quietly replace varlabel = `"`lab'"' in `i'
 
@@ -771,12 +815,38 @@ tabulate censdiv,   generate(censdiv_dum)
 tabulate year,      generate(year_dum)
 tabulate agebin4,   generate(agebin4_dum)
 
+* Interaction dummies (same construction as the top of the file); the
+* empty-cell set differs on this sample, so the denominators are recounted
+unab OCCDUMS : occ_dum*
+foreach od of local OCCDUMS {
+	local i = substr("`od'", 8, .)
+	forvalues k = 2/3 {
+		gen byte occten_d`i'_`k' = `od' * ten_dum`k'
+	}
+}
+forvalues i = 1/12 {
+	capture confirm variable agebin4_dum`i'
+	if !_rc {
+		forvalues k = 2/3 {
+			gen byte ageten_d`i'_`k' = agebin4_dum`i' * ten_dum`k'
+		}
+	}
+}
+foreach v of varlist occten_d* ageten_d* {
+	quietly summarize `v', meanonly
+	if r(max) == 0 drop `v'
+}
+unab OCCTENLIST : occten_d*
+unab AGETENLIST : ageten_d*
+local NOCCTEN_B : word count `OCCTENLIST'
+local NAGETEN_B : word count `AGETENLIST'
+
 
 * ---------- Selection runs: lasso + F-tests, 4 columns ----------
 * c1 = gamma annual, c2 = alpha annual, c3 = gamma hourly, c4 = alpha hourly
 
-matrix GFT  = J(12, 4, .)
-matrix GFTP = J(12, 4, .)
+matrix GFT  = J(14, 4, .)
+matrix GFTP = J(14, 4, .)
 
 capture log close earnsel
 log using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_EarningsSelection.log", ///
@@ -797,9 +867,9 @@ foreach m in fearn fhwage {
 		* F-tests per control set, factor notation (as in the F table above)
 		quietly regress `dv' i.educwrths postgrad i.race OLF ///
 			unemp student i.occ i.twoind i.tenurebin i.censdiv ///
-			i.year i.agebin4
+			i.year i.agebin4 i.occ#i.tenurebin i.agebin4#i.tenurebin
 
-		forvalues s = 1/12 {
+		forvalues s = 1/14 {
 			quietly testparm `TP`s''
 			matrix GFT[`s', `col']  = r(F)
 			matrix GFTP[`s', `col'] = r(p)
@@ -814,7 +884,7 @@ log close earnsel
 * Reuses the fixed row list (lvar#/llab#/NIND) built for the 6-column table.
 
 clear
-set obs `=`NIND'+4'
+set obs `=`NIND'+6'
 gen str40 varlabel = ""
 forvalues c = 1/4 {
 	gen str12 c`c' = ""
@@ -827,6 +897,8 @@ quietly replace varlabel = "Census Division (of 10)" in `=`NIND'+1'
 quietly replace varlabel = "Occupation (of 79)"      in `=`NIND'+2'
 quietly replace varlabel = "Industry (of 34)"        in `=`NIND'+3'
 quietly replace varlabel = "Year (of 37)"            in `=`NIND'+4'
+quietly replace varlabel = "Occupation x Tenure (of `NOCCTEN_B')" in `=`NIND'+5'
+quietly replace varlabel = "Age Bin x Tenure (of `NAGETEN_B')"    in `=`NIND'+6'
 
 forvalues c = 1/4 {
 	local sel "`ga_lasel_`c''"
@@ -840,16 +912,22 @@ forvalues c = 1/4 {
 	local nocc = 0
 	local nind = 0
 	local nyr  = 0
+	local noct = 0
+	local nagt = 0
 	foreach v of local sel {
 		if strmatch("`v'", "censdiv_dum*") local ++ncd
 		if strmatch("`v'", "occ_dum*")     local ++nocc
 		if strmatch("`v'", "twoind_dum*")  local ++nind
 		if strmatch("`v'", "year_dum*")    local ++nyr
+		if strmatch("`v'", "occten_d*")    local ++noct
+		if strmatch("`v'", "ageten_d*")    local ++nagt
 	}
 	quietly replace c`c' = "`ncd'/10"  in `=`NIND'+1'
 	quietly replace c`c' = "`nocc'/79" in `=`NIND'+2'
 	quietly replace c`c' = "`nind'/34" in `=`NIND'+3'
 	quietly replace c`c' = "`nyr'/37"  in `=`NIND'+4'
+	quietly replace c`c' = "`noct'/`NOCCTEN_B'" in `=`NIND'+5'
+	quietly replace c`c' = "`nagt'/`NAGETEN_B'" in `=`NIND'+6'
 }
 
 listtex varlabel c1 c2 c3 c4 using "`OUT'/3.2_gamalpha_lasso_selection.tex", ///
@@ -869,13 +947,13 @@ listtex varlabel c1 c2 c3 c4 using "`OUT'/3.2_gamalpha_lasso_selection.tex", ///
 * ---------- F-test table (4 columns) ----------
 
 clear
-set obs 12
+set obs 14
 gen str40 varlabel = ""
 forvalues c = 1/4 {
 	gen str40 c`c' = ""
 }
 
-forvalues i = 1/12 {
+forvalues i = 1/14 {
 	local lab : word `i' of `SETLABELS'
 	quietly replace varlabel = `"`lab'"' in `i'
 

@@ -263,6 +263,35 @@ Figures \ref{fig:distribution_gamma_alpha_panel} and \ref{fig:age_density_gamma_
     \includegraphics[width=0.9\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/age_density_gamma_alpha_panel.png}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \caption{Mean Gamma and Alpha by Age Across Cohorts. Solid = born pre-1944; Dashed = 1944--1952; Dotted = 1953--1960; Dash-dot = post-1960.}
+    \label{fig:mean_risk_by_age_cohort}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Gamma, Hourly Wage}\\[4pt]
+        \includegraphics[width=\linewidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_wage_by_age_cohort.png}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Alpha, Hourly Wage}\\[4pt]
+        \includegraphics[width=\linewidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_by_age_cohort.png}
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Gamma, Annual Earnings}\\[4pt]
+        \includegraphics[width=\linewidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_earn_by_age_cohort.png}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Alpha, Annual Earnings}\\[4pt]
+        \includegraphics[width=\linewidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png}
+    \end{minipage}
+\end{figure}
+
 
 \section{Empirical Strategy}
 
@@ -294,6 +323,13 @@ Table \ref{tab:gamma_alpha_ols} reports the OLS results. There are two models fo
     \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_alpha_ols.tex}
     }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Distribution of the OLS-Predicted Gamma and Alpha (x 100)}
+    \label{tab:ols_pred_summary_stats}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/ols_pred_summary_stats.tex}
 \end{table}
 
 
@@ -439,7 +475,7 @@ Tables \ref{tab:alpha_pred_matrix} and \ref{tab:alpha_fearn_pred_matrix} break t
     \label{tab:alpha_pred_matrix}
     \begin{minipage}[t]{0.48\textwidth}
         \centering
-        \textbf{Actual}\\[4pt]
+        \textbf{Raw}\\[4pt]
         \resizebox{\linewidth}{!}{%
             \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/alpha_pred_matrix_actual.tex}
         }
@@ -478,7 +514,7 @@ Starting with hourly earnings, for most of these trends, across the actual value
     \label{tab:alpha_fearn_pred_matrix}
     \begin{minipage}[t]{0.48\textwidth}
         \centering
-        \textbf{Actual}\\[4pt]
+        \textbf{Raw}\\[4pt]
         \resizebox{\linewidth}{!}{%
             \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/alpha_fearn_pred_matrix_actual.tex}
         }
@@ -515,7 +551,7 @@ Finally we reach the last two tables, Tables \ref{tab:gamma_deciles} and \ref{ta
 
 \begin{table}[H]
     \centering
-    \caption{Characteristics of Top and Bottom Risk Deciles by Age, Gamma (Sorted by Actual Risk; Percent Shares)}
+    \caption{Characteristics of Top and Bottom Risk Deciles by Age, Gamma (Sorted by Raw Risk; Percent Shares)}
     \label{tab:gamma_deciles}
     \textbf{Panel A: Hourly Wage}\\[4pt]
     \resizebox*{!}{0.41\textheight}{%
@@ -540,7 +576,7 @@ For alpha, in Table \ref{tab:alpha_deciles}, we have the predictions included, s
 
 \begin{table}[H]
     \centering
-    \caption{Characteristics of Top and Bottom Risk Deciles by Age, Alpha (Sorted by Ensemble-Predicted and Actual Risk; Percent Shares)}
+    \caption{Characteristics of Top and Bottom Risk Deciles by Age, Alpha (Sorted by Ensemble-Predicted and Raw Risk; Percent Shares)}
     \label{tab:alpha_deciles}
     \textbf{Panel A: Hourly Wage}\\[4pt]
     \resizebox*{!}{0.41\textheight}{%
@@ -775,7 +811,7 @@ A further point of research in this field would be breaking down this persistent
     \label{tab:gamma_pred_matrix}
     \begin{minipage}[t]{0.48\textwidth}
         \centering
-        \textbf{Actual}\\[4pt]
+        \textbf{Raw}\\[4pt]
         \resizebox{\linewidth}{!}{%
             \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_pred_matrix_actual.tex}
         }
@@ -812,7 +848,7 @@ A further point of research in this field would be breaking down this persistent
     \label{tab:gamma_fearn_pred_matrix}
     \begin{minipage}[t]{0.48\textwidth}
         \centering
-        \textbf{Actual}\\[4pt]
+        \textbf{Raw}\\[4pt]
         \resizebox{\linewidth}{!}{%
             \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_pred_matrix_actual.tex}
         }

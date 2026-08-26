@@ -934,6 +934,31 @@ drop tenurew tenurex tenurey tenurez
 
 
 
+***********************************************************************
+**                                                                   **
+** LABOR FORCE STATUS                                                **
+** Roll student, OLF, and unemp into a single categorical:           **
+**   0 = employed (reference)                                        **
+**   1 = out of labor force unemployed (OLF, inc retired)            **
+**   2 = in labor force unemployed                                   **
+**   3 = student                                                     **
+** Later replaces win, so overlaps resolve student > unemp > OLF.    **
+** Saved back into FullData_CombinedwithTEN below (with the bins)    **
+** so it flows through to the later stages.                          **
+**                                                                   **
+***********************************************************************
+
+capture drop lfstat
+gen lfstat = 0
+replace lfstat = 1 if OLF==1
+replace lfstat = 2 if unemp==1
+replace lfstat = 3 if student==1
+replace lfstat = . if OLF==. & unemp==. & student==.
+
+label define lfstat_lbl 0 "Employed (ref)" 1 "OLF unemployed" 2 "In-LF unemployed" 3 "Student", replace
+label values lfstat lfstat_lbl
+label variable lfstat "Labor force status (0=employed ref, 1=OLF, 2=in-LF unemp, 3=student)"
+
 
 
 

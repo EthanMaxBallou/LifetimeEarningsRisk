@@ -130,10 +130,10 @@ INPUT ./EARNINGSRISK.out
 INPUT ./EARNINGSRISK.out
 INPUT EARNINGSRISK.out
 INPUT EARNINGSRISK.out
+OUTPUT EARNINGSRISK.pdf
 INPUT ./EARNINGSRISK.out
 INPUT ./EARNINGSRISK.out
 OUTPUT EARNINGSRISK.out
-OUTPUT EARNINGSRISK.pdf
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
@@ -232,10 +232,41 @@ INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/age_density_gamma_alpha_panel.png
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/age_density_gamma_alpha_panel.png
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/age_density_gamma_alpha_panel.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png
 INPUT /Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_alpha_ols.tex
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_alpha_ols.tex
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_alpha_ols.tex
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/ols_pred_summary_stats.tex
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/ols_pred_summary_stats.tex
+INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/ols_pred_summary_stats.tex
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_ftest.tex
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_ftest.tex
 INPUT /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_ftest.tex
