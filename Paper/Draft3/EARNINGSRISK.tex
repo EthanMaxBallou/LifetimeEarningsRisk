@@ -214,12 +214,6 @@ Figure \ref{fig:avg_realearn_by_age_cohort2_race} shows the average annual earni
     \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_stepwise_selection.tex}
 \end{table}
 
-\begin{table}[H]
-    \centering
-    \caption{LASSO Selection of Growth-Regression Controls by Horizon Bin}
-    \label{tab:growth_sel_lasso}
-    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_lasso_selection.tex}
-\end{table}
 
 \begin{table}[H]
     \centering
@@ -230,21 +224,7 @@ Figure \ref{fig:avg_realearn_by_age_cohort2_race} shows the average annual earni
     }
 \end{table}
 
-\begin{table}[H]
-    \centering
-    \caption{LASSO Selection for Raw-Difference Gamma and Alpha}
-    \label{tab:gamalpha_sel_lasso}
-    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_gamalpha_lasso_selection.tex}
-\end{table}
 
-\begin{table}[H]
-    \centering
-    \caption{F-Tests of Control Sets for Raw-Difference Gamma and Alpha}
-    \label{tab:gamalpha_sel_ftest}
-    \resizebox{\textwidth}{!}{%
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_gamalpha_ftest.tex}
-    }
-\end{table}
 
 
 Figures \ref{fig:distribution_gamma_alpha_panel} and \ref{fig:age_density_gamma_alpha_panel} show the distributions. The first makes the point about the standard deviations concrete: alpha has a long positive tail with some outliers while gamma is relatively centered around zero. The second shows the age trend that came out of the stratified means. There is a lot of variability in the first two age bins from 22 to 29, that decreases, and once you get to around the 30--33 level you stay relatively steady. Then in the last two bins, once you are into the late 50s and 60s, you have a large amount of variability. Again, that final age bin has a relatively low number of observations, so it is one to take with a grain of salt.
@@ -289,6 +269,35 @@ Figures \ref{fig:distribution_gamma_alpha_panel} and \ref{fig:age_density_gamma_
         \centering
         \textbf{Alpha, Annual Earnings}\\[4pt]
         \includegraphics[width=\linewidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Mean Ensemble-Predicted Gamma and Alpha (NN, RF, LASSO) by Age Across Cohorts. Solid = born pre-1944; Dashed = 1944--1952; Dotted = 1953--1960; Dash-dot = post-1960.}
+    \label{fig:mean_pred_risk_by_age_cohort}
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Gamma, Hourly Wage}\\[4pt]
+        \includegraphics[width=\linewidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_wage_pred_by_age_cohort.png}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Alpha, Hourly Wage}\\[4pt]
+        \includegraphics[width=\linewidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_pred_by_age_cohort.png}
+    \end{minipage}
+
+    \vspace{10pt}
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Gamma, Annual Earnings}\\[4pt]
+        \includegraphics[width=\linewidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_gam_earn_pred_by_age_cohort.png}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{Alpha, Annual Earnings}\\[4pt]
+        \includegraphics[width=\linewidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_pred_by_age_cohort.png}
     \end{minipage}
 \end{figure}
 
@@ -362,14 +371,6 @@ Moving to alpha, every single set of controls is significant. The interesting th
 
 Table \ref{tab:gamma_alpha_stepwise} reports the stepwise results. It is worth mentioning that this model can only select an entire set of controls at a time, and there are again two models for each of the four versions of the risk measure, with no occupation or industry controls allowed in the first and all controls allowed in the second. Looking at the check marks to see which sets get selected, there are some interesting patterns. Starting with gamma and education, for the hourly wage the education controls were selected in both models. For the annual earnings version of gamma, education was selected in the first model, but once occupation and industry controls were added, education was not selected even though it was available. Similar to the F test table, the year fixed effects matter for annual earnings gamma but not for hourly gamma, and cohort is also selected for annual gamma. In both models where occupation and industry could be selected, they were. The age controls were selected in the hourly gamma model only in the version without occupation and industry controls, which is interesting, and again tells a story of how much of the education and age variation occupation and industry really explain, and how much overlap there is. As for the continuous variables, the annual earnings version of gamma selected all three that were available to it --- probability of recession, the annual earnings percentile, and out of labor force --- while hourly wage gamma did not pick up any of them.
 
-\begin{table}[H]
-    \centering
-    \caption{Gamma and Alpha Regressions: Stepwise Selection Results (Coefficients x 100)}
-    \label{tab:gamma_alpha_stepwise}
-    \resizebox{\textwidth}{!}{%
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_alpha_stepwise.tex}
-    }
-\end{table}
 
 
 For the alpha side, the stepwise model selects all of the continuous variables and pretty much every single set of controls in every model that it can, with the one exception that it does not select cohort in the annual earnings model without occupation and industry controls.
@@ -397,28 +398,10 @@ Starting with the correlations of the predictions in Tables \ref{tab:pred_corr} 
 
 Figure \ref{fig:gamma_fearn_rank_methods} takes the same question to occupations and industries: do the methods agree on which are the riskiest and least risky? Each point is an occupation or industry, ranked by each of two methods, and if the methods agreed the points would fall along the 45-degree line. For gamma there might be some mild centering around that line in the occupation plots, but it is only mild. For industry there is quite a bit of dispersion, and it is not particularly clear that it is centered around the 45-degree line at all. Which is to say that for gamma there is not much explanatory power in these rankings.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_occ_rank_lasso_vs_nn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_occ_rank_nn_vs_rf.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_occ_rank_lasso_vs_rf.pdf}
-
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_ind_rank_lasso_vs_nn.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_ind_rank_nn_vs_rf.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_ind_rank_lasso_vs_rf.pdf}
-    \caption{Gamma SHAP Rank Comparisons Across Methods, Annual Earnings (fearn). Top row: occupation; bottom row: industry.}
-    \label{fig:gamma_fearn_rank_methods}
-\end{figure}
 
 
 The out-of-sample test MSE in Table \ref{tab:ml_test_mse} is where this really comes through. These methods are trained on the training data and then evaluated on the test data, so they are seeing observations they did not see in training. The comparison is against what you would get by simply predicting the mean gamma or mean alpha from the training data --- essentially, how much better are these methods doing on new data than if they just guessed the mean every time? For gamma, all three methods are right on par with predicting the training mean. The neural network and LASSO both land at 0.01250 against a baseline of 0.01250 on the hourly side, and on the annual side all three come in at or just above the baseline of 0.02574. They are not able to get a mean squared error lower than just predicting the training mean, on either measure. Relative to predicting the mean, they are not able to improve at all.
 
-\begin{table}[H]
-    \centering
-    \caption{Out-of-Sample Test MSE by Method (MSE x 100)}
-    \label{tab:ml_test_mse}
-    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/ml_test_mse.tex}
-\end{table}
 
 
 For alpha the story is different. All three methods do drop the mean squared error below the baseline. On the hourly side the baseline is 0.08041 and LASSO gets to 0.07850, and on the annual side the baseline is 0.23912 and the neural network gets to 0.23037. These are obviously small numbers, but in percentage terms it is a real drop, on the order of 2 to 4 percent. So there is some explanatory power, and this is consistent with what was shown earlier in the stepwise and OLS tables, where the $R^2$ for alpha is low but approaching a reasonable value, in the range of 0.04 or 0.05, which is quite different from the $R^2$ values on the gamma side of the OLS table, which were between 0.001 and 0.006. There is some variation in alpha that can be explained, and much less so for gamma.
@@ -551,17 +534,9 @@ Finally we reach the last two tables, Tables \ref{tab:gamma_deciles} and \ref{ta
 
 \begin{table}[H]
     \centering
-    \caption{Characteristics of Top and Bottom Risk Deciles by Age, Gamma (Sorted by Raw Risk; Percent Shares)}
+    \caption{Mean Ensemble-Predicted Gamma in the Top and Bottom Predicted-Risk Deciles by Age, Annual Earnings (x 100)}
     \label{tab:gamma_deciles}
-    \textbf{Panel A: Hourly Wage}\\[4pt]
-    \resizebox*{!}{0.41\textheight}{%
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_deciles.tex}
-    }
-
-    \vspace{10pt}
-
-    \textbf{Panel B: Annual Earnings}\\[4pt]
-    \resizebox*{!}{0.41\textheight}{%
+    \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_deciles.tex}
     }
 \end{table}
@@ -576,17 +551,9 @@ For alpha, in Table \ref{tab:alpha_deciles}, we have the predictions included, s
 
 \begin{table}[H]
     \centering
-    \caption{Characteristics of Top and Bottom Risk Deciles by Age, Alpha (Sorted by Ensemble-Predicted and Raw Risk; Percent Shares)}
+    \caption{Mean Ensemble-Predicted Alpha in the Top and Bottom Predicted-Risk Deciles by Age, Annual Earnings (x 100)}
     \label{tab:alpha_deciles}
-    \textbf{Panel A: Hourly Wage}\\[4pt]
-    \resizebox*{!}{0.41\textheight}{%
-        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/alpha_deciles.tex}
-    }
-
-    \vspace{10pt}
-
-    \textbf{Panel B: Annual Earnings}\\[4pt]
-    \resizebox*{!}{0.41\textheight}{%
+    \resizebox{\textwidth}{!}{%
         \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/alpha_fearn_deciles.tex}
     }
 \end{table}
@@ -645,6 +612,45 @@ A further point of research in this field would be breaking down this persistent
 
 \section{Appendix}
 
+
+\begin{table}[H]
+    \centering
+    \caption{LASSO Selection of Growth-Regression Controls by Horizon Bin}
+    \label{tab:growth_sel_lasso}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_lasso_selection.tex}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{LASSO Selection for Raw-Difference Gamma and Alpha}
+    \label{tab:gamalpha_sel_lasso}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_gamalpha_lasso_selection.tex}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{F-Tests of Control Sets for Raw-Difference Gamma and Alpha}
+    \label{tab:gamalpha_sel_ftest}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_gamalpha_ftest.tex}
+    }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Gamma and Alpha Regressions: Stepwise Selection Results (Coefficients x 100)}
+    \label{tab:gamma_alpha_stepwise}
+    \resizebox{\textwidth}{!}{%
+        \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_alpha_stepwise.tex}
+    }
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Out-of-Sample Test MSE by Method (MSE x 100)}
+    \label{tab:ml_test_mse}
+    \input{/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/ml_test_mse.tex}
+\end{table}
 
 \begin{table}[H]
     \centering

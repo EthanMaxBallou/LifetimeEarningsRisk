@@ -254,11 +254,11 @@ summarize gam_wage alph_wage gam_earn alph_earn
 * Income bins (quintiles), separately for annual earnings and hourly wage
 xtile earnbin = realearn, nquantiles(5)
 xtile wagebin = hwage, nquantiles(5)
-label define earnbin_lbl 1 "1st Quintile" 2 "2nd Quintile" ///
-    3 "3rd Quintile" 4 "4th Quintile" 5 "5th Quintile", replace
+label define earnbin_lbl 1 "1st Quintile (Lowest)" 2 "2nd Quintile" ///
+    3 "3rd Quintile" 4 "4th Quintile" 5 "5th Quintile (Highest)", replace
 label values earnbin earnbin_lbl
-label define wagebin_lbl 1 "1st Quintile" 2 "2nd Quintile" ///
-    3 "3rd Quintile" 4 "4th Quintile" 5 "5th Quintile", replace
+label define wagebin_lbl 1 "1st Quintile (Lowest)" 2 "2nd Quintile" ///
+    3 "3rd Quintile" 4 "4th Quintile" 5 "5th Quintile (Highest)", replace
 label values wagebin wagebin_lbl
 
 tempfile base
@@ -466,6 +466,45 @@ foreach v in gam_wage alph_wage gam_earn alph_earn {
 }
 
 
+* ===========================================================================
+* MEAN ENSEMBLE-PREDICTED GAMMA/ALPHA BY AGE ACROSS COHORTS (4 plots)
+*
+* Same construction as the raw-measure plots above, but the plotted variable
+* is the ensemble prediction: the simple mean of the NN, RF and LASSO fitted
+* values (OLS excluded), on the person-years where all three are present
+* (the ML estimation sample). Same fixed y-ranges as the raw plots so the
+* two floats compare directly. Exported as mean_<v>_pred_by_age_cohort.png;
+* the paper combines them into one 2x2 float (fig:mean_pred_risk_by_age_cohort).
+* ===========================================================================
+
+foreach v in gam_wage alph_wage gam_earn alph_earn {
+
+    if strpos("`v'", "gam") local yl "ylabel(0(.01).04, labsize(medsmall) angle(0))"
+    else                    local yl "ylabel(0(.05).2, labsize(medsmall) angle(0))"
+
+    preserve
+        * missing if any of the three fits is missing = estimation sample
+        gen pens = (pred_nn_`v' + pred_rf_`v' + pred_lasso_`v') / 3
+
+        collapse (mean) m=pens (count) n=pens, by(agebin4 cohort)
+        drop if missing(cohort) | missing(agebin4)
+        keep if agebin4 <= 10
+        drop if n < 25
+
+        separate m, by(cohort) veryshortlabel
+
+        twoway line m10 m20 m30 m40 agebin4, sort legend(off) ///
+            lcolor(black black black black) ///
+            lpattern(solid dash dot dash_dot) ///
+            xtitle("Age Bin") ytitle("") ///
+            xlabel(1(1)10, valuelabel angle(45) labsize(medsmall)) ///
+            `yl'
+
+        graph export "$OUTDIR/mean_`v'_pred_by_age_cohort.png", replace width(2000)
+    restore
+}
+
+
 
 
 * ===========================================================================
@@ -478,19 +517,19 @@ foreach v in gam_wage alph_wage gam_earn alph_earn {
 preserve
 
 * Plot-only copies with extreme values set to missing so the tails don't
-* stretch the axes: gamma outside [-0.3, 0.3], alpha outside [-0.3, 0.75].
+* stretch the axes: gamma outside [-0.2, 0.2], alpha outside [-0.2, 0.4].
 * Used for these histograms only, then dropped.
-gen gammaDIST = gam_wage  if inrange(gam_wage,  -0.3, 0.3)
-gen alphaDIST = alph_wage if inrange(alph_wage, -0.3, 0.75)
+gen gammaDIST = gam_wage  if inrange(gam_wage,  -0.2, 0.2)
+gen alphaDIST = alph_wage if inrange(alph_wage, -0.2, 0.4)
 
-histogram gammaDIST, title("Gamma (Hourly)", size(medium))  xtitle("Gamma") name(g_hist_gam_wage, replace)
-histogram alphaDIST, title("Alpha (Hourly)", size(medium))  xtitle("Alpha") name(g_hist_alph_wage, replace)
+histogram gammaDIST, title("Gamma (Hourly)", size(medium))  xtitle("Gamma") xlabel(-0.2(0.1)0.2) name(g_hist_gam_wage, replace)
+histogram alphaDIST, title("Alpha (Hourly)", size(medium))  xtitle("Alpha") xlabel(-0.2(0.1)0.4) name(g_hist_alph_wage, replace)
 
-replace gammaDIST = cond(inrange(gam_earn,  -0.3, 0.3),  gam_earn,  .)
-replace alphaDIST = cond(inrange(alph_earn, -0.3, 0.75), alph_earn, .)
+replace gammaDIST = cond(inrange(gam_earn,  -0.2, 0.2),  gam_earn,  .)
+replace alphaDIST = cond(inrange(alph_earn, -0.2, 0.4),  alph_earn, .)
 
-histogram gammaDIST, title("Gamma (Annual)", size(medium))  xtitle("Gamma") name(g_hist_gam_earn, replace)
-histogram alphaDIST, title("Alpha (Annual)", size(medium))  xtitle("Alpha") name(g_hist_alph_earn, replace)
+histogram gammaDIST, title("Gamma (Annual)", size(medium))  xtitle("Gamma") xlabel(-0.2(0.1)0.2) name(g_hist_gam_earn, replace)
+histogram alphaDIST, title("Alpha (Annual)", size(medium))  xtitle("Alpha") xlabel(-0.2(0.1)0.4) name(g_hist_alph_earn, replace)
 
 drop gammaDIST alphaDIST
 
@@ -1217,24 +1256,27 @@ foreach meas in wage earn {
 
 
 * ===========================================================================
-* CHARACTERISTICS OF TOP AND BOTTOM RISK DECILES BY AGE
+* MEAN PREDICTED RISK IN THE TOP AND BOTTOM PREDICTED-RISK DECILES BY AGE
 *
-* Who has really high and really low risk? Within three broad age bins
-* (22-33, 34-57, 58-61 with the current age-61 cap), the share of each demographic category among the
-* top 10% and bottom 10% of risk, next to the within-bin average share.
+* Who do the models say has really high and really low risk? Within three
+* broad age bins (22-33, 34-57, 58-61 with the current age-61 cap), the
+* mean ENSEMBLE-PREDICTED risk (x100) of each demographic category among
+* the top 10% and bottom 10% of predicted risk, next to the within-bin
+* average for the category ("All").
 *
-* Individuals are first collapsed to one observation per person per age
-* bin (category dummies become the person's share of years in the
-* category). Hourly and annual are collapsed separately because their
-* estimation samples differ. Deciles are computed WITHIN age bin.
+* Ensemble prediction = simple mean of the NN, RF and LASSO fitted values
+* in natural units (OLS excluded). Sample = person-years with all three
+* fits present (the ML estimation sample). Individuals are first collapsed
+* to one observation per person per age bin (category dummies become the
+* person's share of years in the category), so each cell is the dummy-
+* weighted mean of the ensemble prediction over the persons in that cell.
+* Deciles are computed WITHIN age bin on the ensemble prediction, for both
+* gamma and alpha. Note that out of sample every method's gamma MSE ties
+* the predict-the-mean baseline (see 6.6_MLperformance.py), so the gamma
+* table describes the in-sample fitted values only.
 *
-* Gamma is sorted by ACTUAL risk only: out of sample every method's MSE
-* ties the predict-the-mean baseline (see 6.6_MLperformance.py), so a
-* predicted gamma ranking is not defensible. Alpha is sorted BOTH by the
-* ensemble prediction (mean of the three methods' within-bin percentile
-* ranks) and by actual risk, on the same estimation sample.
-*
-* Four panels: {gamma, alpha} x {hourly, annual}. Cells are percent shares.
+* Two panels, annual earnings only: gamma_fearn_deciles.tex and
+* alpha_fearn_deciles.tex. The hourly versions are not produced.
 * ===========================================================================
 
 
@@ -1253,386 +1295,136 @@ capture drop educat_dum*
 tabulate educat, generate(educat_dum)
 
 
-* --- Earnings quintile dummies (mirroring the stratified-means table) ---
-* Hourly panels report the hourly wage quintile, annual panels the annual
-* earnings quintile.
+* --- Annual earnings quintile dummies (mirroring the stratified-means table) ---
 
-capture drop earnbin wagebin
+capture drop earnbin
 xtile earnbin = realearn, nquantiles(5)
-xtile wagebin = hwage, nquantiles(5)
-label define earnbin_lbl 1 "1st Quintile" 2 "2nd Quintile" ///
-    3 "3rd Quintile" 4 "4th Quintile" 5 "5th Quintile", replace
+label define earnbin_lbl 1 "1st Quintile (Lowest)" 2 "2nd Quintile" ///
+    3 "3rd Quintile" 4 "4th Quintile" 5 "5th Quintile (Highest)", replace
 label values earnbin earnbin_lbl
-label define wagebin_lbl 1 "1st Quintile" 2 "2nd Quintile" ///
-    3 "3rd Quintile" 4 "4th Quintile" 5 "5th Quintile", replace
-label values wagebin wagebin_lbl
 
 capture drop earnbin_dum*
-capture drop wagebin_dum*
 tabulate earnbin, generate(earnbin_dum)
-tabulate wagebin, generate(wagebin_dum)
 
 
 * --- Row scaffold: table rows in order, with block titles and labels ---
 * Dummy k of each set corresponds to the k-th lowest value of the source
 * variable, so walking levelsof in order lines the labels up with the dummies.
-* Two variants, differing only in the final quintile block: hourly panels
-* (hr) end with the hourly wage quintile, annual panels (an) with the annual
-* earnings quintile.
 
-local rowvars_common educat_dum1 educat_dum2 educat_dum3 educat_dum4 educat_dum5 ///
+local rowvars_an educat_dum1 educat_dum2 educat_dum3 educat_dum4 educat_dum5 ///
     race_dum1 race_dum2 race_dum3 race_dum4 race_dum5 race_dum6 ///
     cohort_dum1 cohort_dum2 cohort_dum3 cohort_dum4 ///
     ten_dum1 ten_dum2 ten_dum3 ///
     censdiv_dum1 censdiv_dum2 censdiv_dum3 censdiv_dum4 censdiv_dum5 ///
-    censdiv_dum6 censdiv_dum7 censdiv_dum8 censdiv_dum9 censdiv_dum10
+    censdiv_dum6 censdiv_dum7 censdiv_dum8 censdiv_dum9 censdiv_dum10 ///
+    earnbin_dum1 earnbin_dum2 earnbin_dum3 earnbin_dum4 earnbin_dum5
 
-local rowvars_hr `rowvars_common' wagebin_dum1 wagebin_dum2 wagebin_dum3 ///
-    wagebin_dum4 wagebin_dum5
-local rowvars_an `rowvars_common' earnbin_dum1 earnbin_dum2 earnbin_dum3 ///
-    earnbin_dum4 earnbin_dum5
+local nrow_an = 0
+foreach bvar in educat race cohort tenurebin censdiv earnbin {
 
-foreach mm in hr an {
+    if "`bvar'" == "educat"    local btitle "Education"
+    if "`bvar'" == "race"      local btitle "Race"
+    if "`bvar'" == "cohort"    local btitle "Cohort"
+    if "`bvar'" == "tenurebin" local btitle "Tenure Bin"
+    if "`bvar'" == "censdiv"   local btitle "Census Division"
+    if "`bvar'" == "earnbin"   local btitle "Annual Earnings Quintile"
 
-    local qvar = cond("`mm'" == "hr", "wagebin", "earnbin")
-
-    local nrow_`mm' = 0
-    foreach bvar in educat race cohort tenurebin censdiv `qvar' {
-
-        if "`bvar'" == "educat"    local btitle "Education"
-        if "`bvar'" == "race"      local btitle "Race"
-        if "`bvar'" == "cohort"    local btitle "Cohort"
-        if "`bvar'" == "tenurebin" local btitle "Tenure Bin"
-        if "`bvar'" == "censdiv"   local btitle "Census Division"
-        if "`bvar'" == "wagebin"   local btitle "Hourly Wage Quintile"
-        if "`bvar'" == "earnbin"   local btitle "Annual Earnings Quintile"
-
-        levelsof `bvar', local(levels)
-        foreach v of local levels {
-            local ++nrow_`mm'
-            local block_`mm'`nrow_`mm'' "`btitle'"
-            local cat_`mm'`nrow_`mm'' : label (`bvar') `v'
-        }
+    levelsof `bvar', local(levels)
+    foreach v of local levels {
+        local ++nrow_an
+        local block_an`nrow_an' "`btitle'"
+        local cat_an`nrow_an' : label (`bvar') `v'
     }
 }
 
 
 * --------------------------------------------------------------------------
-* GAMMA, HOURLY (sorted by actual risk)
+* ANNUAL PANELS: gamma and alpha, sorted by the ensemble prediction
 * --------------------------------------------------------------------------
 
-preserve
-    keep if !missing(gam_wage)
-    keep personid agebin3 gam_wage educat_dum* race_dum* cohort_dum* ///
-         ten_dum* censdiv_dum* wagebin_dum*
-    drop if missing(agebin3)
+foreach o in gam alph {
 
-    * one observation per person per age bin
-    collapse (mean) gam_wage educat_dum* race_dum* cohort_dum* ten_dum* ///
-             censdiv_dum* wagebin_dum*, by(personid agebin3)
+    local fstem = cond("`o'" == "gam", "gamma", "alpha")
 
-    * within-bin decile flags on actual risk
-    egen p10_act = pctile(gam_wage), p(10) by(agebin3)
-    egen p90_act = pctile(gam_wage), p(90) by(agebin3)
-    gen bot_act = gam_wage <= p10_act
-    gen top_act = gam_wage >= p90_act
+    preserve
+        * ensemble prediction at the person-year level; missing if any of
+        * the three fits is missing, so this keep IS the estimation sample
+        gen pred_ens = (pred_nn_`o'_earn + pred_rf_`o'_earn + pred_lasso_`o'_earn) / 3
+        keep if !missing(pred_ens)
+        keep personid agebin3 pred_ens educat_dum* race_dum* cohort_dum* ///
+             ten_dum* censdiv_dum* earnbin_dum*
+        drop if missing(agebin3)
 
-    * fill the cell matrix: rows = categories, columns = bin x (All/Bot/Top)
-    matrix R = J(`nrow_hr', 9, .)
-    local col = 0
-    forvalues b = 1/3 {
-        foreach part in all bot top {
+        * one observation per person per age bin
+        collapse (mean) pred_ens educat_dum* race_dum* cohort_dum* ten_dum* ///
+                 censdiv_dum* earnbin_dum*, by(personid agebin3)
 
-            if "`part'" == "all" local cond "agebin3 == `b'"
-            if "`part'" == "bot" local cond "agebin3 == `b' & bot_act == 1"
-            if "`part'" == "top" local cond "agebin3 == `b' & top_act == 1"
+        * within-bin decile flags on the ensemble prediction
+        egen p10_pred = pctile(pred_ens), p(10) by(agebin3)
+        egen p90_pred = pctile(pred_ens), p(90) by(agebin3)
+        gen bot_pred = pred_ens <= p10_pred
+        gen top_pred = pred_ens >= p90_pred
 
-            local ++col
-            local row = 0
-            foreach v of local rowvars_hr {
-                local ++row
-                quietly summarize `v' if `cond'
-                matrix R[`row', `col'] = 100 * r(mean)
+        * cell = dummy-weighted mean of pred_ens (x100);
+        * rows = categories, columns = bin x (All / Bottom 10% / Top 10%)
+        matrix R = J(`nrow_an', 9, .)
+        local col = 0
+        forvalues b = 1/3 {
+            foreach part in all bot top {
+
+                if "`part'" == "all" local cond "agebin3 == `b'"
+                if "`part'" == "bot" local cond "agebin3 == `b' & bot_pred == 1"
+                if "`part'" == "top" local cond "agebin3 == `b' & top_pred == 1"
+
+                local ++col
+                local row = 0
+                foreach v of local rowvars_an {
+                    local ++row
+                    * guard: aweights drop zero-weight obs, and summarize
+                    * errors (no observations) if none remain; an empty
+                    * cell is left missing rather than silently reusing
+                    * the previous r(mean)
+                    quietly summarize `v' if `cond', meanonly
+                    if r(N) > 0 & r(sum) > 0 {
+                        quietly summarize pred_ens [aw = `v'] if `cond', meanonly
+                        matrix R[`row', `col'] = 100 * r(mean)
+                    }
+                }
             }
         }
-    }
 
-    * build the table dataset and export
-    clear
-    svmat R, names(c)
-    gen str30 block = ""
-    gen str45 category = ""
-    forvalues i = 1/`nrow_hr' {
-        replace block = "`block_hr`i''" in `i'
-        replace category = "`cat_hr`i''" in `i'
-    }
-    order block category
-
-    * group title printed once, on the first row of each block (compare
-    * against an untouched copy: replace runs top-down, so block[_n-1]
-    * would already be blanked and every other row would keep its title)
-    gen str30 blockfull = block
-    replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
-    drop blockfull
-
-    format c1-c9 %9.1f
-
-    listtex block category c1 c2 c3 c4 c5 c6 c7 c8 c9 ///
-        using "$OUTDIR/gamma_deciles.tex", ///
-        replace ///
-        head("\begin{tabular}{llccc|ccc|ccc}" ///
-             "\hline\hline" ///
-             " & & \multicolumn{3}{c|}{Ages 22-33} & \multicolumn{3}{c|}{Ages 34-57} & \multicolumn{3}{c}{Ages 58-61} \\" ///
-             " & & All & Bottom 10\% & Top 10\% & All & Bottom 10\% & Top 10\% & All & Bottom 10\% & Top 10\% \\" ///
-             "\hline") ///
-        foot("\hline\hline" ///
-             "\end{tabular}") ///
-        rstyle(tabular)
-restore
-
-
-* --------------------------------------------------------------------------
-* GAMMA, ANNUAL (sorted by actual risk)
-* --------------------------------------------------------------------------
-
-preserve
-    keep if !missing(gam_earn)
-    keep personid agebin3 gam_earn educat_dum* race_dum* cohort_dum* ///
-         ten_dum* censdiv_dum* earnbin_dum*
-    drop if missing(agebin3)
-
-    collapse (mean) gam_earn educat_dum* race_dum* cohort_dum* ten_dum* ///
-             censdiv_dum* earnbin_dum*, by(personid agebin3)
-
-    egen p10_act = pctile(gam_earn), p(10) by(agebin3)
-    egen p90_act = pctile(gam_earn), p(90) by(agebin3)
-    gen bot_act = gam_earn <= p10_act
-    gen top_act = gam_earn >= p90_act
-
-    matrix R = J(`nrow_an', 9, .)
-    local col = 0
-    forvalues b = 1/3 {
-        foreach part in all bot top {
-
-            if "`part'" == "all" local cond "agebin3 == `b'"
-            if "`part'" == "bot" local cond "agebin3 == `b' & bot_act == 1"
-            if "`part'" == "top" local cond "agebin3 == `b' & top_act == 1"
-
-            local ++col
-            local row = 0
-            foreach v of local rowvars_an {
-                local ++row
-                quietly summarize `v' if `cond'
-                matrix R[`row', `col'] = 100 * r(mean)
-            }
+        clear
+        svmat R, names(c)
+        gen str30 block = ""
+        gen str45 category = ""
+        forvalues i = 1/`nrow_an' {
+            replace block = "`block_an`i''" in `i'
+            replace category = "`cat_an`i''" in `i'
         }
-    }
+        order block category
 
-    clear
-    svmat R, names(c)
-    gen str30 block = ""
-    gen str45 category = ""
-    forvalues i = 1/`nrow_an' {
-        replace block = "`block_an`i''" in `i'
-        replace category = "`cat_an`i''" in `i'
-    }
-    order block category
+        * group title printed once, on the first row of each block (compare
+        * against an untouched copy: replace runs top-down, so block[_n-1]
+        * would already be blanked and every other row would keep its title)
+        gen str30 blockfull = block
+        replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
+        drop blockfull
 
-    * group title printed once, on the first row of each block (compare
-    * against an untouched copy: replace runs top-down, so block[_n-1]
-    * would already be blanked and every other row would keep its title)
-    gen str30 blockfull = block
-    replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
-    drop blockfull
+        format c1-c9 %9.2f
 
-    format c1-c9 %9.1f
-
-    listtex block category c1 c2 c3 c4 c5 c6 c7 c8 c9 ///
-        using "$OUTDIR/gamma_fearn_deciles.tex", ///
-        replace ///
-        head("\begin{tabular}{llccc|ccc|ccc}" ///
-             "\hline\hline" ///
-             " & & \multicolumn{3}{c|}{Ages 22-33} & \multicolumn{3}{c|}{Ages 34-57} & \multicolumn{3}{c}{Ages 58-61} \\" ///
-             " & & All & Bottom 10\% & Top 10\% & All & Bottom 10\% & Top 10\% & All & Bottom 10\% & Top 10\% \\" ///
-             "\hline") ///
-        foot("\hline\hline" ///
-             "\end{tabular}") ///
-        rstyle(tabular)
-restore
-
-
-* --------------------------------------------------------------------------
-* ALPHA, HOURLY (sorted by the ensemble prediction AND by actual risk)
-* --------------------------------------------------------------------------
-
-preserve
-    * estimation sample, so both sorts run on the same people
-    keep if !missing(pred_nn_alph_wage)
-    keep personid agebin3 alph_wage pred_nn_alph_wage pred_rf_alph_wage ///
-         pred_lasso_alph_wage educat_dum* race_dum* cohort_dum* ten_dum* ///
-         censdiv_dum* wagebin_dum*
-    drop if missing(agebin3)
-
-    collapse (mean) alph_wage pred_nn_alph_wage pred_rf_alph_wage ///
-             pred_lasso_alph_wage educat_dum* race_dum* cohort_dum* ///
-             ten_dum* censdiv_dum* wagebin_dum*, by(personid agebin3)
-
-    * ensemble prediction: mean of the three within-bin percentile ranks
-    egen rank_nn    = rank(pred_nn_alph_wage),    by(agebin3)
-    egen rank_rf    = rank(pred_rf_alph_wage),    by(agebin3)
-    egen rank_lasso = rank(pred_lasso_alph_wage), by(agebin3)
-    gen pred_score = (rank_nn + rank_rf + rank_lasso) / 3
-
-    * within-bin decile flags for both sorts
-    egen p10_pred = pctile(pred_score), p(10) by(agebin3)
-    egen p90_pred = pctile(pred_score), p(90) by(agebin3)
-    gen bot_pred = pred_score <= p10_pred
-    gen top_pred = pred_score >= p90_pred
-
-    egen p10_act = pctile(alph_wage), p(10) by(agebin3)
-    egen p90_act = pctile(alph_wage), p(90) by(agebin3)
-    gen bot_act = alph_wage <= p10_act
-    gen top_act = alph_wage >= p90_act
-
-    * columns per bin: All, Bottom (Pred, Act), Top (Pred, Act)
-    matrix R = J(`nrow_hr', 15, .)
-    local col = 0
-    forvalues b = 1/3 {
-        foreach part in all botp bota topp topa {
-
-            if "`part'" == "all"  local cond "agebin3 == `b'"
-            if "`part'" == "botp" local cond "agebin3 == `b' & bot_pred == 1"
-            if "`part'" == "bota" local cond "agebin3 == `b' & bot_act == 1"
-            if "`part'" == "topp" local cond "agebin3 == `b' & top_pred == 1"
-            if "`part'" == "topa" local cond "agebin3 == `b' & top_act == 1"
-
-            local ++col
-            local row = 0
-            foreach v of local rowvars_hr {
-                local ++row
-                quietly summarize `v' if `cond'
-                matrix R[`row', `col'] = 100 * r(mean)
-            }
-        }
-    }
-
-    clear
-    svmat R, names(c)
-    gen str30 block = ""
-    gen str45 category = ""
-    forvalues i = 1/`nrow_hr' {
-        replace block = "`block_hr`i''" in `i'
-        replace category = "`cat_hr`i''" in `i'
-    }
-    order block category
-
-    * group title printed once, on the first row of each block (compare
-    * against an untouched copy: replace runs top-down, so block[_n-1]
-    * would already be blanked and every other row would keep its title)
-    gen str30 blockfull = block
-    replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
-    drop blockfull
-
-    format c1-c15 %9.1f
-
-    listtex block category c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13 c14 c15 ///
-        using "$OUTDIR/alpha_deciles.tex", ///
-        replace ///
-        head("\begin{tabular}{llccccc|ccccc|ccccc}" ///
-             "\hline\hline" ///
-             " & & \multicolumn{5}{c|}{Ages 22-33} & \multicolumn{5}{c|}{Ages 34-57} & \multicolumn{5}{c}{Ages 58-61} \\" ///
-             " & & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c|}{Top 10\%} & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c|}{Top 10\%} & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c}{Top 10\%} \\" ///
-             " & & & Pred & Raw & Pred & Raw & & Pred & Raw & Pred & Raw & & Pred & Raw & Pred & Raw \\" ///
-             "\hline") ///
-        foot("\hline\hline" ///
-             "\end{tabular}") ///
-        rstyle(tabular)
-restore
-
-
-* --------------------------------------------------------------------------
-* ALPHA, ANNUAL (sorted by the ensemble prediction AND by actual risk)
-* --------------------------------------------------------------------------
-
-preserve
-    keep if !missing(pred_nn_alph_earn)
-    keep personid agebin3 alph_earn pred_nn_alph_earn pred_rf_alph_earn ///
-         pred_lasso_alph_earn educat_dum* race_dum* cohort_dum* ten_dum* ///
-         censdiv_dum* earnbin_dum*
-    drop if missing(agebin3)
-
-    collapse (mean) alph_earn pred_nn_alph_earn pred_rf_alph_earn ///
-             pred_lasso_alph_earn educat_dum* race_dum* cohort_dum* ///
-             ten_dum* censdiv_dum* earnbin_dum*, by(personid agebin3)
-
-    egen rank_nn    = rank(pred_nn_alph_earn),    by(agebin3)
-    egen rank_rf    = rank(pred_rf_alph_earn),    by(agebin3)
-    egen rank_lasso = rank(pred_lasso_alph_earn), by(agebin3)
-    gen pred_score = (rank_nn + rank_rf + rank_lasso) / 3
-
-    egen p10_pred = pctile(pred_score), p(10) by(agebin3)
-    egen p90_pred = pctile(pred_score), p(90) by(agebin3)
-    gen bot_pred = pred_score <= p10_pred
-    gen top_pred = pred_score >= p90_pred
-
-    egen p10_act = pctile(alph_earn), p(10) by(agebin3)
-    egen p90_act = pctile(alph_earn), p(90) by(agebin3)
-    gen bot_act = alph_earn <= p10_act
-    gen top_act = alph_earn >= p90_act
-
-    matrix R = J(`nrow_an', 15, .)
-    local col = 0
-    forvalues b = 1/3 {
-        foreach part in all botp bota topp topa {
-
-            if "`part'" == "all"  local cond "agebin3 == `b'"
-            if "`part'" == "botp" local cond "agebin3 == `b' & bot_pred == 1"
-            if "`part'" == "bota" local cond "agebin3 == `b' & bot_act == 1"
-            if "`part'" == "topp" local cond "agebin3 == `b' & top_pred == 1"
-            if "`part'" == "topa" local cond "agebin3 == `b' & top_act == 1"
-
-            local ++col
-            local row = 0
-            foreach v of local rowvars_an {
-                local ++row
-                quietly summarize `v' if `cond'
-                matrix R[`row', `col'] = 100 * r(mean)
-            }
-        }
-    }
-
-    clear
-    svmat R, names(c)
-    gen str30 block = ""
-    gen str45 category = ""
-    forvalues i = 1/`nrow_an' {
-        replace block = "`block_an`i''" in `i'
-        replace category = "`cat_an`i''" in `i'
-    }
-    order block category
-
-    * group title printed once, on the first row of each block (compare
-    * against an untouched copy: replace runs top-down, so block[_n-1]
-    * would already be blanked and every other row would keep its title)
-    gen str30 blockfull = block
-    replace block = "" if _n > 1 & blockfull == blockfull[_n-1]
-    drop blockfull
-
-    format c1-c15 %9.1f
-
-    listtex block category c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13 c14 c15 ///
-        using "$OUTDIR/alpha_fearn_deciles.tex", ///
-        replace ///
-        head("\begin{tabular}{llccccc|ccccc|ccccc}" ///
-             "\hline\hline" ///
-             " & & \multicolumn{5}{c|}{Ages 22-33} & \multicolumn{5}{c|}{Ages 34-57} & \multicolumn{5}{c}{Ages 58-61} \\" ///
-             " & & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c|}{Top 10\%} & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c|}{Top 10\%} & All & \multicolumn{2}{c}{Bottom 10\%} & \multicolumn{2}{c}{Top 10\%} \\" ///
-             " & & & Pred & Raw & Pred & Raw & & Pred & Raw & Pred & Raw & & Pred & Raw & Pred & Raw \\" ///
-             "\hline") ///
-        foot("\hline\hline" ///
-             "\end{tabular}") ///
-        rstyle(tabular)
-restore
+        listtex block category c1 c2 c3 c4 c5 c6 c7 c8 c9 ///
+            using "$OUTDIR/`fstem'_fearn_deciles.tex", ///
+            replace ///
+            head("\begin{tabular}{llccc|ccc|ccc}" ///
+                 "\hline\hline" ///
+                 " & & \multicolumn{3}{c|}{Ages 22-33} & \multicolumn{3}{c|}{Ages 34-57} & \multicolumn{3}{c}{Ages 58-61} \\" ///
+                 " & & All & Bottom 10\% & Top 10\% & All & Bottom 10\% & Top 10\% & All & Bottom 10\% & Top 10\% \\" ///
+                 "\hline") ///
+            foot("\hline\hline" ///
+                 "\end{tabular}") ///
+            rstyle(tabular)
+    restore
+}
 
 
 

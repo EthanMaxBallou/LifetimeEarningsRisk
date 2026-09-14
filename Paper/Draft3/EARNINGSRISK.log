@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  26 AUG 2026 05:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  14 SEP 2026 14:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -695,231 +695,186 @@ t/3.2_stepwise_selection.tex)
 [8 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdD
 raft/avg_realearn_by_age_cohort2_race.png>]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/3.2_lasso_selection.tex)
+t/3.2_ftest.tex)
 
 [9]
-Overfull \vbox (45.06445pt too high) has occurred while \output is active []
-
-
-
-[10]
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/3.2_ftest.tex)
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/3.2_gamalpha_lasso_selection.tex)
-
-[11]
-Overfull \vbox (45.06445pt too high) has occurred while \output is active []
-
-
-
-[12]
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/3.2_gamalpha_ftest.tex)
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/distribution_gamma_alpha_panel.png, id=153, 1505.625pt x 1129.21875pt>
+t/distribution_gamma_alpha_panel.png, id=140, 1505.625pt x 1129.21875pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/distribution_gamma_alpha_panel.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/distribution_gamma_alpha_panel.png>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/distribution_gamma_alpha_panel.png  used on input lin
-e 256.
+e 236.
 (pdftex.def)             Requested size: 422.77664pt x 317.07507pt.
-
-
-[13]
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/age_density_gamma_alpha_panel.png, id=161, 1505.625pt x 1129.21875pt>
+t/age_density_gamma_alpha_panel.png, id=141, 1505.625pt x 1129.21875pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/age_density_gamma_alpha_panel.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/age_density_gamma_alpha_panel.png>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/age_density_gamma_alpha_panel.png  used on input line
- 263.
+ 243.
 (pdftex.def)             Requested size: 422.77664pt x 317.07507pt.
 
 
-[14 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+[10 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/distribution_gamma_alpha_panel.png>]
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/mean_gam_wage_by_age_cohort.png, id=167, 1505.625pt x 903.375pt>
+t/mean_gam_wage_by_age_cohort.png, id=147, 1505.625pt x 903.375pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/mean_gam_wage_by_age_cohort.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/mean_gam_wage_by_age_cohort.png>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/mean_gam_wage_by_age_cohort.png  used on input line 2
-73.
+53.
 (pdftex.def)             Requested size: 225.4804pt x 135.27985pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/mean_alph_wage_by_age_cohort.png, id=168, 1505.625pt x 903.375pt>
+t/mean_alph_wage_by_age_cohort.png, id=148, 1505.625pt x 903.375pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/mean_alph_wage_by_age_cohort.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/mean_alph_wage_by_age_cohort.png>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/mean_alph_wage_by_age_cohort.png  used on input line 
-278.
+258.
 (pdftex.def)             Requested size: 225.4804pt x 135.27985pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/mean_gam_earn_by_age_cohort.png, id=169, 1505.625pt x 903.375pt>
+t/mean_gam_earn_by_age_cohort.png, id=149, 1505.625pt x 903.375pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/mean_gam_earn_by_age_cohort.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/mean_gam_earn_by_age_cohort.png>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/mean_gam_earn_by_age_cohort.png  used on input line 2
-86.
+66.
 (pdftex.def)             Requested size: 225.4804pt x 135.27985pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/mean_alph_earn_by_age_cohort.png, id=170, 1505.625pt x 903.375pt>
+t/mean_alph_earn_by_age_cohort.png, id=150, 1505.625pt x 903.375pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/mean_alph_earn_by_age_cohort.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/mean_alph_earn_by_age_cohort.png>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png  used on input line 
-291.
+271.
 (pdftex.def)             Requested size: 225.4804pt x 135.27985pt.
 
 
-[15 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+[11 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/age_density_gamma_alpha_panel.png>]
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/mean_gam_wage_pred_by_age_cohort.png, id=156, 1505.625pt x 903.375pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
+dDraft/mean_gam_wage_pred_by_age_cohort.png Graphic file (type png)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+Draft/mean_gam_wage_pred_by_age_cohort.png>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
+sk/OtherOutput/ThirdDraft/mean_gam_wage_pred_by_age_cohort.png  used on input l
+ine 282.
+(pdftex.def)             Requested size: 225.4804pt x 135.27985pt.
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/mean_alph_wage_pred_by_age_cohort.png, id=157, 1505.625pt x 903.375pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
+dDraft/mean_alph_wage_pred_by_age_cohort.png Graphic file (type png)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+Draft/mean_alph_wage_pred_by_age_cohort.png>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
+sk/OtherOutput/ThirdDraft/mean_alph_wage_pred_by_age_cohort.png  used on input 
+line 287.
+(pdftex.def)             Requested size: 225.4804pt x 135.27985pt.
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/mean_gam_earn_pred_by_age_cohort.png, id=158, 1505.625pt x 903.375pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
+dDraft/mean_gam_earn_pred_by_age_cohort.png Graphic file (type png)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+Draft/mean_gam_earn_pred_by_age_cohort.png>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
+sk/OtherOutput/ThirdDraft/mean_gam_earn_pred_by_age_cohort.png  used on input l
+ine 295.
+(pdftex.def)             Requested size: 225.4804pt x 135.27985pt.
+</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/mean_alph_earn_pred_by_age_cohort.png, id=159, 1505.625pt x 903.375pt>
+File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
+dDraft/mean_alph_earn_pred_by_age_cohort.png Graphic file (type png)
+<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+Draft/mean_alph_earn_pred_by_age_cohort.png>
+Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
+sk/OtherOutput/ThirdDraft/mean_alph_earn_pred_by_age_cohort.png  used on input 
+line 300.
+(pdftex.def)             Requested size: 225.4804pt x 135.27985pt.
 
-[16 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+
+[12 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/mean_gam_wage_by_age_cohort.png> </Users/ethanballou/Documents/GitHub/Lif
 etimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_by_age_cohort.png> </Us
 ers/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/me
 an_gam_earn_by_age_cohort.png> </Users/ethanballou/Documents/GitHub/LifetimeEar
 ningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_by_age_cohort.png>]
 
-[17]
+[13 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+Draft/mean_gam_wage_pred_by_age_cohort.png> </Users/ethanballou/Documents/GitHu
+b/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_wage_pred_by_age_cohort
+.png> </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thi
+rdDraft/mean_gam_earn_pred_by_age_cohort.png> </Users/ethanballou/Documents/Git
+Hub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/mean_alph_earn_pred_by_age_coho
+rt.png>]
+
+[14]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_alpha_ols.tex)
 
-[18]
+[15]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/ols_pred_summary_stats.tex)
+
+[16]
+
+[17]
+(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/gamma_ftest.tex)
+
+[18]
+(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/alpha_ftest.tex)
 
 [19]
 
 [20]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_ftest.tex)
-
-[21]
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_ftest.tex)
-
-[22]
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_alpha_stepwise.tex)
-
-[23]
-
-[24]
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_alpha_pred_corr.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_alpha_pred_corr_fearn.tex)
 
-[25]
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_fearn_occ_rank_lasso_vs_nn.pdf, id=240, 361.35pt x 361.35pt>
-File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
-dDraft/gamma_fearn_occ_rank_lasso_vs_nn.pdf Graphic file (type pdf)
-<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
-Draft/gamma_fearn_occ_rank_lasso_vs_nn.pdf>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/gamma_fearn_occ_rank_lasso_vs_nn.pdf  used on input l
-ine 402.
-(pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_fearn_occ_rank_nn_vs_rf.pdf, id=241, 361.35pt x 361.35pt>
-File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
-dDraft/gamma_fearn_occ_rank_nn_vs_rf.pdf Graphic file (type pdf)
-<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
-Draft/gamma_fearn_occ_rank_nn_vs_rf.pdf>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/gamma_fearn_occ_rank_nn_vs_rf.pdf  used on input line
- 403.
-(pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_fearn_occ_rank_lasso_vs_rf.pdf, id=242, 361.35pt x 361.35pt>
-File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
-dDraft/gamma_fearn_occ_rank_lasso_vs_rf.pdf Graphic file (type pdf)
-<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
-Draft/gamma_fearn_occ_rank_lasso_vs_rf.pdf>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/gamma_fearn_occ_rank_lasso_vs_rf.pdf  used on input l
-ine 404.
-(pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_fearn_ind_rank_lasso_vs_nn.pdf, id=243, 361.35pt x 361.35pt>
-File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
-dDraft/gamma_fearn_ind_rank_lasso_vs_nn.pdf Graphic file (type pdf)
-<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
-Draft/gamma_fearn_ind_rank_lasso_vs_nn.pdf>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/gamma_fearn_ind_rank_lasso_vs_nn.pdf  used on input l
-ine 406.
-(pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_fearn_ind_rank_nn_vs_rf.pdf, id=244, 361.35pt x 361.35pt>
-File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
-dDraft/gamma_fearn_ind_rank_nn_vs_rf.pdf Graphic file (type pdf)
-<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
-Draft/gamma_fearn_ind_rank_nn_vs_rf.pdf>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/gamma_fearn_ind_rank_nn_vs_rf.pdf  used on input line
- 407.
-(pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
-</Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_fearn_ind_rank_lasso_vs_rf.pdf, id=245, 361.35pt x 361.35pt>
-File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
-dDraft/gamma_fearn_ind_rank_lasso_vs_rf.pdf Graphic file (type pdf)
-<use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
-Draft/gamma_fearn_ind_rank_lasso_vs_rf.pdf>
-Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/gamma_fearn_ind_rank_lasso_vs_rf.pdf  used on input l
-ine 408.
-(pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
+LaTeX Warning: Reference `fig:gamma_fearn_rank_methods' on page 21 undefined on
+ input line 399.
 
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/ml_test_mse.tex)
 
-[26 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
-Draft/gamma_fearn_occ_rank_lasso_vs_nn.pdf> </Users/ethanballou/Documents/GitHu
-b/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_occ_rank_nn_vs_rf.pdf
-> </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDr
-aft/gamma_fearn_occ_rank_lasso_vs_rf.pdf> </Users/ethanballou/Documents/GitHub/
-LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_ind_rank_lasso_vs_nn.pd
-f> </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdD
-raft/gamma_fearn_ind_rank_nn_vs_rf.pdf> </Users/ethanballou/Documents/GitHub/Li
-fetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_fearn_ind_rank_lasso_vs_rf.pdf>
-]
+
+[21]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/alpha_shap_shares.tex)
 
-[27]
-Overfull \hbox (11.85526pt too wide) in paragraph at lines 441--442
+[22]
+Overfull \hbox (11.85526pt too wide) in paragraph at lines 424--425
 \OT1/cmr/m/n/12 Having established what is correlated with the risk measures, t
 his section turns to characterizing
  []
 
 
 
-[28]
+[23]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_alpha_pred_means.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_alpha_pred_means_fearn.tex)
 
-[29]
+[24]
 
-[30]
+[25]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/alpha_pred_matrix_actual.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
@@ -929,7 +884,7 @@ t/alpha_pred_matrix_rf.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/alpha_pred_matrix_lasso.tex)
 
-[31]
+[26]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/alpha_fearn_pred_matrix_actual.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
@@ -939,223 +894,233 @@ t/alpha_fearn_pred_matrix_rf.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/alpha_fearn_pred_matrix_lasso.tex)
 
-[32]
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_deciles.tex)
+[27]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_fearn_deciles.tex)
 
-[33]
-
-[34]
-(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_deciles.tex)
+[28]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/alpha_fearn_deciles.tex)
 
-[35]
+[29]
 
-[36]
+[30]
 
-[37]
+[31]
 
-[38]
-
-[39]
-Underfull \hbox (badness 2221) in paragraph at lines 629--630
+[32]
+Underfull \hbox (badness 2221) in paragraph at lines 596--597
 \OT1/cmr/m/n/12 Risk. Unpublished manuscript, University of Wisconsin--Milwauke
 e and Illinois
  []
 
 
+
+[33]
+(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/3.2_lasso_selection.tex)
+
+[34]
+(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/3.2_gamalpha_lasso_selection.tex)
+
+[35]
+(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/3.2_gamalpha_ftest.tex)
+
+[36]
+(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/gamma_alpha_stepwise.tex)
+(/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
+t/ml_test_mse.tex)
+
+[37]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_lasso_ind_selection.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_fearn_lasso_ind_selection.tex)
-
-[40]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_lasso_occ_selection.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_fearn_lasso_occ_selection.tex)
 
-[41]
+[38]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/alpha_lasso_ind_selection.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/alpha_fearn_lasso_ind_selection.tex)
 
-[42]
+[39]
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/alpha_lasso_occ_selection.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/alpha_fearn_lasso_occ_selection.tex)
 
-[43]
+[40]
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/avg_realearn_by_age_cohort1_race.png, id=365, 1505.625pt x 1129.21875pt>
+t/avg_realearn_by_age_cohort1_race.png, id=341, 1505.625pt x 1129.21875pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/avg_realearn_by_age_cohort1_race.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/avg_realearn_by_age_cohort1_race.png>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/avg_realearn_by_age_cohort1_race.png  used on input l
-ine 739.
+ine 745.
 (pdftex.def)             Requested size: 422.77664pt x 317.07507pt.
 
 
-[44]
+[41]
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/avg_hwage_by_age_cohort1_race.png, id=371, 1505.625pt x 1129.21875pt>
+t/avg_hwage_by_age_cohort1_race.png, id=347, 1505.625pt x 1129.21875pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/avg_hwage_by_age_cohort1_race.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/avg_hwage_by_age_cohort1_race.png>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/avg_hwage_by_age_cohort1_race.png  used on input line
- 747.
+ 753.
 (pdftex.def)             Requested size: 422.77664pt x 317.07507pt.
 
 
-[45 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+[42 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/avg_realearn_by_age_cohort1_race.png>]
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/avg_hwage_by_age_cohort2_race.png, id=378, 1505.625pt x 1129.21875pt>
+t/avg_hwage_by_age_cohort2_race.png, id=355, 1505.625pt x 1129.21875pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/avg_hwage_by_age_cohort2_race.png Graphic file (type png)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/avg_hwage_by_age_cohort2_race.png>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/avg_hwage_by_age_cohort2_race.png  used on input line
- 754.
+ 760.
 (pdftex.def)             Requested size: 422.77664pt x 317.07507pt.
 
 
-[46 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+[43 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/avg_hwage_by_age_cohort1_race.png>]
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_occ_rank_lasso_vs_nn.pdf, id=385, 361.35pt x 361.35pt>
+t/gamma_occ_rank_lasso_vs_nn.pdf, id=362, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/gamma_occ_rank_lasso_vs_nn.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/gamma_occ_rank_lasso_vs_nn.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/gamma_occ_rank_lasso_vs_nn.pdf  used on input line 76
-0.
+6.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_occ_rank_nn_vs_rf.pdf, id=386, 361.35pt x 361.35pt>
+t/gamma_occ_rank_nn_vs_rf.pdf, id=363, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/gamma_occ_rank_nn_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/gamma_occ_rank_nn_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/gamma_occ_rank_nn_vs_rf.pdf  used on input line 761.
+sk/OtherOutput/ThirdDraft/gamma_occ_rank_nn_vs_rf.pdf  used on input line 767.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_occ_rank_lasso_vs_rf.pdf, id=387, 361.35pt x 361.35pt>
+t/gamma_occ_rank_lasso_vs_rf.pdf, id=364, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/gamma_occ_rank_lasso_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/gamma_occ_rank_lasso_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/gamma_occ_rank_lasso_vs_rf.pdf  used on input line 76
-2.
+8.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_ind_rank_lasso_vs_nn.pdf, id=388, 361.35pt x 361.35pt>
+t/gamma_ind_rank_lasso_vs_nn.pdf, id=365, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/gamma_ind_rank_lasso_vs_nn.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/gamma_ind_rank_lasso_vs_nn.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/gamma_ind_rank_lasso_vs_nn.pdf  used on input line 76
-4.
+sk/OtherOutput/ThirdDraft/gamma_ind_rank_lasso_vs_nn.pdf  used on input line 77
+0.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_ind_rank_nn_vs_rf.pdf, id=389, 361.35pt x 361.35pt>
+t/gamma_ind_rank_nn_vs_rf.pdf, id=366, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/gamma_ind_rank_nn_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/gamma_ind_rank_nn_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/gamma_ind_rank_nn_vs_rf.pdf  used on input line 765.
+sk/OtherOutput/ThirdDraft/gamma_ind_rank_nn_vs_rf.pdf  used on input line 771.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/gamma_ind_rank_lasso_vs_rf.pdf, id=390, 361.35pt x 361.35pt>
+t/gamma_ind_rank_lasso_vs_rf.pdf, id=367, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/gamma_ind_rank_lasso_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/gamma_ind_rank_lasso_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/gamma_ind_rank_lasso_vs_rf.pdf  used on input line 76
-6.
+sk/OtherOutput/ThirdDraft/gamma_ind_rank_lasso_vs_rf.pdf  used on input line 77
+2.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 
 
-[47 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+[44 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/avg_hwage_by_age_cohort2_race.png>]
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_occ_rank_lasso_vs_nn.pdf, id=397, 361.35pt x 361.35pt>
+t/alpha_occ_rank_lasso_vs_nn.pdf, id=374, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_occ_rank_lasso_vs_nn.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_occ_rank_lasso_vs_nn.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/alpha_occ_rank_lasso_vs_nn.pdf  used on input line 77
-4.
+sk/OtherOutput/ThirdDraft/alpha_occ_rank_lasso_vs_nn.pdf  used on input line 78
+0.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_occ_rank_nn_vs_rf.pdf, id=398, 361.35pt x 361.35pt>
+t/alpha_occ_rank_nn_vs_rf.pdf, id=375, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_occ_rank_nn_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_occ_rank_nn_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/alpha_occ_rank_nn_vs_rf.pdf  used on input line 775.
+sk/OtherOutput/ThirdDraft/alpha_occ_rank_nn_vs_rf.pdf  used on input line 781.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_occ_rank_lasso_vs_rf.pdf, id=399, 361.35pt x 361.35pt>
+t/alpha_occ_rank_lasso_vs_rf.pdf, id=376, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_occ_rank_lasso_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_occ_rank_lasso_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/alpha_occ_rank_lasso_vs_rf.pdf  used on input line 77
-6.
+sk/OtherOutput/ThirdDraft/alpha_occ_rank_lasso_vs_rf.pdf  used on input line 78
+2.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_ind_rank_lasso_vs_nn.pdf, id=400, 361.35pt x 361.35pt>
+t/alpha_ind_rank_lasso_vs_nn.pdf, id=377, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_ind_rank_lasso_vs_nn.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_ind_rank_lasso_vs_nn.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/alpha_ind_rank_lasso_vs_nn.pdf  used on input line 77
-8.
+sk/OtherOutput/ThirdDraft/alpha_ind_rank_lasso_vs_nn.pdf  used on input line 78
+4.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_ind_rank_nn_vs_rf.pdf, id=401, 361.35pt x 361.35pt>
+t/alpha_ind_rank_nn_vs_rf.pdf, id=378, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_ind_rank_nn_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_ind_rank_nn_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
-sk/OtherOutput/ThirdDraft/alpha_ind_rank_nn_vs_rf.pdf  used on input line 779.
+sk/OtherOutput/ThirdDraft/alpha_ind_rank_nn_vs_rf.pdf  used on input line 785.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_ind_rank_lasso_vs_rf.pdf, id=402, 361.35pt x 361.35pt>
+t/alpha_ind_rank_lasso_vs_rf.pdf, id=379, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_ind_rank_lasso_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_ind_rank_lasso_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/alpha_ind_rank_lasso_vs_rf.pdf  used on input line 78
-0.
+6.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 
 
-[48 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+[45 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/gamma_occ_rank_lasso_vs_nn.pdf> </Users/ethanballou/Documents/GitHub/Life
 timeEarningsRisk/OtherOutput/ThirdDraft/gamma_occ_rank_nn_vs_rf.pdf> </Users/et
 hanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_oc
@@ -1165,68 +1130,68 @@ ocuments/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/gamma_ind_rank_nn_v
 s_rf.pdf> </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput
 /ThirdDraft/gamma_ind_rank_lasso_vs_rf.pdf>]
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_fearn_occ_rank_lasso_vs_nn.pdf, id=421, 361.35pt x 361.35pt>
+t/alpha_fearn_occ_rank_lasso_vs_nn.pdf, id=397, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_fearn_occ_rank_lasso_vs_nn.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_fearn_occ_rank_lasso_vs_nn.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/alpha_fearn_occ_rank_lasso_vs_nn.pdf  used on input l
-ine 788.
+ine 794.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_fearn_occ_rank_nn_vs_rf.pdf, id=422, 361.35pt x 361.35pt>
+t/alpha_fearn_occ_rank_nn_vs_rf.pdf, id=398, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_fearn_occ_rank_nn_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_fearn_occ_rank_nn_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/alpha_fearn_occ_rank_nn_vs_rf.pdf  used on input line
- 789.
+ 795.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_fearn_occ_rank_lasso_vs_rf.pdf, id=423, 361.35pt x 361.35pt>
+t/alpha_fearn_occ_rank_lasso_vs_rf.pdf, id=399, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_fearn_occ_rank_lasso_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_fearn_occ_rank_lasso_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/alpha_fearn_occ_rank_lasso_vs_rf.pdf  used on input l
-ine 790.
+ine 796.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_fearn_ind_rank_lasso_vs_nn.pdf, id=424, 361.35pt x 361.35pt>
+t/alpha_fearn_ind_rank_lasso_vs_nn.pdf, id=400, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_fearn_ind_rank_lasso_vs_nn.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_fearn_ind_rank_lasso_vs_nn.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/alpha_fearn_ind_rank_lasso_vs_nn.pdf  used on input l
-ine 792.
+ine 798.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_fearn_ind_rank_nn_vs_rf.pdf, id=425, 361.35pt x 361.35pt>
+t/alpha_fearn_ind_rank_nn_vs_rf.pdf, id=401, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_fearn_ind_rank_nn_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_fearn_ind_rank_nn_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/alpha_fearn_ind_rank_nn_vs_rf.pdf  used on input line
- 793.
+ 799.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
-t/alpha_fearn_ind_rank_lasso_vs_rf.pdf, id=426, 361.35pt x 361.35pt>
+t/alpha_fearn_ind_rank_lasso_vs_rf.pdf, id=402, 361.35pt x 361.35pt>
 File: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Thir
 dDraft/alpha_fearn_ind_rank_lasso_vs_rf.pdf Graphic file (type pdf)
 <use /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_fearn_ind_rank_lasso_vs_rf.pdf>
 Package pdftex.def Info: /Users/ethanballou/Documents/GitHub/LifetimeEarningsRi
 sk/OtherOutput/ThirdDraft/alpha_fearn_ind_rank_lasso_vs_rf.pdf  used on input l
-ine 794.
+ine 800.
 (pdftex.def)             Requested size: 150.32504pt x 150.32687pt.
 
 
-[49 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+[46 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_occ_rank_lasso_vs_nn.pdf> </Users/ethanballou/Documents/GitHub/Life
 timeEarningsRisk/OtherOutput/ThirdDraft/alpha_occ_rank_nn_vs_rf.pdf> </Users/et
 hanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/alpha_oc
@@ -1246,7 +1211,7 @@ t/gamma_pred_matrix_rf.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_pred_matrix_lasso.tex)
 
-[50 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
+[47 </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/Third
 Draft/alpha_fearn_occ_rank_lasso_vs_nn.pdf> </Users/ethanballou/Documents/GitHu
 b/LifetimeEarningsRisk/OtherOutput/ThirdDraft/alpha_fearn_occ_rank_nn_vs_rf.pdf
 > </Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDr
@@ -1265,22 +1230,26 @@ t/gamma_fearn_pred_matrix_rf.tex)
 (/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraf
 t/gamma_fearn_pred_matrix_lasso.tex)
 
-[51] (EARNINGSRISK.aux)
+[48] (EARNINGSRISK.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
 Package rerunfilecheck Info: File `EARNINGSRISK.out' has not changed.
 (rerunfilecheck)             Checksum: BF8074FBBFA2642936CB76D4E79E20B3;1152.
  ) 
 Here is how much of TeX's memory you used:
- 12856 strings out of 475466
- 256191 string characters out of 5763911
- 698332 words of memory out of 5000000
- 35416 multiletter control sequences out of 15000+600000
+ 12828 strings out of 475466
+ 253350 string characters out of 5763911
+ 663380 words of memory out of 5000000
+ 35397 multiletter control sequences out of 15000+600000
  570043 words of font info for 79 fonts, out of 8000000 for 9000
  0 hyphenation exceptions out of 8191
- 75i,12n,79p,2132b,557s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,2132b,559s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </Users/ethanballou/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/
 ljfour/jknappen/ec/dpi600/tcrm0700.pk> </Users/ethanballou/Library/Application 
 Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1000.pk></Use
@@ -1308,9 +1277,9 @@ y/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti
 12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fo
 nts/type1/public/amsfonts/cm/cmtt12.pfb></Users/ethanballou/Library/Application
  Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on EARNINGSRISK.pdf (52 pages, 2031084 bytes).
+Output written on EARNINGSRISK.pdf (49 pages, 2220637 bytes).
 PDF statistics:
- 576 PDF objects out of 1000 (max. 8388607)
- 126 named destinations out of 1000 (max. 500000)
- 243 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 553 PDF objects out of 1000 (max. 8388607)
+ 123 named destinations out of 1000 (max. 500000)
+ 233 words of extra memory for PDF output out of 10000 (max. 10000000)
 

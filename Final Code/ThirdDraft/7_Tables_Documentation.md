@@ -67,10 +67,12 @@ SHAP-derived table.
 
 ## 4. Outputs
 
-Everything goes to `$OUTDIR = OtherOutput/ThirdDraft/`. Census: **76 files**
-(42 .tex, 10 .png, 24 .pdf), of which one (`ml_test_mse.tex`) is written by
-`6.6_MLperformance.py`, not this file. The paper embeds all 76 — the output
-folder and the paper's `\input`/`\includegraphics` lists are intentionally 1:1.
+Everything goes to `$OUTDIR = OtherOutput/ThirdDraft/`. Census: **78 files**
+(40 .tex, 14 .png, 24 .pdf), of which one (`ml_test_mse.tex`) is written by
+`6.6_MLperformance.py`, not this file. The paper embeds every file this file
+writes except the six annual-gamma rank plots (`gamma_fearn_{occ,ind}_rank_*.pdf`),
+whose float was dropped from the body of Draft 3 while the code was kept.
+The five `3.2_*.tex` selection tables come from `3.2_EarningsSelection.do`.
 
 ---
 
@@ -119,7 +121,8 @@ different by design; this table is the global anchor.
 ### Table 1: Stratified means (`stratified_means_gamma_alpha.tex`)
 Means of all four risk measures by education, race, cohort, age bin, tenure
 bin, and income quintiles (annual earnings and hourly wage quintiles via
-`xtile`, labeled "1st Quintile" … "5th Quintile"). Built per block with
+`xtile`, labeled "1st Quintile (Lowest)" … "5th Quintile (Highest)"; the
+decile section defines its own copy of the same labels). Built per block with
 `collapse`, stacked, exported via `listtex`.
 
 ### Age-earnings profile panels (4 .png)
@@ -141,8 +144,20 @@ y-ranges so panels compare within measure (0-0.04 gamma, 0-0.2 alpha);
 x ticks show the bin ranges at 45°. Rare cohort × bin edge cells with
 fewer than 25 person-years are dropped.
 
+### Mean ensemble-predicted risk by age across cohorts (4 .png: `mean_{gam,alph}_{wage,earn}_pred_by_age_cohort.png`)
+Same construction and styling as the raw plots above, but the plotted
+variable is the **ensemble prediction**: the simple mean of the NN, RF and
+LASSO fitted values in natural units (OLS excluded), on the person-years
+where all three are present (the ML estimation sample). Same fixed y-ranges
+as the raw plots so the two floats compare directly (the paper's
+`fig:mean_pred_risk_by_age_cohort`, placed right after the raw one). Gamma
+predictions are nearly flat around 0.02 by construction of the null result.
+
 ### Distribution histograms (`distribution_gamma_alpha_panel.png`)
-2×2 histogram panel of the four risk measures.
+2×2 histogram panel of the four risk measures. Plot-only copies are trimmed
+to gamma in [-0.2, 0.2] and alpha in [-0.2, 0.4] (values outside are set to
+missing for the plot, not dropped from the data), and the x-axes are
+labelled over exactly those ranges.
 
 ### Age box plots (`age_density_gamma_alpha_panel.png`)
 2×2 panel of box plots over the fine `agebin4` (4-year) bins. Box and whiskers
@@ -215,28 +230,37 @@ predictions, one small table per outcome × measure × method. The paper stacks
 the four methods of a combo into one 2×2 float. Assumes all five age bins are
 populated; if one ever empties, the export fails loudly on the missing column.
 
-### Decile characteristics (`{gamma,alpha}{,_fearn}_deciles.tex`)
-"Who has really high/low risk": within three broad age bins (22–33, 34–57,
-58–61 under the current age-61 cap; `agebin3`, whose third group is coded
-58–69 but only 58–61 exists in the data), the percent share of each demographic category (education,
-race, cohort, tenure bin, census division) among the top and bottom 10% of
-risk, next to the within-bin average ("All"). Key design decisions:
+### Predicted-risk deciles (`{gamma,alpha}_fearn_deciles.tex`, annual only)
+"Who do the models say has really high/low risk": within three broad age
+bins (22–33, 34–57, 58–61 under the current age-61 cap; `agebin3`, whose
+third group is coded 58–69 but only 58–61 exists in the data), the **mean
+ensemble-predicted risk (×100)** of each demographic category (education,
+race, cohort, tenure bin, census division, annual earnings quintile) among
+the top and bottom 10% of predicted risk, next to the within-bin category
+average ("All"). Nine columns: 3 age bins × (All, Bottom 10%, Top 10%).
+Key design decisions:
+- **Ensemble = simple mean of the NN, RF and LASSO fitted values** in levels
+  (OLS excluded); sample = person-years with all three present (the ML
+  estimation sample). Both gamma and alpha use it; note that gamma's
+  out-of-sample MSE ties the predict-the-mean baseline
+  (`6.6_MLperformance.py`), so the gamma table describes in-sample fitted
+  values only.
 - **Person × age-bin collapse first** (one observation per person per bin;
-  category dummies become the person's share of years in the category), done
-  **separately per measure** because the estimation samples differ.
-- **Gamma is sorted by ACTUAL risk only** — out of sample every method's MSE
-  ties the predict-the-mean baseline (see `6.6_MLperformance.py`), so a
-  predicted gamma ranking would be noise (and in-sample RF fits would look
-  deceptively informative).
-- **Alpha is sorted both ways** on the same estimation sample: by the ensemble
-  prediction (mean of the three methods' within-bin percentile ranks — rank
-  averaging is scale-free) and, independently, by actual risk. The paired
-  Pred/Act columns show whether the model's characteristic-based ranking finds
-  the same people as the raw values.
-- Deciles and All benchmarks are computed **within bin** (otherwise the 58+
-  dispersion explosion would make every tail an age proxy).
+  category dummies become the person's share of years in the category), so
+  each cell is the **dummy-weighted mean** of the ensemble prediction
+  (`summarize pred_ens [aw=dummy]`). A guard skips cells with zero total
+  weight (an empty category in a tail), which are left missing — `summarize`
+  with aweights errors on "no observations" even under `quietly`, and
+  `capture` would silently reuse the previous cell's `r(mean)`.
+- **Tails are defined within bin by the ensemble prediction** (`pctile` at
+  10/90 by `agebin3`); within bin because otherwise the 58+ dispersion
+  explosion would make every tail an age proxy.
+- Hourly panels are **not produced**; the earlier percent-share design (gamma
+  sorted by actual risk, alpha by rank-averaged prediction and by actual) was
+  replaced in Draft 3.
 - Row labels are pulled from the value labels via `levelsof` + `: label`, so
   they stay in sync with the `tabulate, generate()` dummy order automatically.
+  Cells use `%9.2f` (gamma cells are ~2 after ×100).
 
 ### Appendix: occ/ind SHAP rank tables (8 .tex) + cross-method rank plots (24 .pdf)
 Per outcome × measure × dimension (occupation, industry): a table ranking the
@@ -262,9 +286,10 @@ ranking. NN/RF SHAP values are continuous and effectively never tie.
   `train_test_split` with `random_state=42` on a row-index vector — if the
   seeds or split sizes ever change in files 6/6.1/6.4/6.5, they must change
   there too.
-- **Paper-side sizing:** the decile floats use `\resizebox*{!}{0.41\textheight}`
-  — the star matters. Unstarred `\resizebox` targets height-above-baseline, and
-  baseline-centered tabulars get ENLARGED instead of shrunk.
+- **Paper-side sizing:** the decile floats are single 9-column tables and use
+  `\resizebox{\textwidth}{!}`. If a height-based `\resizebox*{!}{...}` is ever
+  reintroduced, the star matters: unstarred `\resizebox` targets
+  height-above-baseline, and baseline-centered tabulars get ENLARGED.
 - **Determinism:** the whole file is deterministic — same inputs give
   byte-identical .tex outputs (used as the standard refactor check).
 - **After retraining any Python model:** rerun the relevant 6.x scripts, then
