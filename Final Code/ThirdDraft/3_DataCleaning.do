@@ -2151,16 +2151,16 @@ label define whiteL  ///
 label values white  whiteL
 
 
-gen cohort=10 if birthyr<1944
-  replace cohort=20 if birthyr>=1944 & birthyr<=1952
-  replace cohort=30 if birthyr>=1953 & birthyr<=1960
-  replace cohort=40 if birthyr>=1961
+gen cohort=10 if birthyr<1946
+  replace cohort=20 if birthyr>=1946 & birthyr<=1953
+  replace cohort=30 if birthyr>=1954 & birthyr<=1961
+  replace cohort=40 if birthyr>=1962
 label variable cohort "birth cohort"
 label define cohortL  ///
-	10 "born pre-1944" ///
-	20 "born 1944-1952" ///
-	30 "born 1953-1960" ///
-	40 "born post-1960" 
+	10 "born pre-1946" ///
+	20 "born 1946-1953" ///
+	30 "born 1954-1961" ///
+	40 "born post-1961" 
 label values cohort  cohortL
 
 

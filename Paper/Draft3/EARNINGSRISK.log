@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  14 SEP 2026 14:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2025.2.23)  14 SEP 2026 17:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1245,7 +1245,7 @@ Package rerunfilecheck Info: File `EARNINGSRISK.out' has not changed.
 Here is how much of TeX's memory you used:
  12828 strings out of 475466
  253350 string characters out of 5763911
- 663380 words of memory out of 5000000
+ 664380 words of memory out of 5000000
  35397 multiletter control sequences out of 15000+600000
  570043 words of font info for 79 fonts, out of 8000000 for 9000
  0 hyphenation exceptions out of 8191
@@ -1277,7 +1277,7 @@ y/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmti
 12.pfb></Users/ethanballou/Library/Application Support/MiKTeX/texmfs/install/fo
 nts/type1/public/amsfonts/cm/cmtt12.pfb></Users/ethanballou/Library/Application
  Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on EARNINGSRISK.pdf (49 pages, 2220637 bytes).
+Output written on EARNINGSRISK.pdf (49 pages, 2206120 bytes).
 PDF statistics:
  553 PDF objects out of 1000 (max. 8388607)
  123 named destinations out of 1000 (max. 500000)

@@ -11,7 +11,7 @@
 *** This program implements the first stage on earnings DIFFERENCES rather than levels.
 *** For each horizon z (1-41), the raw z-year change in log earnings, Gz = Fz.y - y, is
 *** regressed by OLS on time-t characteristics: age profiles in 4-year age bins interacted
-*** with newgroup (race/cohort/education) and postgrad, tenure bins, PrRecess, OLF, and
+*** with cohort/education/race interactions, tenure bins, OLF, and
 *** census division / year / occupation / industry fixed effects.
 
 *** The residuals RGz are the component of z-year earnings growth that could NOT be
@@ -86,7 +86,7 @@ label variable agebin4 "Age bin (12 groups of 4 years, first stage)"
 
 * Interactions: cohort x education and cohort x race.
 * cohort is coded 10/20/30/40 and educwrths 1-4, race 1-7, so the sum yields a
-* unique categorical code for each cell (e.g. 23 = born 1944-1952, some college).
+* unique categorical code for each cell (e.g. 23 = born 1946-1953, some college).
 capture drop cohort_educ cohort_race
 gen cohort_educ = cohort + educwrths if cohort!=. & educwrths!=.
 gen cohort_race = cohort + race     if cohort!=. & race!=.

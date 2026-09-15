@@ -56,7 +56,7 @@ print(meta.column_names)
 columns_to_keep = [
     'year', 'personid', 'censdiv', 'occ', 'twoind', 'race', 
     'agebin',
-    'PrRecess', 'OLF', 'tenure', 'cohort',
+    'OLF', 'tenure', 'cohort',
     'alphaP_WEIGHTED', 'edyrs'
 ]
 
@@ -229,7 +229,7 @@ print(meta.column_names)
 columns_to_keep = [
     'year', 'personid', 'censdiv', 'occ', 'twoind', 'race', 
     'agebin',
-    'PrRecess', 'OLF', 'tenure', 'cohort',
+    'OLF', 'tenure', 'cohort',
     'alphaP_WEIGHTED_fearn', 'edyrs'
 ]
 

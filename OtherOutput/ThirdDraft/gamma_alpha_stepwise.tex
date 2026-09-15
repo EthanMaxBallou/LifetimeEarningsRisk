@@ -6,27 +6,21 @@
                     &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}&\multicolumn{1}{c}{(8)}\\
                     &\multicolumn{1}{c}{No Occ/Ind}&\multicolumn{1}{c}{All Controls}&\multicolumn{1}{c}{No Occ/Ind}&\multicolumn{1}{c}{All Controls}&\multicolumn{1}{c}{No Occ/Ind}&\multicolumn{1}{c}{All Controls}&\multicolumn{1}{c}{No Occ/Ind}&\multicolumn{1}{c}{All Controls}\\
 \hline
-Probability of Recession&                     &                     &       1.185\sym{**} &       1.196\sym{**} &       2.040\sym{*}  &       2.103\sym{**} &       3.576\sym{*}  &       3.587\sym{*}  \\
-                    &                     &                     &     (0.390)         &     (0.389)         &     (0.822)         &     (0.816)         &     (1.423)         &     (1.414)         \\
+Out of Labor Force  &                     &                     &                     &                     &       10.32\sym{***}&       7.548\sym{***}&       25.39\sym{***}&       17.88\sym{***}\\
+                    &                     &                     &                     &                     &     (0.809)         &     (0.814)         &     (1.512)         &     (1.516)         \\
 [1em]
-5-year moving average of AEP&                     &                     &      0.0246\sym{***}&      0.0224\sym{***}&       0.123\sym{***}&       0.108\sym{***}&       0.349\sym{***}&       0.337\sym{***}\\
-                    &                     &                     &   (0.00278)         &   (0.00282)         &   (0.00457)         &   (0.00500)         &   (0.00781)         &   (0.00855)         \\
-[1em]
-Out of Labor Force  &                     &                     &                     &                     &       8.503\sym{***}&       6.494\sym{***}&       20.06\sym{***}&       14.72\sym{***}\\
-                    &                     &                     &                     &                     &     (0.809)         &     (0.814)         &     (1.500)         &     (1.507)         \\
-[1em]
-Constant            &      0.0135\sym{***}&      0.0204\sym{***}&    0.000827         &     0.00557         &      0.0235         &      0.0288         &     -0.0608\sym{*}  &     -0.0694\sym{*}  \\
-                    &   (0.00147)         &   (0.00517)         &   (0.00525)         &   (0.00863)         &    (0.0138)         &    (0.0180)         &    (0.0238)         &    (0.0310)         \\
+Constant            &      0.0136\sym{***}&      0.0203\sym{***}&      0.0169\sym{***}&      0.0175\sym{*}  &       0.125\sym{***}&       0.107\sym{***}&       0.202\sym{***}&       0.136\sym{***}\\
+                    &   (0.00147)         &   (0.00517)         &   (0.00426)         &   (0.00840)         &    (0.0137)         &    (0.0179)         &    (0.0239)         &    (0.0311)         \\
 \hline
-Census Division FE  &  \checkmark         &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
+Census Division FE  &  \checkmark         &                     &  \checkmark         &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
 Year FE             &                     &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
 Race FE             &                     &                     &                     &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
-Cohort FE           &                     &                     &  \checkmark         &                     &                     &  \checkmark         &                     &                     \\
+Cohort FE           &                     &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         &                     &                     \\
 Occupation FE       &                     &  \checkmark         &                     &  \checkmark         &                     &  \checkmark         &                     &  \checkmark         \\
 Industry FE         &                     &  \checkmark         &                     &  \checkmark         &                     &  \checkmark         &                     &  \checkmark         \\
-Education FE        &  \checkmark         &                     &  \checkmark         &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
-Age Bin FE          &  \checkmark         &  \checkmark         &                     &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
-Tenure FE           &                     &                     &  \checkmark         &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
+Education FE        &  \checkmark         &                     &                     &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
+Age Bin FE          &  \checkmark         &  \checkmark         &                     &                     &                     &                     &  \checkmark         &                     \\
+Tenure FE           &                     &                     &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         &  \checkmark         \\
 \midrule Census Division FE Available&         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Year FE Available   &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Race FE Available   &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
@@ -36,7 +30,7 @@ Industry FE Available&          No         &         Yes         &          No  
 Education FE Available&         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Age Bin FE Available&         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
 Tenure FE Available &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
-R-squared           &       0.001         &       0.003         &       0.003         &       0.006         &       0.020         &       0.036         &       0.040         &       0.053         \\
+R-squared           &       0.001         &       0.003         &       0.002         &       0.005         &       0.013         &       0.031         &       0.019         &       0.037         \\
 N                   &       74916         &       74916         &       74585         &       74585         &       92875         &       92875         &       92453         &       92453         \\
 \hline\hline
 \multicolumn{9}{l}{\footnotesize Standard errors in parentheses}\\

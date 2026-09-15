@@ -90,7 +90,10 @@ specifications `$RHS_NO` (no occupation/industry controls) and `$RHS_ALL`
 preserved so results reproduce.
 
 ### S1. Early data prep
-Everything downstream assumes this ran. In order:
+Everything downstream assumes this ran. Immediately after the `use`, `PrRecess`,
+`ma5aep` and `AEP` are **dropped**: they are built in `3_DataCleaning.do` but
+excluded from every model and exhibit (and from the ML feature matrices in
+`6` / `6.1`). Then, in order:
 1. **Renames** the four risk measures to `gam_wage`/`alph_wage`/`gam_earn`/`alph_earn`.
 2. **Label overrides:** the saved dta's `agebin`/`tenurebin` value labels carry
    "(ref)" markers; they are re-defined here (clean "46-53", "0-1") for table
@@ -100,7 +103,7 @@ Everything downstream assumes this ran. In order:
    `pred_<nn|rf|lasso|ols>_<gam|alph>_<wage|earn>` — e.g. `pred_lasso_alph_earn`.
 4. **`educat`** (0 = less than HS … 4 = Bachelors+), built from `edyrs` to match
    the EDU1–EDU4 dummy definitions; created once here, used by several sections.
-5. **Rescaling (/100)** of `EDU1–EDU4 OLF PrRecess ma5aep` — the same scaling
+5. **Rescaling (/100)** of `EDU1–EDU4 OLF` — the same scaling
    `7_Analysis.do` used, so regression coefficients read as "×100".
    `currentage` is deliberately NOT rescaled (the profile plots use it raw).
 6. **Dummy sets** via `tabulate, generate()`: `race_dum* censdiv_dum* occ_dum*
@@ -170,7 +173,9 @@ Hourly {No Occ/Ind, All Controls} then Annual {same}. Eight stored `regress`
 estimates (`ols_<o>_<meas>_<no|all>`); FE Yes/No rows via `estadd`. The
 vertical divider requires a custom `prehead()` supplying
 `\begin{tabular}{l*{4}{c}|*{4}{c}}` (esttab cannot emit a piped spec natively).
-Stars: * .10 ** .05 *** .01.
+Stars: * .10 ** .05 *** .01. Regressors are the education dummies, age and
+tenure bins, OLF, and the FE sets; probability of recession and the moving-
+average earnings percentile were removed from both specs in Draft 3.
 
 ### OLS prediction descriptive stats (`ols_pred_summary_stats.tex`)
 Distribution of the full-sample OLS fitted values (`pred_ols_*`): Mean,
@@ -193,8 +198,10 @@ Yes/No rows record what each model was offered. **Wildcard varlists**
 — this is a correctness fix, not just style: the data now has 36 year and 6
 race categories, so the legacy `year_dum1-year_dum27` / `race_dum1-race_dum5`
 ranges silently drop candidates. Reference-omitting sets (edu, agebin, tenure)
-keep explicit lists. Note: this table inherits esttab's default star levels
-(.05/.01/.001), unlike the OLS table — carried over from the original.
+keep explicit lists. OLF is the only coefficient row in the table body (the
+two continuous macro/percentile controls were removed). Note: this table
+inherits esttab's default star levels (.05/.01/.001), unlike the OLS table —
+carried over from the original.
 
 ### Correlation of ML predictions (`gamma_alpha_pred_corr{,_fearn}.tex`)
 Per measure: 3×3 lower-triangle correlations of the NN/RF/LASSO person-year

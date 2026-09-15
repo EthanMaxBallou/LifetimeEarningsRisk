@@ -23,11 +23,17 @@ global SHAPDIR "$OUTDIR/shap"
 capture mkdir "$OUTDIR"
 capture mkdir "$SHAPDIR"
 
-global RHS_NO  "EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF ib1.tenurebin ib4.agebin i.(censdiv year race cohort)"
-global RHS_ALL "EDU1 EDU2 EDU3 EDU4 PrRecess ma5aep OLF ib1.tenurebin ib4.agebin i.(censdiv year occ race cohort twoind)"
+global RHS_NO  "EDU1 EDU2 EDU3 EDU4 OLF ib1.tenurebin ib4.agebin i.(censdiv year race cohort)"
+global RHS_ALL "EDU1 EDU2 EDU3 EDU4 OLF ib1.tenurebin ib4.agebin i.(censdiv year occ race cohort twoind)"
 
 
 use "$DATADIR/Consolidated_AlphaGamma_withDemographics.dta", replace
+
+* Probability of recession, the 5-year moving-average earnings percentile and
+* its raw input are built in 3_DataCleaning.do but excluded from every model
+* and exhibit here (and from the ML feature matrices in 6 / 6.1). Dropped
+* up front so nothing below can pick them up by accident.
+drop PrRecess ma5aep AEP
 
 
 
@@ -150,8 +156,6 @@ replace EDU2 = EDU2 / 100
 replace EDU3 = EDU3 / 100
 replace EDU4 = EDU4 / 100
 replace OLF = OLF / 100
-replace PrRecess = PrRecess / 100
-replace ma5aep = ma5aep / 100
 
 label var OLF "Out of Labor Force"
 
@@ -347,7 +351,7 @@ restore
 * earnings by age, one panel per cohort x white/non-white combination, with
 * one line per education category (educwrths) within each panel. The 8
 * cohort x race panels are split into two separate 2x2 grids by cohort pair
-* (pre-1944 & 1944-1952; 1953-1960 & post-1960). No legend graph is combined
+* (pre-1946 & 1946-1953; 1954-1961 & post-1961). No legend graph is combined
 * in (graph combine gives a legend row the same height as a panel row, which
 * wastes a lot of space) -- instead a note() caption below each grid states
 * the fixed line-color-to-education mapping, and panels are sized taller.
@@ -373,10 +377,10 @@ foreach meas in realearn hwage {
             drop if missing(educwrths)
             separate `meas', by(educwrths) veryshortlabel
 
-            if `c' == 10 local cohorttitle "Born Pre-1944"
-            if `c' == 20 local cohorttitle "Born 1944-1952"
-            if `c' == 30 local cohorttitle "Born 1953-1960"
-            if `c' == 40 local cohorttitle "Born Post-1960"
+            if `c' == 10 local cohorttitle "Born Pre-1946"
+            if `c' == 20 local cohorttitle "Born 1946-1953"
+            if `c' == 30 local cohorttitle "Born 1954-1961"
+            if `c' == 40 local cohorttitle "Born Post-1961"
             if `w' == 100 local racetitle "White"
             if `w' == 200 local racetitle "Non-white"
 
@@ -397,7 +401,7 @@ foreach meas in realearn hwage {
     if "`meas'" == "realearn" local measnote "Annual earnings in 2024 dollars."
     else                      local measnote "Hourly wage in 2024 dollars."
 
-    * --- Grid 1: cohorts pre-1944 and 1944-1952 ---
+    * --- Grid 1: cohorts pre-1946 and 1946-1953 ---
     graph combine g_`meas'_10_100 g_`meas'_10_200 ///
                   g_`meas'_20_100 g_`meas'_20_200, ///
         cols(2) name(g_`meas'_group1, replace) ///
@@ -408,7 +412,7 @@ foreach meas in realearn hwage {
     graph export "$OUTDIR/avg_`meas'_by_age_cohort1_race.png", ///
         replace width(2000)
 
-    * --- Grid 2: cohorts 1953-1960 and post-1960 ---
+    * --- Grid 2: cohorts 1954-1961 and post-1961 ---
     graph combine g_`meas'_30_100 g_`meas'_30_200 ///
                   g_`meas'_40_100 g_`meas'_40_200, ///
         cols(2) name(g_`meas'_group2, replace) ///
@@ -639,8 +643,8 @@ esttab ols_gam_wage_no ols_gam_wage_all ols_gam_earn_no ols_gam_earn_all ///
     using "$OUTDIR/gamma_alpha_ols.tex", ///
     replace se r2 label ///
     prehead("{" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\begin{tabular}{l*{4}{c}|*{4}{c}}" "\hline\hline") ///
-    keep(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin PrRecess ma5aep OLF 2.tenurebin 3.tenurebin) ///
-    order(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin PrRecess ma5aep OLF 2.tenurebin 3.tenurebin) ///
+    keep(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin OLF 2.tenurebin 3.tenurebin) ///
+    order(EDU1 EDU2 EDU3 EDU4 1.agebin 2.agebin 3.agebin 5.agebin OLF 2.tenurebin 3.tenurebin) ///
     mgroups("Gamma, Hourly Wage" "Gamma, Annual Earnings" "Alpha, Hourly Wage" "Alpha, Annual Earnings", ///
             pattern(1 0 1 0 1 0 1 0) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
     mtitles("No Occ/Ind" "All Controls" "No Occ/Ind" "All Controls" "No Occ/Ind" "All Controls" "No Occ/Ind" "All Controls") ///
@@ -848,8 +852,8 @@ foreach o in gam alph {
 * with -unab- (e.g. unab occlist : occ_dum*).
 * ===========================================================================
 
-local sw_no  "PrRecess ma5aep OLF (edu_dum1 edu_dum2 edu_dum3 edu_dum4) (agebin_dum1 agebin_dum2 agebin_dum3 agebin_dum5) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (race_dum*) (cohort_dum*)"
-local sw_all "PrRecess ma5aep OLF (edu_dum1 edu_dum2 edu_dum3 edu_dum4) (agebin_dum1 agebin_dum2 agebin_dum3 agebin_dum5) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (occ_dum*) (race_dum*) (cohort_dum*) (twoind_dum*)"
+local sw_no  "OLF (edu_dum1 edu_dum2 edu_dum3 edu_dum4) (agebin_dum1 agebin_dum2 agebin_dum3 agebin_dum5) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (race_dum*) (cohort_dum*)"
+local sw_all "OLF (edu_dum1 edu_dum2 edu_dum3 edu_dum4) (agebin_dum1 agebin_dum2 agebin_dum3 agebin_dum5) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (occ_dum*) (race_dum*) (cohort_dum*) (twoind_dum*)"
 
 eststo clear
 
@@ -1004,7 +1008,7 @@ foreach outn in gamma alpha {
                     inlist(feature, "currentage", "currentagesq", "currentagecube")
                 replace grp = "tenure"  if feature == "tenure"
 
-                drop if grp == ""       // PrRecess and OLF are not control sets
+                drop if grp == ""       // OLF is not a control set
 
                 collapse (mean) averageshapvalue, by(grp)
                 replace averageshapvalue = 100 * averageshapvalue

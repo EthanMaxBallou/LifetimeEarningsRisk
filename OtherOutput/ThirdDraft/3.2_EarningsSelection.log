@@ -2,7 +2,7 @@
       name:  earnsel
        log:  /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_EarningsSelection.log
   log type:  text
- opened on:  26 Aug 2026, 03:35:03
+ opened on:  14 Sep 2026, 16:05:15
 
 . 
 . * Record the exact bin sizes
@@ -288,7 +288,7 @@ agebin4_dum11 |  -.2373079   .0134712   -17.62   0.000     -.263711   -.2109049
 agebin4_dum12 |  -.0285571   .0344059    -0.83   0.407    -.0959917    .0388775
         _cons |  -.0030221   .0250681    -0.12   0.904    -.0521548    .0461107
 -------------------------------------------------------------------------------
-note: twoind_dum1 omitted because of collinearity with another variable.
+note: occ_dum1 omitted because of collinearity with another variable.
 note: occten_d27_2 omitted because of collinearity with another variable.
 note: ageten_d7_2 omitted because of collinearity with another variable.
 Computing plugin lambda ...
@@ -321,11 +321,11 @@ Selection: Plugin heteroskedastic
           OLF |     x    
         unemp |     x    
       student |     x    
-     occ_dum1 |     x    
     occ_dum12 |     x    
     occ_dum23 |     x    
     occ_dum53 |     x    
     occ_dum67 |     x    
+  twoind_dum1 |     x    
   twoind_dum5 |     x    
  twoind_dum11 |     x    
  twoind_dum23 |     x    
@@ -905,7 +905,7 @@ note: ageten_d11_2 omitted because it is constant.
 note: ageten_d11_3 omitted because it is constant.
 note: ageten_d12_2 omitted because it is constant.
 note: ageten_d12_3 omitted because it is constant.
-note: occ_dum1 omitted because of collinearity with another variable.
+note: twoind_dum1 omitted because of collinearity with another variable.
 Computing plugin lambda ...
 Iteration 1:     lambda = .0097643   no. of nonzero coef. =  85
 Iteration 2:     lambda = .0097643   no. of nonzero coef. =  86
@@ -942,6 +942,7 @@ Selection: Plugin heteroskedastic
           OLF |     x    
         unemp |     x    
       student |     x    
+     occ_dum1 |     x    
      occ_dum2 |     x    
     occ_dum14 |     x    
     occ_dum16 |     x    
@@ -952,7 +953,6 @@ Selection: Plugin heteroskedastic
     occ_dum58 |     x    
     occ_dum74 |     x    
     occ_dum75 |     x    
-  twoind_dum1 |     x    
   twoind_dum2 |     x    
   twoind_dum3 |     x    
   twoind_dum5 |     x    
@@ -2111,13 +2111,13 @@ Legend:
       name:  earnsel
        log:  /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_EarningsSelection.log
   log type:  text
- closed on:  26 Aug 2026, 03:48:04
+ closed on:  14 Sep 2026, 16:18:54
 --------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
       name:  earnsel
        log:  /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_EarningsSelection.log
   log type:  text
- opened on:  26 Aug 2026, 04:18:16
+ opened on:  14 Sep 2026, 16:51:19
 
 . 
 . local col = 0
@@ -2195,7 +2195,7 @@ Legend:
   e - empty cell
   o - omitted
   x - estimated
-note: twoind_dum1 omitted because of collinearity with another variable.
+note: occ_dum1 omitted because of collinearity with another variable.
 Computing plugin lambda ...
 Iteration 1:     lambda = .0147262   no. of nonzero coef. =  40
 Iteration 2:     lambda = .0147262   no. of nonzero coef. =  43
@@ -2222,7 +2222,6 @@ Selection: Plugin heteroskedastic
    race_dum2 |     x    
          OLF |     x    
        unemp |     x    
-    occ_dum1 |     x    
     occ_dum3 |     x    
     occ_dum4 |     x    
     occ_dum5 |     x    
@@ -2234,6 +2233,7 @@ Selection: Plugin heteroskedastic
    occ_dum52 |     x    
    occ_dum69 |     x    
    occ_dum79 |     x    
+ twoind_dum1 |     x    
  twoind_dum2 |     x    
  twoind_dum4 |     x    
  twoind_dum6 |     x    
@@ -2388,5 +2388,5 @@ Legend:
       name:  earnsel
        log:  /Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_EarningsSelection.log
   log type:  text
- closed on:  26 Aug 2026, 04:20:13
+ closed on:  14 Sep 2026, 16:53:11
 --------------------------------------------------------------------------------------------------------------------------------
