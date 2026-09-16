@@ -1864,6 +1864,18 @@ tsset personid year
 	replace OLF=1 if (OLF==0|OLF==.) & year<1979 & (relation!=1|seqno!=1) & F.annhrs==0 & F.unemp==0 & (F.earnings==0|F.earnings==.)
 	replace student=1 if student==0 & F.edyrs-edyrs>=1 & F.edyrs!=. & edyrs!=.
 
+** Labor force status: one categorical for the three flags. Later replaces
+** win, so overlaps resolve student > unemp > OLF. Used in place of the
+** separate flags in 3.2_EarningsSelection.do and 4_GamAlphaCalc.do.
+gen lifestat = 0
+	replace lifestat = 1 if OLF==1
+	replace lifestat = 2 if unemp==1
+	replace lifestat = 3 if student==1
+	replace lifestat = . if OLF==. & unemp==. & student==.
+label define lifestatL 0 "Employed" 1 "Out of labor force" 2 "Unemployed" 3 "Student"
+label values lifestat lifestatL
+label variable lifestat "Labor force status (0=employed ref, 1=OLF, 2=unemp, 3=student)"
+
 
 
 
@@ -2092,6 +2104,20 @@ label define educwrthsL  ///
 
 label values educwrths	 educwrthsL
 
+** Education with postgraduate split out (time-invariant, from edmaxyrs).
+** Used in place of educwrths + postgrad in 3.2_EarningsSelection.do and
+** 4_GamAlphaCalc.do.
+gen trueEDU = educwrths
+	replace trueEDU = 5 if postgrad==1 & educwrths==4
+label define trueEDUL  ///
+	1 "HS dropout (max ed = 0-11 yrs)" ///
+	2 "HS grad only (max ed = 12 yrs)" ///
+	3 "Some college (max ed = 13-15 yrs)" ///
+	4 "College grad (max ed = 16 yrs)" ///
+	5 "Postgrad (max ed = 17+ yrs)"
+label values trueEDU trueEDUL
+label variable trueEDU "max level of education, postgrad separate"
+
 
 ** Age-related
 
@@ -2164,9 +2190,9 @@ label define cohortL  ///
 label values cohort  cohortL
 
 
-gen group=white+cohort+educwrths
-  drop if group>244
-label variable group "= white (1st dig) + cohort (2nd) + educwrths (3rd)"
+gen group=white+cohort+trueEDU
+  drop if group>245
+label variable group "= white (1st dig) + cohort (2nd) + trueEDU (3rd)"
 
 
 

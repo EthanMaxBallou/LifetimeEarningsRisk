@@ -11,7 +11,7 @@
 *** This program implements the first stage on earnings DIFFERENCES rather than levels.
 *** For each horizon z (1-41), the raw z-year change in log earnings, Gz = Fz.y - y, is
 *** regressed by OLS on time-t characteristics: age profiles in 4-year age bins interacted
-*** with cohort/education/race interactions, tenure bins, OLF, and
+*** with cohort/education/race interactions, tenure bins, labor force status, and
 *** census division / year / occupation / industry fixed effects.
 
 *** The residuals RGz are the component of z-year earnings growth that could NOT be
@@ -85,13 +85,13 @@ label variable agebin4 "Age bin (12 groups of 4 years, first stage)"
 
 
 * Interactions: cohort x education and cohort x race.
-* cohort is coded 10/20/30/40 and educwrths 1-4, race 1-7, so the sum yields a
+* cohort is coded 10/20/30/40 and trueEDU 1-5, race 1-7, so the sum yields a
 * unique categorical code for each cell (e.g. 23 = born 1946-1953, some college).
 capture drop cohort_educ cohort_race
-gen cohort_educ = cohort + educwrths if cohort!=. & educwrths!=.
+gen cohort_educ = cohort + trueEDU if cohort!=. & trueEDU!=.
 gen cohort_race = cohort + race     if cohort!=. & race!=.
 
-label variable cohort_educ "Cohort x education (cohort + educwrths)"
+label variable cohort_educ "Cohort x education (cohort + trueEDU)"
 label variable cohort_race "Cohort x race (cohort + race)"
 
 
@@ -99,7 +99,7 @@ save "/Users/ethanballou/Documents/Data/LER_Draft2/FullData_CombinedwithTEN.dta"
 
 
 
-* Average earnings age profile for each group (group = white + cohort + educwrths)
+* Average earnings age profile for each group (group = white + cohort + trueEDU)
 
 preserve
 collapse (mean) fearn, by(currentage group)
@@ -139,7 +139,7 @@ foreach x of local DVLIST {
 
 		gen G`z'_`x' = F`z'.`x' - `x' if F`z'.`x' !=. & `x' !=.
 
-		quietly reg G`z'_`x' i.(cohort cohort_educ cohort_race educwrths race OLF occ twoind)##i.agebin4 OLF ib1.tenurebin i.(tenurebin)#i.agebin4 i.(tenurebin)#i.occ i.(censdiv year occ twoind currentage)
+		quietly reg G`z'_`x' i.(cohort cohort_educ cohort_race trueEDU race lifestat occ twoind)##i.agebin4 ib1.tenurebin i.(tenurebin)#i.agebin4 i.(tenurebin)#i.occ i.(censdiv year occ twoind currentage)
 
 		predict RG`z'_`x' if e(sample), r
 		label variable RG`z'_`x' "residual growth of `x' between years t+1 and t+`=`z'+1' (1st stage)"

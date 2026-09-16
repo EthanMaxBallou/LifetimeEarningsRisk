@@ -14,9 +14,10 @@
 ***
 *** Design notes:
 ***   - Candidate sets = the variables in the current first stage of
-***     4_GamAlphaCalc.do, de-duplicated, with education (educwrths)
-***     replacing the composite group variable: educwrths, postgrad, race,
-***     OLF, unemp, student, occ, twoind, tenurebin, censdiv, year, agebin4.
+***     4_GamAlphaCalc.do, de-duplicated: trueEDU (education with postgrad
+***     split out), race, lifestat (employed/OLF/unemp/student), occ,
+***     twoind, tenurebin, censdiv, year, agebin4. trueEDU and lifestat are
+***     built in 3_DataCleaning.do.
 ***   - Age enters as agebin4 only. The first stage also has i.currentage,
 ***     but a full currentage dummy set nests agebin4 exactly (each agebin4
 ***     dummy is a sum of currentage dummies), so offering both would make
@@ -85,7 +86,7 @@ gen agebin4 = floor((currentage-22)/4) + 1 if currentage>=22 & currentage<=69
 **                                                                   **
 ***********************************************************************
 
-keep personid year fearn fhwage educwrths postgrad race OLF unemp student ///
+keep personid year fearn fhwage trueEDU race lifestat ///
      occ twoind tenurebin censdiv agebin4
 
 drop if fearn==. & fhwage==.
@@ -138,7 +139,8 @@ label variable zbin "Horizon bin for the selection regressions"
 **                                                                   **
 ***********************************************************************
 
-tabulate educwrths, generate(educ_dum)
+tabulate trueEDU, generate(educ_dum)
+tabulate lifestat, generate(lfs_dum)
 tabulate race,      generate(race_dum)
 tabulate occ,       generate(occ_dum)
 tabulate twoind,    generate(twoind_dum)
@@ -182,37 +184,34 @@ local NAGETEN_A : word count `AGETENLIST'
 * Candidate terms shared by every regression. z dummies are prepended
 * inside the loop (they differ by bin) and locked in via lockterm1.
 * No interaction dummies here: stepwise keeps its original candidate sets.
-local CANDIDATES "(educ_dum*) postgrad (race_dum*) OLF unemp student (occ_dum*) (twoind_dum*) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (agebin4_dum1 agebin4_dum2 agebin4_dum3 agebin4_dum4 agebin4_dum5 agebin4_dum6 agebin4_dum8 agebin4_dum9 agebin4_dum10 agebin4_dum11 agebin4_dum12)"
+local CANDIDATES "(educ_dum*) (race_dum*) (lfs_dum2 lfs_dum3 lfs_dum4) (occ_dum*) (twoind_dum*) (ten_dum2 ten_dum3) (censdiv_dum*) (year_dum*) (agebin4_dum1 agebin4_dum2 agebin4_dum3 agebin4_dum4 agebin4_dum5 agebin4_dum6 agebin4_dum8 agebin4_dum9 agebin4_dum10 agebin4_dum11 agebin4_dum12)"
 
 * Same list, unparenthesized, for lasso: in lasso syntax parentheses mean
 * ALWAYS INCLUDE (only the z dummies get that), and lasso selects
 * individual dummies rather than whole sets. The interaction dummies are
 * lasso candidates too.
-local LASSOCANDS "educ_dum* postgrad race_dum* OLF unemp student occ_dum* twoind_dum* ten_dum2 ten_dum3 censdiv_dum* year_dum* agebin4_dum1 agebin4_dum2 agebin4_dum3 agebin4_dum4 agebin4_dum5 agebin4_dum6 agebin4_dum8 agebin4_dum9 agebin4_dum10 agebin4_dum11 agebin4_dum12 occten_d* ageten_d*"
+local LASSOCANDS "educ_dum* race_dum* lfs_dum2 lfs_dum3 lfs_dum4 occ_dum* twoind_dum* ten_dum2 ten_dum3 censdiv_dum* year_dum* agebin4_dum1 agebin4_dum2 agebin4_dum3 agebin4_dum4 agebin4_dum5 agebin4_dum6 agebin4_dum8 agebin4_dum9 agebin4_dum10 agebin4_dum11 agebin4_dum12 occten_d* ageten_d*"
 
-* testparm argument for each of the 14 F-test table rows. The F-test
+* testparm argument for each of the 11 F-test table rows. The F-test
 * model uses the same sets of controls but in i.() factor notation, so
 * each set carries a proper reference category and the joint F per set
 * is well-defined (the joint F is invariant to which level is the base).
-local TP1  "i.educwrths"
-local TP2  "postgrad"
+local TP1  "i.trueEDU"
+local TP2  "i.lifestat"
 local TP3  "i.race"
-local TP4  "OLF"
-local TP5  "unemp"
-local TP6  "student"
-local TP7  "i.occ"
-local TP8  "i.twoind"
-local TP9  "i.tenurebin"
-local TP10 "i.censdiv"
-local TP11 "i.year"
-local TP12 "i.agebin4"
-local TP13 "i.occ#i.tenurebin"
-local TP14 "i.agebin4#i.tenurebin"
+local TP4  "i.occ"
+local TP5  "i.twoind"
+local TP6  "i.tenurebin"
+local TP7  "i.censdiv"
+local TP8  "i.year"
+local TP9  "i.agebin4"
+local TP10 "i.occ#i.tenurebin"
+local TP11 "i.agebin4#i.tenurebin"
 
 * F-statistics and p-values per set x run; columns 1-3 = fearn bins 1-3,
 * columns 4-6 = fhwage bins 1-3 (same mapping as the summary tables)
-matrix FT  = J(14, 6, .)
-matrix FTP = J(14, 6, .)
+matrix FT  = J(11, 6, .)
+matrix FTP = J(11, 6, .)
 
 
 ***********************************************************************
@@ -258,11 +257,11 @@ forvalues b = 1/3 {
 		* per run and a testparm per set
 		local col = cond("`x'"=="fearn", `b', 3+`b')
 
-		quietly regress G_`x' z_dum* i.educwrths postgrad i.race OLF ///
-			unemp student i.occ i.twoind i.tenurebin i.censdiv ///
+		quietly regress G_`x' z_dum* i.trueEDU i.lifestat i.race ///
+			i.occ i.twoind i.tenurebin i.censdiv ///
 			i.year i.agebin4 i.occ#i.tenurebin i.agebin4#i.tenurebin
 
-		forvalues s = 1/14 {
+		forvalues s = 1/11 {
 			quietly testparm `TP`s''
 			matrix FT[`s', `col']  = r(F)
 			matrix FTP[`s', `col'] = r(p)
@@ -303,17 +302,17 @@ local OUT "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/
 
 * ---------- Stepwise table: control sets in or out ----------
 
-local SETSTUBS  "educ_dum postgrad race_dum OLF unemp student occ_dum twoind_dum ten_dum censdiv_dum year_dum agebin4_dum"
-local SETLABELS `""Education" "Postgrad" "Race" "OLF" "Unemployed" "Student" "Occupation" "Industry" "Tenure" "Census Division" "Year" "Age Bin""'
+local SETSTUBS  "educ_dum lfs_dum race_dum occ_dum twoind_dum ten_dum censdiv_dum year_dum agebin4_dum"
+local SETLABELS `""Education" "Labor Force Status" "Race" "Occupation" "Industry" "Tenure" "Census Division" "Year" "Age Bin""'
 
 clear
-set obs 12
+set obs 9
 gen str40 varlabel = ""
 forvalues c = 1/6 {
 	gen str12 c`c' = ""
 }
 
-forvalues s = 1/12 {
+forvalues s = 1/9 {
 	local stub : word `s' of `SETSTUBS'
 	local lab  : word `s' of `SETLABELS'
 	quietly replace varlabel = `"`lab'"' in `s'
@@ -349,27 +348,25 @@ listtex varlabel c1 c2 c3 c4 c5 c6 using "`OUT'/3.2_stepwise_selection.tex", ///
 * ---------- Lasso table: individual variables (occ/ind/year as counts) ----------
 
 * Fixed row list: lvar#/llab# pairs. Regular blocks are spelled out with
-* forvalues, but the row count is fixed (65 individual rows + 3 count rows).
+* forvalues, but the row count is fixed (27 individual rows + 6 count rows).
 local r = 0
 
-local EDUCLABELS `""HS Dropout" "HS Graduate" "Some College" "College Graduate""'
-forvalues k = 1/4 {
+local EDUCLABELS `""HS Dropout" "HS Graduate" "Some College" "College Graduate" "Postgrad""'
+forvalues k = 1/5 {
 	local ++r
 	local lvar`r' "educ_dum`k'"
 	local llab`r' : word `k' of `EDUCLABELS'
 }
 
+* lifestat dummies: lfs_dum1 (employed) is the omitted reference
 local ++r
-local lvar`r' "postgrad"
-local llab`r' "Postgrad"
-local ++r
-local lvar`r' "OLF"
+local lvar`r' "lfs_dum2"
 local llab`r' "OLF"
 local ++r
-local lvar`r' "unemp"
+local lvar`r' "lfs_dum3"
 local llab`r' "Unemployed"
 local ++r
-local lvar`r' "student"
+local lvar`r' "lfs_dum4"
 local llab`r' "Student"
 
 local RACELABELS `""White" "Black" "Native American" "Asian or Pacific Islander" "Latino" "Other or Unknown""'
@@ -457,7 +454,7 @@ listtex varlabel c1 c2 c3 c4 c5 c6 using "`OUT'/3.2_lasso_selection.tex", ///
 	     "\hline") ///
 	foot("\hline\hline" ///
 	     "\multicolumn{7}{l}{\footnotesize Lasso, plugin lambda; z dummies always included.} \\" ///
-	     "\multicolumn{7}{l}{\footnotesize Age 46-49 and tenure 0-1 are omitted reference categories.} \\" ///
+	     "\multicolumn{7}{l}{\footnotesize Age 46-49, tenure 0-1 and employed are omitted reference categories.} \\" ///
 	     "\end{tabular}") ///
 	rstyle(tabular)
 
@@ -466,15 +463,15 @@ listtex varlabel c1 c2 c3 c4 c5 c6 using "`OUT'/3.2_lasso_selection.tex", ///
 * Same cell format as the 7_Tables.do F-test tables: "F*** (p)".
 
 clear
-set obs 14
+set obs 11
 gen str40 varlabel = ""
 forvalues c = 1/6 {
 	gen str40 c`c' = ""
 }
 
-local SETLABELS `""Education" "Postgrad" "Race" "OLF" "Unemployed" "Student" "Occupation" "Industry" "Tenure" "Census Division" "Year" "Age Bin" "Occ x Tenure" "Age Bin x Tenure""'
+local SETLABELS `""Education" "Labor Force Status" "Race" "Occupation" "Industry" "Tenure" "Census Division" "Year" "Age Bin" "Occ x Tenure" "Age Bin x Tenure""'
 
-forvalues i = 1/14 {
+forvalues i = 1/11 {
 	local lab : word `i' of `SETLABELS'
 	quietly replace varlabel = `"`lab'"' in `i'
 
@@ -798,7 +795,7 @@ replace tenurebin = 1 if unemp==1
 capture drop agebin4
 gen agebin4 = floor((currentage-22)/4) + 1 if currentage>=22 & currentage<=69
 
-keep personid year educwrths postgrad race OLF unemp student ///
+keep personid year trueEDU race lifestat ///
      occ twoind tenurebin censdiv agebin4
 
 merge 1:1 personid year using `consolidated'
@@ -806,7 +803,8 @@ keep if _merge == 3
 drop _merge
 
 * Dummy sets for the lasso (same construction as above)
-tabulate educwrths, generate(educ_dum)
+tabulate trueEDU, generate(educ_dum)
+tabulate lifestat, generate(lfs_dum)
 tabulate race,      generate(race_dum)
 tabulate occ,       generate(occ_dum)
 tabulate twoind,    generate(twoind_dum)
@@ -845,8 +843,8 @@ local NAGETEN_B : word count `AGETENLIST'
 * ---------- Selection runs: lasso + F-tests, 4 columns ----------
 * c1 = gamma annual, c2 = alpha annual, c3 = gamma hourly, c4 = alpha hourly
 
-matrix GFT  = J(14, 4, .)
-matrix GFTP = J(14, 4, .)
+matrix GFT  = J(11, 4, .)
+matrix GFTP = J(11, 4, .)
 
 capture log close earnsel
 log using "/Users/ethanballou/Documents/GitHub/LifetimeEarningsRisk/OtherOutput/ThirdDraft/3.2_EarningsSelection.log", ///
@@ -865,11 +863,11 @@ foreach m in fearn fhwage {
 		local ga_lasel_`col' "`e(allvars_sel)'"
 
 		* F-tests per control set, factor notation (as in the F table above)
-		quietly regress `dv' i.educwrths postgrad i.race OLF ///
-			unemp student i.occ i.twoind i.tenurebin i.censdiv ///
+		quietly regress `dv' i.trueEDU i.lifestat i.race ///
+			i.occ i.twoind i.tenurebin i.censdiv ///
 			i.year i.agebin4 i.occ#i.tenurebin i.agebin4#i.tenurebin
 
-		forvalues s = 1/14 {
+		forvalues s = 1/11 {
 			quietly testparm `TP`s''
 			matrix GFT[`s', `col']  = r(F)
 			matrix GFTP[`s', `col'] = r(p)
@@ -939,7 +937,7 @@ listtex varlabel c1 c2 c3 c4 using "`OUT'/3.2_gamalpha_lasso_selection.tex", ///
 	     "\hline") ///
 	foot("\hline\hline" ///
 	     "\multicolumn{5}{l}{\footnotesize Lasso, plugin lambda. Outcomes are gamma/alpha from raw earnings differences,} \\" ///
-	     "\multicolumn{5}{l}{\footnotesize consolidated by mixed regression. Age 46-49 and tenure 0-1 are omitted references.} \\" ///
+	     "\multicolumn{5}{l}{\footnotesize consolidated by mixed regression. Age 46-49, tenure 0-1, employed are omitted references.} \\" ///
 	     "\end{tabular}") ///
 	rstyle(tabular)
 
@@ -947,13 +945,13 @@ listtex varlabel c1 c2 c3 c4 using "`OUT'/3.2_gamalpha_lasso_selection.tex", ///
 * ---------- F-test table (4 columns) ----------
 
 clear
-set obs 14
+set obs 11
 gen str40 varlabel = ""
 forvalues c = 1/4 {
 	gen str40 c`c' = ""
 }
 
-forvalues i = 1/14 {
+forvalues i = 1/11 {
 	local lab : word `i' of `SETLABELS'
 	quietly replace varlabel = `"`lab'"' in `i'
 
